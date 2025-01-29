@@ -14,6 +14,10 @@ export default class CrudDatosProductos {
         return datos.find(dato => dato.id == id)
     }
 
+    static encontrarPorNombre(nombre, datos){
+        return datos.find(dato => dato.nombre == nombre)
+    }
+
     static agregarDato(nuevoDato, datos, setDatos){
         if (this.existe(nuevoDato.id, datos)){
             return false
@@ -38,3 +42,5 @@ export default class CrudDatosProductos {
 
     }
 }
+
+

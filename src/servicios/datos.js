@@ -1,4 +1,4 @@
-import { cargarClientes, cargarProductos } from "./obtenerDatos"
+import { ejemploFacturaCompra, cargarClientes, cargarProductos, cargarMedidas, cargarCategorias, cargarMarcas, tiposClientes, cargarFacturasCompra, cargarFacturasVenta} from "./obtenerDatos"
 
 export class ObtenerDatos {
     
@@ -10,6 +10,30 @@ export class ObtenerDatos {
         return cargarProductos()
     }
 
+    static medidas(){
+        return cargarMedidas()
+    }
+
+    static categorias(){
+        return cargarCategorias()
+    }
+
+    static marcas(){
+        return cargarMarcas()
+    }
+
+    static tiposClientes(){
+        return tiposClientes()
+    }
+    static compras(){
+        return cargarFacturasCompra()
+    }
+    static ventas(){
+        return cargarFacturasVenta()
+    }
+    static ejemploFacturaCompra(){
+        return ejemploFacturaCompra() 
+    }
 }
 
 

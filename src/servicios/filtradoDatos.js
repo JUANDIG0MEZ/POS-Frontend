@@ -1,32 +1,13 @@
 
-export class FiltradoDatosProductos {
+export class FiltradoDatos {
 
-    static contienenNombre(datos, nombre, propiedad="nombre"){
-        return datos.filter(dato => dato[propiedad].toLowerCase().includes(nombre.toLowerCase())) 
+    static filtroCadena(datos, propiedad, valor){
+        return datos.filter(dato => {
+            return dato[propiedad].toLowerCase().includes(valor.toLowerCase())}
+        )
     }
-
-    static contienenMarca(datos, marca, propiedad="marca") {
-        return datos.filter(dato => dato[propiedad].toLowerCase().includes(marca.toLowerCase()))
-    }
-    
-    static contienenCategoria(datos, categoria, propiedad="categoria"){
-        return datos.filter(dato => dato[propiedad].toLowerCase().includes(categoria.toLowerCase()))
-    }
-
-    static fullFiltrado(datos, nombre, marca, categoria){
-        if (nombre !== ""){
-            datos = this.contienenNombre(datos, nombre)
-        }
-        if (marca !== ""){
-            datos = this.contienenMarca(datos, marca)
-        }
-        if (categoria !== ""){
-            datos = this.contienenCategoria(datos, categoria)
-        }
-        return datos
+    static filtroNumero(datos, propiedad, valor){
+        return datos.filter(dato => dato[propiedad].toString().toLowerCase().includes(valor.toString()))
     }
 
 }
-
-
-

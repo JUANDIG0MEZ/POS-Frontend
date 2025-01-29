@@ -6,13 +6,18 @@ import Tabla from "../../componentes/Tabla"
 import InputText from "../../componentes/InputText"
 import Boton from "../../componentes/Boton"
 import HabilitadorTabla from "../../componentes/HablitadorTabla"
-
-import { FiltradoDatosProductos } from "../../servicios/filtradoDatos"
+import ModalCrearProducto from "../../componentes/Modales/ModalCrearProducto"
+import ModalModificarProducto from "../../componentes/Modales/ModalModificarProducto"
+import { FiltradoDatos } from "../../servicios/filtradoDatos"
 
 import CrudDatosProductos from "../../servicios/crudDatosProductos"
 
 const urlImage = "https://files.porsche.com/filestore/image/multimedia/none/992-gt3-rs-modelimage-sideshot/model/cfbb8ed3-1a15-11ed-80f5-005056bbdc38/porsche-model.png"
 const urlImage2 = "https://www.mercedes-benz.com.co/mercedes/site/artic/20230718/imag/foto_0000001120230718122321/gexterior_4m.jpg"
+
+
+
+
 
 
 export default function Inventario() {
@@ -39,92 +44,121 @@ export default function Inventario() {
     const [busquedaMedida, setBusquedaMedida] = useState("")
     const [productosFiltrados, setProductosFiltrados] = useState([])
     const [productoSeleccionado, setProductoSeleccionado] = useState([])
-    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState({})
+    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState("")
     const [imagen, setImagen] = useState("")
 
-    useEffect(()=>{
-        setProductosFiltrados([...productos])
-    }, [productos])
+    const [showModalCrear, setShowModalCrear] = useState(false)
+    const [showModalModificar, setShowModalModificar] = useState(false)
 
     useEffect(()=>{
-        setProductosFiltrados(FiltradoDatosProductos.fullFiltrado([...productos], busquedaNombre, busquedaMarca, busquedaCategoria))
+        let datosFiltrados = FiltradoDatos.filtroCadena(productos, "nombre", busquedaNombre)
+        datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "marca", busquedaMarca)
+        datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "categoria", busquedaCategoria)
+        datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "medida", busquedaMedida)
+        datosFiltrados = FiltradoDatos.filtroNumero(datosFiltrados, "id", busquedaId)
+        console.log('se logro filtrar los datos', datosFiltrados)
+        setProductosFiltrados(datosFiltrados)
     }, [productos, busquedaNombre, busquedaMarca, busquedaCategoria, busquedaMedida, busquedaId])
 
     useEffect(()=>{
-        if (productoSeleccionado.id !== undefined){
+        const dato = CrudDatosProductos.encontrarPorId(idProductoSeleccionado, productos) 
+        if (dato){
+            setProductoSeleccionado(dato)
+
             if (imagen === urlImage){
                 setImagen(urlImage2)
             }
             else{
                 setImagen(urlImage)
             }
-            setBusquedaId(productoSeleccionado.id)
         }
         
-    }, [productoSeleccionado])
-
-    useEffect(()=>{
-        console.time("buscando producto")
-        const dato = CrudDatosProductos.encontrarPorId(idProductoSeleccionado, productos) 
-        console.timeEnd("buscando producto")
-        if (dato){
-            setProductoSeleccionado(dato)
-        }
     }, [idProductoSeleccionado])
 
 
+
+    function limipiarBusquedas(){
+        setBusquedaNombre("")
+        setBusquedaMarca("")
+        setBusquedaCategoria("")
+        setBusquedaId("")
+        setBusquedaMedida("")
+    }
+
     return (
-        <>
-            <div className="h-screen flex flex-col max-w-5xl min-w-[1200px] mx-auto px-5 py-3 gap-3">
-                <div className="flex items-center justify-between h-64 w-full mx-auto gap-4">
-                    <figure className="h-full w-[500px]">
-                        <img className="h-full w-full object-contain border rounded-xl" src={imagen} alt="" />
-                    </figure>
+        <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
+            <div className="flex items-cente justify-between h-56 w-full mx-auto gap-4">
+                <figure className="h-52 w-[400px]">
+                    <img className="h-full w-full object-contain border rounded-xl" src={imagen} alt="" />
+                </figure>
 
-                    <div className="flex flex-col h-full w-full justify-between items-center gap-7">
-                        <div className="w-full">
-                            <h2 className="text-2xl font-semibold">Buscar Producto</h2>
+                <div className="flex flex-col h-full w-full gap-6 justify-center">
+                    <h2 className="text-2xl font-semibold w-full text-left mb-2">ENCONTRAR PRODUCTOS</h2>
+                    <div className="flex w-full gap-4 items-center">
+                        <div className="flex gap-1 items-center">
+                            <Boton texto="<" isNormal={true}/>
+                            <InputText
+                            estilo="w-20" 
+                            label="Id" 
+                            valor={busquedaId} 
+                            setValor={setBusquedaId} 
+                            isNumber = {true} 
+                            labelSeleccionado={productoSeleccionado.id}/>
+                            <Boton texto=">" isNormal={true}/>
                         </div>
-                        <div className="flex w-full gap-4">
-                            <InputText label="Nombre" setValor={setBusquedaNombre} valor={busquedaNombre}></InputText>
-                            <div className="flex gap-1">
-                                <Boton texto="<" isNormal={true}></Boton>
-                                <InputText label="Id" setValor={setBusquedaId} valor={busquedaId}></InputText>
-                                <Boton texto=">" isNormal={true}></Boton>
-                            </div>
-                        </div>
-                        <div className="flex w-full gap-3">
-                            
-                            <InputText label="Marca" setValor={setBusquedaMarca} valor={busquedaMarca} ></InputText>
-                            <InputText label="Categoria" setValor={setBusquedaCategoria} valor={busquedaCategoria}></InputText>
-                            <InputText label="Medida" setValor={setBusquedaMedida} valor={busquedaMedida}></InputText>
-                        </div>
-                        <div className="w-full flex">
-                            <Boton texto="Cancelar" isNormal={true}></Boton>
-                            <div className="w-full flex aling-right gap-4 justify-end">
-                                <Boton texto="Eliminar" isNormal={true}></Boton>
-                                <Boton texto="Modificar" isNormal={true}></Boton>
-                                <Boton texto="Agregar" isNormal={false}></Boton>
-                            </div>
-                            
-                            
-                        </div>
+                        <InputText
+                        label="Nombre" 
+                        valor={busquedaNombre}
+                        setValor={setBusquedaNombre} 
+                        labelSeleccionado={productoSeleccionado.nombre}
+                        />
+                        <InputText
+                        label="Marca"
+                        estilo= "w-80"
+                        valor={busquedaMarca}
+                        setValor={setBusquedaMarca}
+                        labelSeleccionado={productoSeleccionado.marca}/>
+
                     </div>
+                    <div className="flex w-full items-center justify-between gap-3">
+                        <InputText 
+                        estilo="w-72"
+                        label="Categoria" 
+                        valor={busquedaCategoria} 
+                        setValor={setBusquedaCategoria} 
+                        labelSeleccionado={productoSeleccionado.categoria}/>
+                        <InputText
+                        label="Medida"
+                        valor={busquedaMedida}
+                        setValor={setBusquedaMedida}
+                        labelSeleccionado={productoSeleccionado.medida}/>
 
+                        <Boton texto="Limpiar" onClick={limipiarBusquedas} isNormal={true}/>
+                        
+
+                        <Boton texto="Eliminar" isNormal={true}/>
+                        <Boton onClick={()=>setShowModalModificar(true)} texto="Modificar" isNormal={true}/>
+                        <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar" isNormal={false}/>
+                        
+                    </div>
                 </div>
-                <div className="w-full px-2">
-                    <HabilitadorTabla isVisible = {isColumnasVisible} setVisible={setIsColumnasVisible}></HabilitadorTabla>
-                </div>
-                <div className="w-full">
-                    <Tabla
+            </div>
+            <div className="w-full px-2">
+                <HabilitadorTabla isVisible = {isColumnasVisible} setVisible={setIsColumnasVisible}/>
+            </div>
+            <div className="w-full overflow-auto p-1 text-md mb-10">
+                <Tabla
                     datos = {productosFiltrados}
                     isVisible = {isColumnasVisible}
-                    setItemSeleccionado={setIdProductoSeleccionado}
-                    itemSeleccionado={idProductoSeleccionado}
-                    ></Tabla>
-                </div>
-                
+                    setIdItemSeleccionado={setIdProductoSeleccionado}
+                    total = {4500000}
+                />
             </div>
-        </>
+            {
+                showModalCrear && <ModalCrearProducto setShowModal={setShowModalCrear}/> ||
+                showModalModificar && <ModalModificarProducto setShowModal={setShowModalModificar} productoSeleccionado={productoSeleccionado}/>
+            }
+        </div>
     )
 }
+

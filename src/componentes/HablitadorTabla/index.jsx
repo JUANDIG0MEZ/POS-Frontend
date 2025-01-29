@@ -8,7 +8,7 @@ export default function HabilitadorTabla(props){
                 Object.keys(props.isVisible).map((key, index)=>{
                     return <li  
                     key={index} 
-                    className={`${props.isVisible[key] ? 'bg-gray-200': 'bg-white'} cursor-pointer py-2 px-2 rounded-xl`} 
+                    className={`${props.isVisible[key] ? 'text-gray-600 bg-gray-100 border hover:shadow-md': 'bg-white hover:bg-gray-100 hover:text-gray-600'} cursor-pointer py-2 px-2 rounded-xl font-bold`} 
                     onClick={()=> {
                         props.setVisible({
                             ...props.isVisible,

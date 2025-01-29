@@ -6,6 +6,14 @@ export default class CrudDatosClientes {
         return cargarClientes()
     }
 
+    static encontrarPorId(id, datos){
+        return datos.find(dato => dato.id == id)
+    }
+
+    static encontrarPorNombre(nombre, datos){
+        return datos.find(dato => dato.nombre == nombre)
+    }
+
     static existe(id, datos){
         return datos.some(dato => dato.id === id)
     }
@@ -32,7 +40,6 @@ export default class CrudDatosClientes {
         else{
             return false
         }
-
     }
 
 

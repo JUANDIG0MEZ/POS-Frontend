@@ -1,59 +1,85 @@
-import { memo } from "react"
+import {memo} from 'react'
 
-
-export default function Tabla(props) {
-
-
+export default memo(function Tabla(props) {
+    console.log("Si ingreso a la tabla")
     function seleccionFila(e){
         const fila = e.target.closest('tr')
-        if (fila){
+        if (fila && props.setIdItemSeleccionado){
             const id = fila.dataset.id
-            props.setItemSeleccionado(id)
+            props.setIdItemSeleccionado(id)
         }
     }
 
-    function isSeleccionado(actual){
-        return actual == props.itemSeleccionado
-    }
+    let colspan = 0
 
+    if (props.isVisible){
+        colspan = Object.keys(props.isVisible).filter(key => props.isVisible[key] === true).length
+    }
+    else{
+        if (props.datos.length > 0){
+            colspan = Object.keys(props.datos[0]).length
+        }
+    }
+    console.log(colspan)
 
     return (
-        <table className="mx-auto">
+        <table className="w-full">
             <thead>
 
                 <tr className="bg-gray-50">
                 {
                 props.datos.length > 0 && Object.keys(props.datos[0]).map((key, indice)=>{
-                    if (props.isVisible[key] === false) {
-                        return null
+                    if (props.isVisible){
+                        if (props.isVisible[key] === false) {
+                            return null
+                        }
                     }
-                    return <th key={indice} className="p-1 border">{key}</th>   
-                }) 
+                    return <th key={indice} className="p-2 border">{key}</th>
+                })
                 }
                 </tr>
             </thead>
-            <tbody onClick={seleccionFila}> 
-                  {
-                        props.datos.length > 0 && 
-                        props.datos.map((dato)=>{
-                            return (
-                            <tr
+            <tbody onClick={seleccionFila} className=" p-1 h-full w-full overflow-auto">
+                { 
+                    props.datos.length > 0 && props.datos.map((dato)=>{
+                        return (<tr
                             key={dato.id} 
                             data-id = {dato.id}
-                            className={`bg-white border hover:bg-gray-300 cursor-pointer ${isSeleccionado(dato.id) ? 'bg-gray-400' : '' }`}>
-                                {   
-                                    Object.keys(dato).map((key, indice)=>{
+                            className={`hover:bg-gray-300 cursor-pointer text-center`}>
+                            {   
+                                Object.keys(dato).map((key, indice)=>{
+                                    if (props.isVisible){
                                         if (props.isVisible[key] === false) {
                                             return null
                                         }
-                                        return <td key={indice} className="p-2 border">{dato[key]}</td>
-                                    })
-                                }
-                            </tr>
-                            )
-                        })
+                                    }
+                                    return <td key={indice} className="p-2 border">{dato[key]}</td>
+                                })
+                            }
+                        </tr>)
+                    
+                })}    
+
+                {   
+                    props.total && props.datos.length> 0 &&
+                <tr className=''>
+                    {
+                        colspan-3 >= 0 && <td colSpan={colspan-2} ></td>
                     }
+ 
+                    {
+                        colspan-1 > 0 && <td className="bg-gray-50 p-2 border text-center font-bold">Total</td>
+                    }
+                    {
+                        colspan > 0 && <td className='p-2 border text-center font-bold'>{props.total}</td>
+                    }
+                </tr>
+                }
+                
             </tbody>
+            
+            
         </table>
+        
     )
-}
+})
