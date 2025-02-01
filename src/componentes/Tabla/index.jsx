@@ -1,7 +1,6 @@
 import {memo} from 'react'
 
 export default memo(function Tabla(props) {
-    console.log("Si ingreso a la tabla")
     function seleccionFila(e){
         const fila = e.target.closest('tr')
         if (fila && props.setIdItemSeleccionado){
@@ -20,8 +19,6 @@ export default memo(function Tabla(props) {
             colspan = Object.keys(props.datos[0]).length
         }
     }
-    console.log(colspan)
-
     return (
         <table className="w-full">
             <thead>

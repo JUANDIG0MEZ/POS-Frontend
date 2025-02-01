@@ -8,7 +8,6 @@ export default function InputText(props){
                     {labelSolo + "  "}  
                     {
                     <span className="text-black">
-                        {console.log(props.isPrice)}
                         {props.isPrice? "$ ": ""}
                         {props.isNumber? formattedValue(props.labelSeleccionado) : props.labelSeleccionado}
                     </span>

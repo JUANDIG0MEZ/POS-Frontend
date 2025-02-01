@@ -1,9 +1,13 @@
-import {cargarProductos } from "./obtenerDatos"
+import {cargarProductos, cargarMarcas } from "./obtenerDatos"
 
 export default class CrudDatosProductos {
     // Read
-    static productos() {
-        return cargarProductos()
+    static async productos() {
+        return await cargarProductos()
+    }
+
+    static async marcas(){
+        return await cargarMarcas()
     }
 
     static existe(id, datos){

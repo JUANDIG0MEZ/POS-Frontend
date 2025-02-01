@@ -1,60 +1,59 @@
 import { faker } from '@faker-js/faker'
 
 
-export function cargarProductos() {
-    const productos = []
-    for (let i = 0; i < 500; i++) {
-        productos.push({
-            id: i,
-            nombre: faker.commerce.productName(),
-            marca: faker.company.name(),
-            categoria: faker.commerce.department(),
-            medida: faker.helpers.arrayElement(['Kg', 'Unidad', 'Litro', 'Metro Cuadrado']),
-            precioCompra: faker.commerce.price({min: 10000, max: 50000}),
-            precioVenta: faker.commerce.price({min: 50000, max: 100000}),
-            cantidad: faker.number.int({min: 1, max: 100}),
-            total: faker.number.int({min: 100000000, max: 100000000000})
-            })
-    }
-    return productos
-
-}
-
-export function cargarClientes() {
-    const clientes = []
-
-    for (let i = 0; i < 10; i++) {
-        clientes.push({
-            id: i,
-            nombre: faker.person.fullName(),
-            direccion: faker.location.streetAddress(),
-            telefono: faker.phone.number(),
-            email: faker.internet.email(),
-            tipo: faker.helpers.arrayElement(['Proveedor', 'Cliente', 'Ambos']),
-            porPagarle: faker.finance.amount(),
-            debe: faker.finance.amount()            
+export async function cargarProductos() {    
+    return await fetch('http://localhost:3000/api/v1/productos')
+        .then(response => response.json())
+        .then(data => {
+            return data
         })
-    }
-    return clientes
+        .catch(error => console.error('Error:', error))
+}
+
+export async function cargarClientes() {
+    return await fetch('http://localhost:3000/api/v1/clientes')
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
+        .catch(error => console.error('Error:', error))
+    
+}
+
+export async function cargarMedidas() {
+    return await fetch('http://localhost:3000/api/v1/productos/medidas')
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
+        .catch(error => console.error('Error:', error))
+}
+
+export async function cargarCategorias() {
+    return await fetch('http://localhost:3000/api/v1/productos/categorias')
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
 }
 
 
-export function cargarMedidas() {
-    return ['Kg', 'Unidad', 'Litro']
+export async function cargarMarcas() {
+    return await fetch('http://localhost:3000/api/v1/productos/marcas')
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
+        .catch(error => console.error('Error:', error))
 }
 
-
-export function cargarCategorias() {
-    return ['Alimentos', 'Bebidas', 'Limpieza', 'Hogar', 'Electrodomesticos']
-}
-
-
-export function cargarMarcas() {
-    return ['Pepsi', 'Coca Cola', 'Nestle', 'P&G', 'Unilever']
-}
-
-export function tiposClientes() {
-    return ['Proveedor', 'Cliente', 'Ambos']
+export async function tiposClientes() {
+    return await fetch('http://localhost:3000/api/v1/clientes/tipos')
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
+        .catch(error => console.error('Error:', error))
 }
 
 

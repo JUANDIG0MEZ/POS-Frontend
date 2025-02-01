@@ -2,8 +2,8 @@ import {cargarClientes } from "./obtenerDatos"
 
 export default class CrudDatosClientes {
     //read
-    static clientes() {
-        return cargarClientes()
+    static async clientes() {
+        return await cargarClientes()
     }
 
     static encontrarPorId(id, datos){

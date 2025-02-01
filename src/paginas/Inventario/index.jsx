@@ -15,11 +15,6 @@ import CrudDatosProductos from "../../servicios/crudDatosProductos"
 const urlImage = "https://files.porsche.com/filestore/image/multimedia/none/992-gt3-rs-modelimage-sideshot/model/cfbb8ed3-1a15-11ed-80f5-005056bbdc38/porsche-model.png"
 const urlImage2 = "https://www.mercedes-benz.com.co/mercedes/site/artic/20230718/imag/foto_0000001120230718122321/gexterior_4m.jpg"
 
-
-
-
-
-
 export default function Inventario() {
     const {
         productos
@@ -56,7 +51,6 @@ export default function Inventario() {
         datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "categoria", busquedaCategoria)
         datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "medida", busquedaMedida)
         datosFiltrados = FiltradoDatos.filtroNumero(datosFiltrados, "id", busquedaId)
-        console.log('se logro filtrar los datos', datosFiltrados)
         setProductosFiltrados(datosFiltrados)
     }, [productos, busquedaNombre, busquedaMarca, busquedaCategoria, busquedaMedida, busquedaId])
 

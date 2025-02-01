@@ -2,6 +2,7 @@ import { useState} from "react"
 import { FaChevronDown } from "react-icons/fa"
 
 export default function InputLista(props) {
+    console.log("esta es la lista que da errores", props.lista)
 
     const [showLista, setShowLista] = useState(false)
 
@@ -46,6 +47,7 @@ export default function InputLista(props) {
 
     function listaFiltrada(nuevoValor){
         if (props.lista){
+            console.log("Esta es la lista que genera problemas")
             if (props.isNumber){
                 return( props.lista.filter(item => item.toString().includes(nuevoValor)))
             }
