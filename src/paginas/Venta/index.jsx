@@ -85,13 +85,13 @@ export default function Venta(){
 
             <div className="flex flex-col gap-6 w-full">
                 <div className="w-full flex gap-3">
-                    <InputLista label="Nombre cliente" valor={nombre} setValor={setNombre}/>
-                    <InputText estilo={"w-[500px]"} label="Direccion" valor={direccion} setValor={setDireccion}/>
+                    <InputLista label="Nombre cliente" valor={nombre}/>
+                    <InputText estilo={"w-[500px]"} label="Direccion" valor={direccion}/>
                 </div>
                 <div className="w-full flex justify-between">
                     <div className="flex gap-3">
-                        <InputText estilo={"w-48"} label="Telefono" valor={telefono} setValor={setTelefono} isNumber={true}/>
-                        <InputText estilo={"w-96"} label="Email" valor={email} setValor={setEmail}/>
+                        <InputText estilo={"w-48"} label="Telefono" valor={telefono} isNumber={true}/>
+                        <InputText estilo={"w-96"} label="Email" valor={email} />
                     </div>
                     
                     <div className="flex gap-4">
@@ -99,8 +99,8 @@ export default function Venta(){
                         <RadioBoton onChange={cambiarEstado} name="estado" valor="Entregado" label="Entregado" checked={estado === "Entregado"}/>
                     </div>
                     <div className="flex gap-3">
-                        <InputText estilo={"w-48"} label="Pagado" valor={porPagar} setValor={setPorPagar} isNumber={true} isPrice={true}/>
-                        <InputText estilo={"w-48"} label="Total" valor={total} setValor={setTotal} isNumber={true} isPrice={true}/>
+                        <InputText estilo={"w-48"} label="Pagado" valor={porPagar} isNumber={true} isPrice={true}/>
+                        <InputText estilo={"w-48"} label="Total" valor={total} isNumber={true} isPrice={true}/>
                     </div>
                     
                 </div>

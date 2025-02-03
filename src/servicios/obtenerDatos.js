@@ -13,8 +13,16 @@ export async function cargarClientes() {
         .then(data => {
             return data
         })
+        .catch(error => console.error('Error:', error))  
+}
+
+export async function cargarCliente(id){
+    return await fetch(`http://localhost:3000/api/v1/clientes/${id}`)
+        .then(response => response.json())
+        .then(data =>{
+            return data
+        })
         .catch(error => console.error('Error:', error))
-    
 }
 
 export async function cargarMedidas() {

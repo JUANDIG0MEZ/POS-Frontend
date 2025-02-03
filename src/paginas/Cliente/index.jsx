@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import InputText from '../../componentes/InputText';
 import {useParams} from 'react-router-dom';
 import Boton from '../../componentes/Boton';
-
+import { cargarCliente } from '../../servicios/obtenerDatos';
 export default function Cliente() {
 
     const {id} = useParams();
@@ -14,24 +14,44 @@ export default function Cliente() {
     const [porPagarle, setPorPagarle] = useState("")
     const [debe, setDebe] = useState("")
 
+    useEffect(()=>{
+        async function cargar(){
+            try{
+                const cliente = await cargarCliente(id)
+                setNombre(cliente.nombre)
+                setDireccion(cliente.direccion)
+                setTelefono(cliente.telefono)
+                setEmail(cliente.email)
+                setTipo(cliente.tipo)
+                setPorPagarle(cliente.porPagarle)
+                setDebe(cliente.debe)
+
+            }
+            catch{
+                console.log(`error al cargar el cliente ${id}`)
+            }   
+        }
+        cargar()
+    }, [])
+
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
             <h1 className="text-2xl font-bold mb-3">CLIENTE ID <span className='text-red-500 p-1 border rounded-md'>{id}</span></h1>
             <div className='flex flex-col gap-4'>
                 <div className='flex gap-3 mb-2'>
-                    <InputText label="Nombre"  valor={nombre} setValor={setNombre}/>
-                    <InputText label="Direccion"  valor={direccion} setValor={setDireccion}/>
+                    <InputText label="Nombre"  valor={nombre}/>
+                    <InputText label="Direccion"  valor={direccion}/>
 
 
                 </div>
                 <div className='flex gap-3 items-center'>
-                    <InputText estilo="w-48" label="Telefono"  valor={telefono} setValor={setTelefono} isNumber={true}/>
-                    <InputText estilo="w-96" label="Email"  valor={email} setValor={setEmail}/>
-                    <InputText estilo="w-40" label="Tipo"  valor={tipo} setValor={setTipo}/>
+                    <InputText estilo="w-48" label="Telefono"  valor={telefono} isNumber={true}/>
+                    <InputText estilo="w-96" label="Email"  valor={email} />
+                    <InputText estilo="w-40" label="Tipo"  valor={tipo} />
 
-                    <InputText estilo="w-48" label="Por pagarle"  valor={porPagarle} setValor={setPorPagarle} isNumber={true}/>
+                    <InputText estilo="w-48" label="Por pagarle"  valor={porPagarle} isNumber={true}/>
                     <Boton texto="Pagar"/>
-                    <InputText estilo="w-48" label="Debe"  valor={debe} setValor={setDebe} isNumber={true}/>
+                    <InputText estilo="w-48" label="Debe"  valor={debe} isNumber={true}/>
                     <Boton texto="Abonar"/>
                     
                 </div>
