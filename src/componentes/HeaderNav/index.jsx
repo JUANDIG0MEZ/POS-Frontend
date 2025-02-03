@@ -21,7 +21,7 @@ const navItems = {
     'Clientes': {
         icon: <FaUser />,
         to: '/clientes'
-    },
+    }
 }
 
 export default function HeaderNav() {
@@ -41,20 +41,11 @@ export default function HeaderNav() {
                     })
                 }
             </ul>
-
-            <ul className='grow-0 flex items-center text-white gap-4'>
-                <li>
-                    Juan Diego
-                </li>
-                <li>
-                    <NavLink className=''>
-                        <FaUser/>
-                    </NavLink> 
-                </li>
-                   
-                
-                
-            </ul>
+            
+            <NavLink to='/perfil' className=''>
+                <p className='grow-0 flex items-center text-white gap-4'>Juan Diego <FaUser/></p>
+            </NavLink> 
+            
 
             
         </nav>

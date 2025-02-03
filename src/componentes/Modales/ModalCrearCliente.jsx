@@ -1,8 +1,8 @@
 import InputText from "../InputText"
 import InputLista from "../InputLista"
 import Boton from "../Boton"
-import { useState} from "react"
-import { ObtenerDatos } from "../../servicios/datos"
+import { useState, useEffect} from "react"
+import crudDatosClientes from "../../servicios/crudDatosClientes"
 
 export default function ModalCrearCliente(props){
 
@@ -14,6 +14,8 @@ export default function ModalCrearCliente(props){
     const [email, setEmail] = useState("")
     const [tipo, setTipo] = useState("")
 
+    const [listaTipo, setListaTipo] = useState([])
+
 
     function cerrarModal(){
         if (props.setShowModal){
@@ -21,6 +23,19 @@ export default function ModalCrearCliente(props){
         }
         
     }
+
+    useEffect(()=>{
+        async function cargarListas(){
+            try {
+                const tipoCliente = await crudDatosClientes.tiposClientes()
+                setListaTipo(tipoCliente)
+            }
+            catch {
+                console.log("Error al cargar los tipos de clientes en el modal crear cliente")
+            }
+        }
+        cargarListas()
+    }, [])
 
 
     return (
@@ -32,7 +47,7 @@ export default function ModalCrearCliente(props){
                         <InputText label="Nombre" valor={nombre} setValor={setNombre}/>
                         <InputLista 
                         estilo="w-48"
-                        label="Tipo" valor = {tipo} setValor={setTipo} lista = {ObtenerDatos.tiposClientes()}/>                        
+                        label="Tipo" valor = {tipo} setValor={setTipo} lista = {listaTipo}/>                        
                         
                     </div>
                     <div className="flex gap-3">
@@ -53,8 +68,7 @@ export default function ModalCrearCliente(props){
                             isNormal={true}/>
                         </div>
                         
-                        <div className="flex w-full justify-end gap-3">
-                            
+                        <div className="flex w-full justify-end gap-3">  
                             <Boton onClick={cerrarModal} texto = "Cancelar"  isNormal = {true}/>
                             <Boton texto = "Agregar" />  
                         </div>

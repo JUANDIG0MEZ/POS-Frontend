@@ -1,14 +1,16 @@
 import Tabla from "../../componentes/Tabla"
 import {FiltradoDatos} from "../../servicios/filtradoDatos"
-import CrudDatosClientes from "../../servicios/crudDatosClientes"
 import {useState, useContext, useEffect} from 'react'
 import { ContextInventario } from "../../contextInventario"
 import InputLista from "../../componentes/InputLista"
 import InputText from "../../componentes/InputText"
 import Boton from "../../componentes/Boton"
 import ModalCrearCliente from "../../componentes/Modales/ModalCrearCliente"
+import { useNavigate } from "react-router-dom"
 
-export default function Clientes() {
+export default  function Clientes() {
+
+    const navigate = useNavigate()
 
     const {
         clientes
@@ -16,32 +18,25 @@ export default function Clientes() {
 
 
     const [idSeleleccionado, setIdSeleccionado] = useState("")
-    const [clienteSeleccionado, setClienteSeleccionado] = useState("")
     const [clientesFiltrados, setClientesFiltrados] = useState([])
     const [nombre, setNombre] = useState("")
     const [tipo, setTipo] = useState("")
     const [id, setId] = useState("")
 
-
     const [showModalCrear, setShowModalCrear] = useState(false)
-    //const [showModalModificar, setShowModalModificar] = useState(false)
-    //const [showModalEliminar, setShowModalEliminar] = useState(false)
 
     useEffect(()=> {
         let datosFiltrados = FiltradoDatos.filtroCadena(clientes, "nombre", nombre)
         datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "tipo", tipo)
         datosFiltrados = FiltradoDatos.filtroNumero(datosFiltrados, "id", id)
         setClientesFiltrados(datosFiltrados)
-        console.log("todo bien en clientes")
     }, [clientes, nombre, tipo, id])
-
-
 
     useEffect(()=>{
         if (idSeleleccionado){
-            setClienteSeleccionado(CrudDatosClientes.encontrarPorId(idSeleleccionado, clientes))
+            navigate(`/cliente/${idSeleleccionado}`)
         }
-    },[idSeleleccionado])
+    }, [ idSeleleccionado ])
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
@@ -54,14 +49,12 @@ export default function Clientes() {
                     estilo={"w-20"}
                     label="Id"
                     valor={id}
-                    labelSeleccionado={clienteSeleccionado.id}
                     setValor={setId}
                     isNumber={true}
                     />
 
                     <InputText
                     label="Nombre"
-                    labelSeleccionado = {clienteSeleccionado.nombre}
                     valor={nombre}
                     setValor = {setNombre}
                     />
@@ -70,17 +63,9 @@ export default function Clientes() {
                     estilo={"w-40"}
                     lista = {["Proveedor", "Cliente", "Ambos"]}
                     label="tipo"
-                    labelSeleccionado={clienteSeleccionado.tipo}
                     valor={tipo}
                     setValor={setTipo}/>
-
-                    
-                    <Boton texto="Eliminar" isNormal={true}/>
-                    <Boton texto="Modificar" isNormal={true}/>
-                    <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar"/>
-
-                    
-                    
+                    <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar"/>      
                 </div>
             </div>
             

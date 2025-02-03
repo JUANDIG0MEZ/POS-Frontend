@@ -1,10 +1,9 @@
 import InputText from "../InputText"
 import InputLista from "../InputLista"
 import Boton from "../Boton"
-import { useState} from "react"
-import { ObtenerDatos } from "../../servicios/datos"
+import { useState, useEffect} from "react"
 import DropZone from "../DropZona"
-
+import CrudDatosProductos from "../../servicios/crudDatosProductos"
 
 
 
@@ -19,12 +18,49 @@ export default function ModalModificarProducto(props){
     const [cantidad, setCantidad] = useState(productoSeleccionado.cantidad)
     const [categoria, setCategoria] = useState(productoSeleccionado.categoria)
 
+
+    const [listaMarca, setListaMarca] = useState([])
+    const [listaCategoria, setListaCategoria] = useState([])
+    const [listaMedida, setListaMedida] = useState([])
+
+
     function cerrarModal(){
         if (props.setShowModal){
             props.setShowModal(false)
         }
         
     }
+
+
+    useEffect(()=>{
+    
+            async function cargarListas(){
+                try {
+                    const marcas = await CrudDatosProductos.marcas()
+                    setListaMarca(marcas)
+                }
+                catch {
+                    console.log("Error al cargar las marcas del modal crear productos")
+                }
+    
+                try {
+                    const categorias = await CrudDatosProductos.categorias()
+                    setListaCategoria(categorias)
+                }
+                catch {
+                    console.log("Error al cargar las categorias del modal crear productos")
+                }
+    
+                try {
+                    const medidas = await CrudDatosProductos.medidas()
+                    setListaMedida(medidas)
+                }
+                catch{
+                    console.log("Error al cargar las medidas del modal crear productos")
+                }
+            }
+            cargarListas()
+            }, [])
 
 
 
@@ -41,12 +77,12 @@ export default function ModalModificarProducto(props){
                         <InputText label="Nombre" valor={nombre} setValor={setNombre}/>
                     </div>
                     <div className="flex w-full gap-3">
-                        <InputLista label="Marca" valor = {marca} setValor={setMarca} lista = {ObtenerDatos.marcas()}/>
-                        <InputLista label="Categoria" valor={categoria} setValor={setCategoria} lista = {ObtenerDatos.categorias()} />
+                        <InputLista label="Marca" valor = {marca} setValor={setMarca} lista = {listaMarca}/>
+                        <InputLista label="Categoria" valor={categoria} setValor={setCategoria} lista = {listaCategoria} />
                     </div>
                     <div className="flex gap-3">
                         <div className="w-3/12">
-                            <InputLista label="Medida" valor= {medida} setValor={setMedida} lista = {ObtenerDatos.medidas()}/>
+                            <InputLista label="Medida" valor= {medida} setValor={setMedida} lista = {listaMedida}/>
                         </div>
                         <InputText label="Cantidad" valor={cantidad} setValor={setCantidad} isNumber={true}/>
                         <InputText label="Valor Compra" valor={precioCompra} setValor={setPrecioCompra} isNumber={true}/>

@@ -4,17 +4,17 @@ import InputLista from "../../componentes/InputLista"
 import InputText from "../../componentes/InputText"
 import Boton from "../../componentes/Boton"
 import RadioBoton from "../../componentes/RadioBoton"
-import { ObtenerDatos } from "../../servicios/datos"
 import { useState } from "react"
+import { useParams } from "react-router-dom"
 import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
 import CrudDatosProductos from "../../servicios/crudDatosProductos"
+import CrudDatosFacturasCompra from "../../servicios/crudDatosFacturasCompra"
 
 export default function Compra(){
 
+    const {id} = useParams()
 
     const [showModal, setShowModal] = useState(false)
-
-
     const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(undefined)
     const [productoSeleccionado, setProductoSeleccionado] = useState(undefined)
 
@@ -30,7 +30,7 @@ export default function Compra(){
     const [facturaOriginal, setFacturaOriginal] = useState([])
 
     useEffect(()=>{
-        console.log(idProductoSeleccionado)
+
         if (idProductoSeleccionado){
             setShowModal(true)      
             const producto = CrudDatosProductos.encontrarPorId(idProductoSeleccionado, facturaModificada)
@@ -45,19 +45,28 @@ export default function Compra(){
     }
 
     useEffect(()=>{
-        const factura = ObtenerDatos.ejemploFacturaCompra().data
-        setFacturaOriginal(factura)
-        setFacturaModificada(factura)
-        //setFactura(ObtenerDatos.ejemploFacturaCompra().data)
-        setFecha(ObtenerDatos.ejemploFacturaCompra().info[0].fecha)
-        setNombre(ObtenerDatos.ejemploFacturaCompra().info[0].nombre)
-        setDireccion(ObtenerDatos.ejemploFacturaCompra().info[0].direccion)
-        setTelefono(ObtenerDatos.ejemploFacturaCompra().info[0].telefono)
-        setEmail(ObtenerDatos.ejemploFacturaCompra().info[0].email)
-        setEstado(ObtenerDatos.ejemploFacturaCompra().info[0].estado)
-        setTotal(ObtenerDatos.ejemploFacturaCompra().info[0].total)
-        setPorPagar(ObtenerDatos.ejemploFacturaCompra().info[0].porPagar)
 
+        async function cargarDatos(){
+            try{
+                const factura = await CrudDatosFacturasCompra.factura(id)
+                setFacturaOriginal(factura.data)
+                setFacturaModificada(factura.data)
+                
+                setFecha(factura.info.fecha)
+                setNombre(factura.info.nombre)
+                setDireccion(factura.info.direccion)
+                setTelefono(factura.info.telefono)
+                setEmail(factura.info.email)
+                setEstado(factura.info.estado)
+                setTotal(factura.info.total)
+                setPorPagar(factura.info.porPagar)
+            }
+            catch{
+                console.log("Error al cargar los productos")
+            }
+        }
+
+        cargarDatos()
 
     }, [])
 
@@ -70,7 +79,7 @@ export default function Compra(){
             
             
             <div className="flex justify-between my-2">
-                <h1 className="text-2xl font-bold flex items-center">FACTURA DE COMPRA ID:<p className="text-red-500 border p-1">{"450"}</p></h1>
+                <h1 className="text-2xl font-bold flex items-center">FACTURA DE COMPRA ID:<p className="text-red-500 border p-1 rounded-md">{id}</p></h1>
                 <h1 className="text-xl font-bold flex items-center"> Fecha: {fecha}</h1>
             </div>
 

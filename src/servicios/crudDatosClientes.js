@@ -1,9 +1,13 @@
-import {cargarClientes } from "./obtenerDatos"
+import {cargarClientes, tiposClientes} from "./obtenerDatos"
 
 export default class CrudDatosClientes {
     //read
     static async clientes() {
         return await cargarClientes()
+    }
+
+    static async tiposClientes(){
+        return await tiposClientes()
     }
 
     static encontrarPorId(id, datos){

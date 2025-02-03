@@ -1,4 +1,4 @@
-import { ejemploFacturaCompra, cargarClientes, cargarProductos, cargarMedidas, cargarCategorias, cargarMarcas, tiposClientes, cargarFacturasCompra, cargarFacturasVenta} from "./obtenerDatos"
+import {cargarClientes, cargarProductos, cargarMedidas, cargarCategorias, cargarMarcas, tiposClientes, cargarFacturasCompra, cargarFacturasVenta} from "./obtenerDatos"
 
 export class ObtenerDatos {
     
@@ -31,9 +31,10 @@ export class ObtenerDatos {
     static ventas(){
         return cargarFacturasVenta()
     }
-    static ejemploFacturaCompra(){
-        return ejemploFacturaCompra() 
+    static(id){
+        return cargarFacturasCompra(id)
     }
+
 }
 
 
