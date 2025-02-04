@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import InputText from '../../componentes/InputText';
 import {useParams} from 'react-router-dom';
 import Boton from '../../componentes/Boton';
-import { cargarCliente } from '../../servicios/obtenerDatos';
+import Tabla from '../../componentes/Tabla';
+import { cargarCliente, clientePagos, clienteCompras, clienteAbonos, clienteVentas } from '../../servicios/obtenerDatos';
 export default function Cliente() {
 
     const {id} = useParams();
@@ -13,6 +14,18 @@ export default function Cliente() {
     const [tipo, setTipo] = useState("")
     const [porPagarle, setPorPagarle] = useState("")
     const [debe, setDebe] = useState("")
+
+    const [pagos, setPagos]= useState([])
+    const [compras, setCompras]= useState([])
+    const [abonos, setAbonos]= useState([])
+    const [ventas, setVentas]= useState([])
+
+    const [mostrarTabla, setMostrarTabla] = useState({
+        pagos: true,
+        compras: false,
+        abonos: false,
+        ventas: false
+    })
 
     useEffect(()=>{
         async function cargar(){
@@ -33,6 +46,60 @@ export default function Cliente() {
         }
         cargar()
     }, [])
+
+    function cambiarTabla(tabla){
+        setMostrarTabla({
+            pagos: false,
+            compras: false,
+            abonos: false,
+            ventas: false,
+            [tabla]: true
+        })
+    }
+
+    async function cargarPagos(){
+        try{
+            const pagosCargados = await clientePagos()
+            setPagos(pagosCargados)
+            cambiarTabla("pagos")
+        }
+        catch{
+            console.log(`error al cargar los pagos del cliente ${id}`)
+        } 
+    }
+    async function cargarcompras(){
+        try{
+            const pagosCargados = await clienteCompras()
+            setCompras(pagosCargados)
+            cambiarTabla("compras")
+        }
+        catch{
+            console.log(`error al cargar los pagos del cliente ${id}`)
+        } 
+    }
+
+    async function cargarAbonos(){
+        try{
+            const pagosCargados = await clienteAbonos()
+            setAbonos(pagosCargados)
+            cambiarTabla("abonos")
+        }
+        catch{
+            console.log(`error al cargar los pagos del cliente ${id}`)
+        } 
+    }
+
+    async function cargarVentas(){
+        try{
+            const pagosCargados = await clienteVentas()
+            setVentas(pagosCargados)
+            cambiarTabla("ventas")
+        }
+        catch{
+            console.log(`error al cargar los pagos del cliente ${id}`)
+        } 
+    }
+
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
@@ -57,17 +124,34 @@ export default function Cliente() {
                 </div>
                 <div className='flex justify-between'>
                     <div className='flex gap-3'>
-                        <Boton texto="Ventas" isNormal={true}/>
-                        <Boton texto="Compras" isNormal={true}/>
-                        <Boton texto="Abonos" isNormal={true}/>
-                        <Boton texto="Pagos" isNormal={true}/>
+                        <Boton
+                        texto="Ventas"
+                        onClick={cargarVentas}
+                        isNormal={true}/>
+
+                        <Boton 
+                        onClick={cargarcompras}
+                        texto="Compras" isNormal={true}/>
+                        <Boton
+                        onClick={cargarAbonos}
+                        texto="Abonos"
+                        isNormal={true}/>
+                        <Boton texto="Pagos" 
+                        onClick={cargarPagos}
+                        isNormal={true}/>
                     </div>
                     <Boton texto="Modificar datos" isNormal="true"/>
 
                 </div>
                 
             </div>
-            
+            <div className='w-full overflow-auto p-1 text-md mb-10'>
+
+                {mostrarTabla.pagos && <Tabla datos={pagos}/>}
+                {mostrarTabla.compras && <Tabla datos={compras}/>}
+                {mostrarTabla.abonos && <Tabla datos={abonos}/>}
+                {mostrarTabla.ventas && <Tabla datos={ventas}/>}
+            </div>
         </div>
 
         
