@@ -20,15 +20,27 @@ export default function Inventario() {
         productos
     } = useContext(ContextInventario)
     const columnas = {
-        'id': true,
-        'nombre': true,
-        'marca': true,
-        'categoria': true,
-        'medida': true,
-        'precioCompra': true,
-        'precioVenta': true,
-        'cantidad': true,
-        'total': true,
+        id: true,
+        nombre: true,
+        marca: true,
+        categoria: true,
+        medida: true,
+        precio_compra: true,
+        precio_venta: true,
+        cantidad: true,
+        total: true,
+    }
+
+    const renombrar = {
+        id: 'ID',
+        nombre: 'Nombre',
+        marca: 'Marca',
+        categoria: 'Categoria',
+        medida: 'Medida',
+        precio_compra: 'Precio Compra',
+        precio_venta: 'Precio Venta',
+        cantidad: 'Cantidad',
+        total: 'Total',
     }
 
     const [isColumnasVisible, setIsColumnasVisible] = useState(columnas)
@@ -138,7 +150,7 @@ export default function Inventario() {
                 </div>
             </div>
             <div className="w-full px-2">
-                <HabilitadorTabla isVisible = {isColumnasVisible} setVisible={setIsColumnasVisible}/>
+                <HabilitadorTabla isVisible = {isColumnasVisible} setVisible={setIsColumnasVisible} rename={renombrar}/>
             </div>
             <div className="w-full overflow-auto p-1 text-md mb-10">
                 <Tabla
@@ -146,6 +158,7 @@ export default function Inventario() {
                     isVisible = {isColumnasVisible}
                     setIdItemSeleccionado={setIdProductoSeleccionado}
                     total = {4500000}
+                    rename = {renombrar}
                 />
             </div>
             {

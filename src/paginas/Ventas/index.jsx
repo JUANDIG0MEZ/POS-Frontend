@@ -15,7 +15,7 @@ export default function Ventas(){
 
     const [id, setId] = useState("")
     const [nombre, setNombre] = useState("")
-    const [estado, setEStado] = useState("")
+    const [estado, setEStado] = useState({id: null, nombre: null})
 
 
     useEffect(()=> {
@@ -58,7 +58,7 @@ export default function Ventas(){
                 <div className="w-40">
                     <InputLista
                     label={"Estado"}
-                    lista={["Entregado", "Por entregar"]}
+                    lista={[{id: 0, nombre: "Entregado"}, {id: 1, nombre: "Por entregar"}]}
                     valor={estado}
                     setValor={setEStado}/>
 

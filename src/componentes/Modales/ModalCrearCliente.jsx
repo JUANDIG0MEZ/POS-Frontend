@@ -14,7 +14,7 @@ export default function ModalCrearCliente(props){
     const [email, setEmail] = useState("")
     const [tipo, setTipo] = useState("")
 
-    const [listaTipo, setListaTipo] = useState([])
+    const [listaTipo, setListaTipo] = useState([{id: 3, nombre: "Ambos"}, {id: 1, nombre: "Proveedor"}, {id: 2, nombre: "Cliente"}])
 
 
     function cerrarModal(){
@@ -23,19 +23,6 @@ export default function ModalCrearCliente(props){
         }
         
     }
-
-    useEffect(()=>{
-        async function cargarListas(){
-            try {
-                const tipoCliente = await crudDatosClientes.tiposClientes()
-                setListaTipo(tipoCliente)
-            }
-            catch {
-                console.log("Error al cargar los tipos de clientes en el modal crear cliente")
-            }
-        }
-        cargarListas()
-    }, [])
 
 
     return (

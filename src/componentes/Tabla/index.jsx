@@ -31,6 +31,9 @@ export default memo(function Tabla(props) {
                             return null
                         }
                     }
+                    if (props.rename && props.rename[key]){
+                        return <th key={indice} className="p-2 border">{props.rename[key]}</th>
+                    }
                     return <th key={indice} className="p-2 border">{key}</th>
                 })
                 }

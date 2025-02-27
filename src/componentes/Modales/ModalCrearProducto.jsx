@@ -10,10 +10,11 @@ export default function ModalCrearProducto(props){
     const [nombre, setNombre] = useState("")
     const [precioCompra, setPrecioCompra] = useState("")
     const [precioVenta, setPrecioVenta] = useState("")
-    const [medida, setMedida] = useState("")
-    const [marca, setMarca] = useState("")
+
+    const [medida, setMedida] = useState({id: null, nombre: null})
+    const [marca, setMarca] = useState({id: null, nombre: null})
     const [cantidad, setCantidad] = useState("")
-    const [categoria, setCategoria] = useState("")
+    const [categoria, setCategoria] = useState({id: null, nombre: null})
     
     const [listaMarca, setListaMarca] = useState([])
     const [listaCategoria, setListaCategoria] = useState([])
@@ -54,6 +55,9 @@ export default function ModalCrearProducto(props){
         }
         cargarListas()
         }, [])
+
+
+        
 
 
     return (
@@ -130,3 +134,5 @@ export default function ModalCrearProducto(props){
         </div>
     )
 }
+
+

@@ -5,7 +5,7 @@ import InputText from "../../componentes/InputText";
 import InputLista from "../../componentes/InputLista";
 import Boton from "../../componentes/Boton";
 import {Link, useNavigate } from "react-router-dom";
-import CrudDAtosFacturasCompra from "../../servicios/crudDatosFacturasCompra";
+import CrudDatosFacturasCompra from "../../servicios/crudDatosFacturasCompra";
 
 
 export default function Compras(){
@@ -17,13 +17,13 @@ export default function Compras(){
     const [idSeleleccionado, setIdSeleccionado] = useState(null)
     const [id, setId] = useState("")
     const [nombre, setNombre] = useState("")
-    const [estado, setEstado] = useState("")
+    const [estado, setEstado] = useState({id: null, nombre: null})
 
 
     useEffect(()=> {
         async function cargarFacturas(){
             try {
-                const facturas = await CrudDAtosFacturasCompra.facturas()
+                const facturas = await CrudDatosFacturasCompra.facturas()
                 setFacturas(facturas)
             }
             catch {
@@ -50,7 +50,7 @@ export default function Compras(){
                 
                 <InputText label={"Cliente"} setValor={setNombre} valor={nombre}/>
                 <div className="w-40">
-                    <InputLista label={"Estado"} lista={["Entregado", "Por entregar"]} valor={estado} setValor={setEstado}/>
+                    <InputLista label={"Estado"} lista={[{id: 0, nombre: "entregado"}, {id: 1, nombre: "no entregado"}]} valor={estado} setValor={setEstado}/>
 
                 </div>
                 <div className="flex gap-3">

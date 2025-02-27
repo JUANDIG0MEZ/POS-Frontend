@@ -27,7 +27,7 @@ export default  function Clientes() {
 
     useEffect(()=> {
         let datosFiltrados = FiltradoDatos.filtroCadena(clientes, "nombre", nombre)
-        datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "tipo", tipo)
+        datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "tipo", (tipo.nombre || ""))
         datosFiltrados = FiltradoDatos.filtroNumero(datosFiltrados, "id", id)
         setClientesFiltrados(datosFiltrados)
     }, [clientes, nombre, tipo, id])
@@ -61,7 +61,7 @@ export default  function Clientes() {
                     
                     <InputLista 
                     estilo={"w-40"}
-                    lista = {["Proveedor", "Cliente", "Ambos"]}
+                    lista = {[{id: 0, nombre: "Proveedor"}, {id: 1, nombre: "cliente"}, {id: 2, nombre: 'Ambos'}]}
                     label="tipo"
                     valor={tipo}
                     setValor={setTipo}/>

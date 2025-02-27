@@ -62,7 +62,7 @@ export async function tiposClientes() {
 }
 
 export async function cargarFacturasCompra(){
-    return await fetch('http://localhost:3000/api/v1/facturas/compra')
+    return await fetch('http://localhost:3000/api/v1/facturas/compras')
         .then(response => response.json())
         .then(data => {
             return data
@@ -74,7 +74,7 @@ export async function cargarFacturasCompra(){
 
 export async function cargarFacturasVenta(){
     
-    return await fetch('http://localhost:3000/api/v1/facturas/venta')
+    return await fetch('http://localhost:3000/api/v1/facturas/ventas')
         .then(response => response.json())
         .then(data => {
             return data
