@@ -2,7 +2,6 @@ import InputText from "../InputText"
 import InputLista from "../InputLista"
 import Boton from "../Boton"
 import { useState, useEffect} from "react"
-import crudDatosClientes from "../../servicios/crudDatosClientes"
 
 export default function ModalCrearCliente(props){
 

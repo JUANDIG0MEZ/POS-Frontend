@@ -9,8 +9,8 @@ export default memo(function Tabla(props) {
         }
     }
 
-    let colspan = 0
 
+    let colspan = 0
     if (props.isVisible){
         colspan = Object.keys(props.isVisible).filter(key => props.isVisible[key] === true).length
     }
@@ -19,6 +19,8 @@ export default memo(function Tabla(props) {
             colspan = Object.keys(props.datos[0]).length
         }
     }
+
+
     return (
         <table className="w-full">
             <thead>
@@ -42,6 +44,7 @@ export default memo(function Tabla(props) {
             <tbody onClick={seleccionFila} className=" p-1 h-full w-full overflow-auto">
                 { 
                     props.datos.length > 0 && props.datos.map((dato)=>{
+                        console.log(dato)
                         return (<tr
                             key={dato.id} 
                             data-id = {dato.id}

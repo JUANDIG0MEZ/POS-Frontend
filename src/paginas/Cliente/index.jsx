@@ -57,20 +57,21 @@ export default function Cliente() {
         })
     }
 
-    async function cargarPagos(){
+    async function cargarVentas(){
         try{
-            const pagosCargados = await clientePagos()
-            setPagos(pagosCargados)
-            cambiarTabla("pagos")
+            const consultaVentas = await clienteVentas(id)
+            setVentas(consultaVentas)
+            cambiarTabla("ventas")
         }
         catch{
             console.log(`error al cargar los pagos del cliente ${id}`)
         } 
     }
+
     async function cargarcompras(){
         try{
-            const pagosCargados = await clienteCompras()
-            setCompras(pagosCargados)
+            const consultaCompras = await clienteCompras(id)
+            setCompras(consultaCompras)
             cambiarTabla("compras")
         }
         catch{
@@ -80,8 +81,9 @@ export default function Cliente() {
 
     async function cargarAbonos(){
         try{
-            const pagosCargados = await clienteAbonos()
-            setAbonos(pagosCargados)
+            const consultaAbonos = await clienteAbonos(id)
+            setAbonos(consultaAbonos)
+            console.log("abonos:", consultaAbonos)
             cambiarTabla("abonos")
         }
         catch{
@@ -89,16 +91,18 @@ export default function Cliente() {
         } 
     }
 
-    async function cargarVentas(){
+    async function cargarPagos(){
         try{
-            const pagosCargados = await clienteVentas()
-            setVentas(pagosCargados)
-            cambiarTabla("ventas")
+            const consultaPagos = await clientePagos(id)
+            setPagos(consultaPagos)
+            cambiarTabla("pagos")
         }
         catch{
             console.log(`error al cargar los pagos del cliente ${id}`)
         } 
     }
+
+    
 
 
     return (

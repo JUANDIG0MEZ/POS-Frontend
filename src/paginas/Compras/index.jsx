@@ -24,6 +24,7 @@ export default function Compras(){
         async function cargarFacturas(){
             try {
                 const facturas = await CrudDatosFacturasCompra.facturas()
+                console.log(facturas)
                 setFacturas(facturas)
             }
             catch {

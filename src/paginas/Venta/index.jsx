@@ -49,17 +49,17 @@ export default function Venta(){
         async function cargarDatos(){
             try{
                 const factura = await CrudDatosFacturasVenta.factura(id)
-                setFacturaOriginal(factura.data)
-                setFacturaModificada(factura.data)
-                
+                setFacturaOriginal(factura.datos)
+                setFacturaModificada(factura.datos)
+    
                 setFecha(factura.info.fecha)
-                setNombre(factura.info.nombre)
+                setNombre(factura.info.cliente)
                 setDireccion(factura.info.direccion)
                 setTelefono(factura.info.telefono)
                 setEmail(factura.info.email)
                 setEstado(factura.info.estado)
                 setTotal(factura.info.total)
-                setPorPagar(factura.info.porPagar)
+                setPorPagar(factura.info.por_pagar)
             }
             catch{
                 console.log("Error al cargar los productos")
@@ -85,7 +85,7 @@ export default function Venta(){
 
             <div className="flex flex-col gap-6 w-full">
                 <div className="w-full flex gap-3">
-                    <InputLista label="Nombre cliente" valor={nombre}/>
+                    <InputText estilo={"w-[500px]"} label="Nombre cliente" valor = {nombre}/>
                     <InputText estilo={"w-[500px]"} label="Direccion" valor={direccion}/>
                 </div>
                 <div className="w-full flex justify-between">

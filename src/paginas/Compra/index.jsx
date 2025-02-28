@@ -21,7 +21,6 @@ export default function Compra(){
     const [facturaModificada, setFacturaModificada] = useState([])
     const [fecha, setFecha] = useState("")
     const [nombre, setNombre] = useState("")
-    const [direccion, setDireccion] = useState("")
     const [telefono, setTelefono] = useState("")
     const [email, setEmail] = useState("")
     const [estado, setEstado] = useState("")
@@ -40,7 +39,6 @@ export default function Compra(){
     }, [idProductoSeleccionado])
 
     function cancelarCambios(){
-        console.log("cambios cancelados")
         setFacturaModificada(facturaOriginal)
     }
 
@@ -49,12 +47,10 @@ export default function Compra(){
         async function cargarDatos(){
             try{
                 const factura = await CrudDatosFacturasCompra.factura(id)
-                setFacturaOriginal(factura.data)
-                setFacturaModificada(factura.data)
-                
+                setFacturaOriginal(factura.datos)
+                setFacturaModificada(factura.datos)              
                 setFecha(factura.info.fecha)
-                setNombre(factura.info.nombre)
-                setDireccion(factura.info.direccion)
+                setNombre(factura.info.cliente)
                 setTelefono(factura.info.telefono)
                 setEmail(factura.info.email)
                 setEstado(factura.info.estado)
@@ -85,8 +81,8 @@ export default function Compra(){
 
             <div className="flex flex-col gap-6 w-full">
                 <div className="w-full flex gap-3">
-                    <InputLista label="Nombre cliente" valor={nombre} setValor={setNombre}/>
-                    <InputText estilo={"w-[500px]"} label="Direccion" valor={direccion} setValor={setDireccion}/>
+                    <InputText estilo={"w-96"} label="Nombre cliente" valor={nombre} setValor={setNombre}/>
+                    {/*<InputLista label="Nombre cliente" valor={nombre} setValor={setNombre}/>*/}
                 </div>
                 <div className="w-full flex justify-between">
                     <div className="flex gap-3">

@@ -23,6 +23,7 @@ export default function Ventas(){
             try {
                 const facturas = await CrudDatosFacturasVenta.facturas()
                 setFacturas(facturas)
+                console.log(facturas)
             }
             catch {
                 console.log("Error al cargar las facturas de venta")

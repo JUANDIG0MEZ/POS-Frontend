@@ -84,7 +84,7 @@ export async function cargarFacturasVenta(){
 
 export async function cargarFacturaVenta(id){
     
-    return await fetch(`http://localhost:3000/api/v1/facturas/venta/${id}`)
+    return await fetch(`http://localhost:3000/api/v1/facturas/ventas/${id}`)
         .then(response => response.json())
         .then(data => {
             return data
@@ -94,7 +94,7 @@ export async function cargarFacturaVenta(id){
 
 
 export async function cargarFacturaCompra(id){
-    return await fetch(`http://localhost:3000/api/v1/facturas/compra/${id}`)
+    return await fetch(`http://localhost:3000/api/v1/facturas/compras/${id}`)
         .then(response => response.json())
         .then(data => {
             return data
@@ -121,6 +121,7 @@ export async function clienteCompras(id){
 }
 
 export async function clienteAbonos(id){
+    console.log("id:", id)
     return await fetch(`http://localhost:3000/api/v1/clientes/${id}/abonos`)
         .then(response => response.json())
         .then(data => {
