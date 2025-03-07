@@ -44,7 +44,6 @@ export default memo(function Tabla(props) {
             <tbody onClick={seleccionFila} className=" p-1 h-full w-full overflow-auto">
                 { 
                     props.datos.length > 0 && props.datos.map((dato)=>{
-                        console.log(dato)
                         return (<tr
                             key={dato.id} 
                             data-id = {dato.id}

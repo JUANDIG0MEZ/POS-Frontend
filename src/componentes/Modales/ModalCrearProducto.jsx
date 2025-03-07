@@ -8,22 +8,59 @@ import CrudDatosProductos from "../../servicios/crudDatosProductos"
 export default function ModalCrearProducto(props){
 
     const [nombre, setNombre] = useState("")
-    const [precioCompra, setPrecioCompra] = useState("")
-    const [precioVenta, setPrecioVenta] = useState("")
+    const [precioCompra, setPrecioCompra] = useState(null)
+    const [precioVenta, setPrecioVenta] = useState(null)
 
-    const [medida, setMedida] = useState({id: null, nombre: null})
-    const [marca, setMarca] = useState({id: null, nombre: null})
+    const [medida, setMedida] = useState(null)
+    const [marca, setMarca] = useState(null)
     const [cantidad, setCantidad] = useState("")
-    const [categoria, setCategoria] = useState({id: null, nombre: null})
+    const [categoria, setCategoria] = useState(null)
     
     const [listaMarca, setListaMarca] = useState([])
     const [listaCategoria, setListaCategoria] = useState([])
     const [listaMedida, setListaMedida] = useState([])
-
     function cerrarModal(){
         if (props.setShowModal){
             props.setShowModal(false)
         }
+    }
+
+    function crearProducto(){
+        if (nombre){
+            const nuevoProducto = {
+            nombre: nombre,
+            marca: marca,
+            categoria: categoria,
+            medida: medida,
+            precio_compra: precioCompra,
+            precio_venta: precioVenta,
+            cantidad: cantidad }
+            
+            // se eliminan los valores nulos
+            for (const key in nuevoProducto){
+                if (!nuevoProducto[key]){
+                    delete nuevoProducto[key]
+                }
+            }
+
+            fetch("http://localhost:3000/api/v1/productos",{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(nuevoProducto)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+        
+        
+    
     }
 
     useEffect(()=>{
@@ -121,7 +158,9 @@ export default function ModalCrearProducto(props){
                                 onClick={cerrarModal}
                                 texto = "Cancelar"
                                 isNormal = {true}/>
-                            <Boton texto = "Agregar" />
+                            <Boton
+                                onClick={crearProducto}
+                                texto = "Agregar" />
                         </div>
                         
                         

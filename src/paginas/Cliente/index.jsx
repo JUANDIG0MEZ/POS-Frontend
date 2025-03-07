@@ -83,7 +83,6 @@ export default function Cliente() {
         try{
             const consultaAbonos = await clienteAbonos(id)
             setAbonos(consultaAbonos)
-            console.log("abonos:", consultaAbonos)
             cambiarTabla("abonos")
         }
         catch{

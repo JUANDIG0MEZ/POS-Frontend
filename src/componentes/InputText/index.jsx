@@ -30,6 +30,9 @@ export default function InputText(props){
         
         const nuevoValor = e.target.value.replace(regex, "")
         if (props.setValor){
+            if (nuevoValor === ""){
+                props.setValor(null)
+            }
             props.setValor(nuevoValor)
         }
     }

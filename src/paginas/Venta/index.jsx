@@ -40,7 +40,6 @@ export default function Venta(){
     }, [idProductoSeleccionado])
 
     function cancelarCambios(){
-        console.log("cambios cancelados")
         setFacturaModificada(facturaOriginal)
     }
 

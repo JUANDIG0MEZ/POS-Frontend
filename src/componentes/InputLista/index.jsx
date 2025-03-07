@@ -3,13 +3,13 @@ import { FaChevronDown } from "react-icons/fa"
 
 export default function InputLista(props) {
     const [showLista, setShowLista] = useState(false)
-    console.log(props.valor)
+
+
     function seleccionarItem(e){
         const fila = e.target.closest('li')
         if (fila){
             const valor = fila.textContent
-            const key = fila.getAttribute("key")
-            const nuevoValor = {id: key, nombre: valor}
+            const nuevoValor = valor
             setShowLista(false)
             props.setValor(nuevoValor)
         }      
@@ -24,10 +24,8 @@ export default function InputLista(props) {
             regex = /[^a-zA-Z0-9\s\p{P}]/gu;
         }
 
-        const nuevoValorNombre = e.target.value.replace(regex, "")
+        const nuevoValor = e.target.value.replace(regex, "")
         if (props.setValor){
-            
-            const nuevoValor = { id: null, nombre: nuevoValorNombre }
             props.setValor(nuevoValor)
 
         }        
@@ -49,10 +47,10 @@ export default function InputLista(props) {
     function listaFiltrada(nuevoValor){
         if (props.lista){
             if (props.isNumber){
-                return (props.lista.filter(item => item.nombre.toString().includes(nuevoValor.nombre || "")))
+                return (props.lista.filter(item => item.toString().includes(nuevoValor || "")))
             }
             else{
-                return (props.lista.filter(item => item.nombre.toLowerCase().includes((nuevoValor.nombre || "").toLowerCase())))
+                return (props.lista.filter(item => item.toLowerCase().includes((nuevoValor || "").toLowerCase())))
             }
 
         }
@@ -72,7 +70,7 @@ export default function InputLista(props) {
                 onFocus={()=>{setShowLista(true)}} 
                 onBlur={()=>{setShowLista(false)}}
                 onChange={establecerValor}
-                value = {props.valor.nombre || ""}
+                value = {props.valor || ""}
                 className={`${props.isNumber ? "tracking-wider" : "tracking-wide"} w-full border px-2 py-1 pr-6 focus:outline-none  ${showLista ? "rounded-t-md border-b-white": "rounded-md" }   `}/>
 
                 <FaChevronDown
@@ -83,8 +81,8 @@ export default function InputLista(props) {
                 onMouseDown={seleccionarItem}
                 className={`absolute w-full z-10 bg-white border overflow-y-auto rounded-b-md shadow-lg max-h-52 ${showLista ? "block" : "hidden"}`}>
                     {
-                        listaFiltrada(props.valor) && listaFiltrada(props.valor).slice(0, 20).map((item)=>{
-                            return <li key={item.id} className="hover:bg-red-300 px-2 py-1 rounded-sm">{item.nombre}</li>
+                        listaFiltrada(props.valor) && listaFiltrada(props.valor).slice(0, 20).map((item, indice)=>{
+                            return <li key={indice} className="hover:bg-red-300 px-2 py-1 rounded-sm">{item}</li>
                         })
                     }
             </ul>

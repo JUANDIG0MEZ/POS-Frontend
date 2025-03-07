@@ -121,7 +121,6 @@ export async function clienteCompras(id){
 }
 
 export async function clienteAbonos(id){
-    console.log("id:", id)
     return await fetch(`http://localhost:3000/api/v1/clientes/${id}/abonos`)
         .then(response => response.json())
         .then(data => {

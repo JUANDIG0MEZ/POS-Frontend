@@ -6,25 +6,32 @@ import InputLista from "../../componentes/InputLista";
 import Boton from "../../componentes/Boton";
 import {Link, useNavigate } from "react-router-dom";
 import CrudDatosFacturasCompra from "../../servicios/crudDatosFacturasCompra";
-
+import { FiltradoDatos } from "../../servicios/filtradoDatos";
 
 export default function Compras(){
 
     const [facturas, setFacturas] = useState([])
+    const [facturasFiltradas, setFacturasFiltradas] = useState([])
     const navigate = useNavigate()
+
+    console.log(facturas)
 
 
     const [idSeleleccionado, setIdSeleccionado] = useState(null)
-    const [id, setId] = useState("")
-    const [nombre, setNombre] = useState("")
-    const [estado, setEstado] = useState({id: null, nombre: null})
+    const [id, setId] = useState(null)
+    const [nombre, setNombre] = useState(null)
+    const [estado, setEstado] = useState(null)
+    const [fechaInicio, setFechaInicio] = useState("")
+    const [fechaFinal, setFechaFinal] = useState("")
 
+    useEffect(()=> {
+        setFacturasFiltradas(FiltradoDatos.filtroFecha(facturas, 'fecha', fechaInicio, fechaFinal))
+    }, [facturas, fechaInicio, fechaFinal])
 
     useEffect(()=> {
         async function cargarFacturas(){
             try {
                 const facturas = await CrudDatosFacturasCompra.facturas()
-                console.log(facturas)
                 setFacturas(facturas)
             }
             catch {
@@ -40,6 +47,18 @@ export default function Compras(){
         }
     }, [idSeleleccionado])
 
+    useEffect(()=> {
+        setFacturasFiltradas(FiltradoDatos.filtroNumero(facturas, 'id',id))
+    }, [facturas, id])
+
+    useEffect(()=> {
+        setFacturasFiltradas(FiltradoDatos.filtroCadena(facturas, 'cliente',nombre))
+    }, [facturas, nombre])
+
+    useEffect(()=> {
+        setFacturasFiltradas(FiltradoDatos.filtroCadena(facturas, 'estado',estado))
+    }, [facturas, estado])
+
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-2 overflow-auto">
             <h1 className="text-2xl font-bold w-fit mb-5">FACTURAS DE COMPRAS</h1>
@@ -51,12 +70,12 @@ export default function Compras(){
                 
                 <InputText label={"Cliente"} setValor={setNombre} valor={nombre}/>
                 <div className="w-40">
-                    <InputLista label={"Estado"} lista={[{id: 0, nombre: "entregado"}, {id: 1, nombre: "no entregado"}]} valor={estado} setValor={setEstado}/>
+                    <InputLista label={"Estado"} lista={["Entregado", "No entregado"]} valor={estado} setValor={setEstado}/>
 
                 </div>
                 <div className="flex gap-3">
-                    <FechaInput label={"Desde"}/>
-                    <FechaInput label={"Hasta"}/>
+                    <FechaInput label={"Desde"} valor = {fechaInicio} setValor= {setFechaInicio}/>
+                    <FechaInput label={"Hasta"} valor= {fechaFinal} setValor= {setFechaFinal}/>
                 </div>
                 <Link className="" to={'/comprar'}><Boton texto={"+"}/></Link>
 
@@ -64,7 +83,7 @@ export default function Compras(){
             
             <div>
             <Tabla
-                datos={facturas}
+                datos={facturasFiltradas}
                 setIdItemSeleccionado = {setIdSeleccionado}
                 />
             </div>

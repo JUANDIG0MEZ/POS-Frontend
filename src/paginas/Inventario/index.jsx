@@ -44,11 +44,11 @@ export default function Inventario() {
     }
 
     const [isColumnasVisible, setIsColumnasVisible] = useState(columnas)
-    const [busquedaNombre, setBusquedaNombre] = useState("")
-    const [busquedaMarca, setBusquedaMarca] = useState("")
-    const [busquedaCategoria, setBusquedaCategoria] = useState("")
-    const [busquedaId, setBusquedaId] = useState("")
-    const [busquedaMedida, setBusquedaMedida] = useState("")
+    const [busquedaNombre, setBusquedaNombre] = useState(null)
+    const [busquedaMarca, setBusquedaMarca] = useState(null)
+    const [busquedaCategoria, setBusquedaCategoria] = useState(null)
+    const [busquedaId, setBusquedaId] = useState(null)
+    const [busquedaMedida, setBusquedaMedida] = useState(null)
     const [productosFiltrados, setProductosFiltrados] = useState([])
     const [productoSeleccionado, setProductoSeleccionado] = useState([])
     const [idProductoSeleccionado, setIdProductoSeleccionado] = useState("")
@@ -84,11 +84,11 @@ export default function Inventario() {
 
 
     function limipiarBusquedas(){
-        setBusquedaNombre("")
-        setBusquedaMarca("")
-        setBusquedaCategoria("")
-        setBusquedaId("")
-        setBusquedaMedida("")
+        setBusquedaNombre(null)
+        setBusquedaMarca(null)
+        setBusquedaCategoria(null)
+        setBusquedaId(null)
+        setBusquedaMedida(null)
     }
 
     return (
@@ -127,6 +127,9 @@ export default function Inventario() {
 
                     </div>
                     <div className="flex w-full items-center justify-between gap-3">
+                        <div>
+                            
+                        </div>
                         <InputText 
                         estilo="w-72"
                         label="Categoria" 
@@ -135,6 +138,7 @@ export default function Inventario() {
                         labelSeleccionado={productoSeleccionado.categoria}/>
                         <InputText
                         label="Medida"
+                        estilo="w-72"
                         valor={busquedaMedida}
                         setValor={setBusquedaMedida}
                         labelSeleccionado={productoSeleccionado.medida}/>
@@ -142,7 +146,6 @@ export default function Inventario() {
                         <Boton texto="Limpiar" onClick={limipiarBusquedas} isNormal={true}/>
                         
 
-                        <Boton texto="Eliminar" isNormal={true}/>
                         <Boton onClick={()=>setShowModalModificar(true)} texto="Modificar" isNormal={true}/>
                         <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar" isNormal={false}/>
                         
