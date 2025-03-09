@@ -12,9 +12,11 @@ import Perfil from './paginas/Perfil'
 import './App.css'
 import Dashboard from './componentes/Dashboard'
 import Cliente from './paginas/Cliente'
+import {Toaster} from 'sonner'
 function App() {
   return (
     <>
+      <Toaster position='top-right' closeButton richColors/>
       <BrowserRouter>
         <Routes>
           <Route element={<Dashboard />}>

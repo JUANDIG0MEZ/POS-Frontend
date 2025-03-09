@@ -26,6 +26,7 @@ const InventarioProvider = ({children}) => {
                 console.log('Error al cargar clientes')
             }
         }
+        
         cargar()
     }, [])
 

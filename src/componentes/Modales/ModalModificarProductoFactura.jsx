@@ -1,6 +1,5 @@
 
-
-import InputText from "../InputText"
+import InputNumber from "../InputNumber"
 import Boton from "../Boton"
 import { useState, useEffect} from "react"
 
@@ -8,16 +7,17 @@ import { useState, useEffect} from "react"
 
 
 export default function ModalModificarProductoFactura(props){
+    const id = props.idProductoSeleccionado
+    const indiceFila = encontrarIndiceFila(id)
+    const productoSeleccionado = props.datos[indiceFila]
 
-    const productoSeleccionado = props.productoSeleccionado
-    const [nombre, setNombre] = useState(productoSeleccionado.nombre)
     const [precio, setPrecio]= useState(productoSeleccionado.precio)
-    const [medida, setMedida] = useState(productoSeleccionado.medida)
-    const [marca, setMarca] = useState(productoSeleccionado.marca)
     const [cantidad, setCantidad] = useState(productoSeleccionado.cantidad)
-    const [categoria, setCategoria] = useState(productoSeleccionado.categoria)
-    const [total, setTotal] = useState(undefined)
+    const [total, setTotal] = useState(productoSeleccionado.subtotal)
 
+    function encontrarIndiceFila(id){
+        return props.datos.findIndex(fila => fila.id == id)
+    }
 
     function cerrarModal(){
         if (props.setShowModal){
@@ -26,12 +26,24 @@ export default function ModalModificarProductoFactura(props){
         
     }
 
-    
-
     useEffect(()=>{
-        setTotal(cantidad * precio)
+        setTotal(cantidad * precio) 
     }, [cantidad, precio])
 
+
+    function guardarCambios(){
+        const productoModificado = {
+            ...productoSeleccionado,
+            cantidad: cantidad,
+            precio: precio,
+            subtotal: total
+        }
+        const nuevosDatos = [...props.datos]
+        nuevosDatos[indiceFila] = productoModificado
+        console.log(nuevosDatos)
+        props.setDatos(nuevosDatos)
+        cerrarModal()
+    }
 
 
 
@@ -39,12 +51,12 @@ export default function ModalModificarProductoFactura(props){
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="flex bg-white p-5 rounded-lg w-[800px] items-center gap-4">    
                 <div className="flex flex-col flex-1 gap-5">
-                    <h2 className="w-full text-xl font-semibold mb-5">MODIFICAR PRODUCTO: <span className="font-normal text-lg">{nombre}</span></h2>
+                    <h2 className="w-full text-xl font-semibold mb-5">MODIFICAR PRODUCTO: <span className="font-bold text-lg text-red-400">{productoSeleccionado.nombre}</span></h2>
                     <div className="flex gap-3">
-                        <InputText estilo={'w-32'} label="Cantidad" valor={cantidad} setValor={setCantidad} isNumber={true}/>
-                        <InputText estilo={'w-60'} label="Precio" valor={precio} setValor={setPrecio} isNumber={true}/>
+                        <InputNumber estilo={'w-32'} label="Cantidad" valor={cantidad} setValor={setCantidad} format={true}/>
+                        <InputNumber estilo={'w-60'} label="Precio" valor={precio} setValor={setPrecio} format={true}/>
                         <div className="pointer-events-none">
-                            <InputText label="Total" valor={total} isNumber={true}/>
+                            <InputNumber label="Total" valor={total} format={true}/>
                         </div>
 
                     </div>
@@ -54,7 +66,7 @@ export default function ModalModificarProductoFactura(props){
                             <Boton texto = "Eliminar Producto" isNormal={true}/>
                         </div>
                         
-                        <Boton texto = "Guardar cambios" />
+                        <Boton texto = "Guardar cambios" onClick={guardarCambios} />
                     </div>
 
                 </div>

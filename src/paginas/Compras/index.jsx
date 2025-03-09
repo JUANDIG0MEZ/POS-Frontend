@@ -7,14 +7,14 @@ import Boton from "../../componentes/Boton";
 import {Link, useNavigate } from "react-router-dom";
 import CrudDatosFacturasCompra from "../../servicios/crudDatosFacturasCompra";
 import { FiltradoDatos } from "../../servicios/filtradoDatos";
-
+import { toast} from 'sonner';
 export default function Compras(){
 
     const [facturas, setFacturas] = useState([])
     const [facturasFiltradas, setFacturasFiltradas] = useState([])
     const navigate = useNavigate()
 
-    console.log(facturas)
+    
 
 
     const [idSeleleccionado, setIdSeleccionado] = useState(null)
@@ -29,16 +29,31 @@ export default function Compras(){
     }, [facturas, fechaInicio, fechaFinal])
 
     useEffect(()=> {
-        async function cargarFacturas(){
-            try {
-                const facturas = await CrudDatosFacturasCompra.facturas()
-                setFacturas(facturas)
+        toast.promise(
+            fetch('http://localhost:3000/api/v1/facturas/compras')
+                .then(async response => {
+                    if (!response.ok){
+                        throw new Error(`Error ${response.status}: ${response.statusText}`)
+                    }
+
+                    const data = await response.json()
+                    console.log(data)
+                    if (data.status === 'success'){
+                        return data
+                    }
+                    else {
+                        throw new Error(data.message)
+                    }
+                }),
+            {
+                loading: 'Cargando facturas de compras',
+                success: (data) => {
+                    setFacturas(data.body)
+                    return `${data.body.length} Facturas cargadas`;
+                },
+                error: 'Error al cargar las facturas de compras'
             }
-            catch {
-                console.log("Error al cargar las facturas de compras")
-            }
-        }
-        cargarFacturas()
+        )
     }, [])
 
     useEffect(()=>{
