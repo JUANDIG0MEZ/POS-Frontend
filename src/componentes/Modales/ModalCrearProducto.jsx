@@ -1,11 +1,17 @@
 import InputText from "../InputText"
+import InputNumber from "../InputNumber"
 import InputLista from "../InputLista"
 import Boton from "../Boton"
 import { useEffect, useState} from "react"
 import DropZone from "../DropZona"
 import CrudDatosProductos from "../../servicios/crudDatosProductos"
-
+import  {toast} from 'sonner'
+import { useContext } from "react"
+import { ContextInventario } from "../../contextInventario"
 export default function ModalCrearProducto(props){
+
+    // Se trae la lista de productos
+    const {productos, setProductos} = useContext(ContextInventario)
 
     const [nombre, setNombre] = useState("")
     const [precioCompra, setPrecioCompra] = useState(null)
@@ -42,21 +48,41 @@ export default function ModalCrearProducto(props){
                     delete nuevoProducto[key]
                 }
             }
-
-            fetch("http://localhost:3000/api/v1/productos",{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(nuevoProducto)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
+            console.log("Promesa iniciada")
+            toast.promise(
+                fetch("http://localhost:3000/api/v1/productos",{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(nuevoProducto)
                 })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+                .then(async response => {
+                    if (!response.ok){
+                        throw new Error(`Error ${response.status}: ${response.statusText}`)
+                    }
+                    const data = await response.json()
+                    console.log(data)
+                    if (data.status === 'success'){
+
+                        return data.body
+                    }
+                    else {
+                        throw new Error(data.message)
+                    }
+                })
+            , {
+                loading: "Creando producto",
+                success: (data) => {
+                    // se agrega el nuevo producto a la lista de productos
+                    setProductos([...productos, data])
+                    return "Producto creado"
+                },
+                error: (error) => error.message
+            })
+        }
+        else{
+            toast.warning("El nombre del producto es obligatorio")
         }
         
         
@@ -122,30 +148,30 @@ export default function ModalCrearProducto(props){
                        
                         <InputLista label="Categoria" valor={categoria} setValor={setCategoria} lista = {listaCategoria} />
                         <InputLista estilo={"w-72"} label="Medida" valor= {medida} setValor={setMedida} lista = {listaMedida}/>
-                        <InputText
+                        <InputNumber
                             estilo="w-48"
                             label="Cantidad"
                             valor={cantidad}
                             setValor={setCantidad}
-                            isNumber={true}
+                            format={true}
                             />
                     </div>
                     <div className="flex gap-3 items-center justify-between">
                         <div className="flex gap-3 items-center">
-                            <InputText 
+                            <InputNumber
                                 estilo="w-52"
                                 label="Valor Compra" 
                                 valor={precioCompra}
                                 setValor={setPrecioCompra}
-                                isNumber={true}
+                                format={true}
                                 />
                                 
-                            <InputText
+                            <InputNumber
                                 estilo="w-52"
                                 label="Valor Venta"
                                 valor={precioVenta}
                                 setValor={setPrecioVenta}
-                                isNumber={true}
+                                format={true}
                                 />
                             <Boton
                             onClick={cerrarModal}

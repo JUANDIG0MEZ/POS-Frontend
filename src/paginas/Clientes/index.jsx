@@ -61,7 +61,7 @@ export default  function Clientes() {
                     
                     <InputLista 
                     estilo={"w-40"}
-                    lista = {[{id: 0, nombre: "Proveedor"}, {id: 1, nombre: "cliente"}, {id: 2, nombre: 'Ambos'}]}
+                    lista = {["Proveedor", "Cliente", "Ambos"]}
                     label="tipo"
                     valor={tipo}
                     setValor={setTipo}/>

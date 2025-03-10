@@ -5,8 +5,7 @@ import InputText from "../../componentes/InputText";
 import InputLista from "../../componentes/InputLista";
 import Boton from "../../componentes/Boton";
 import {Link, useNavigate } from "react-router-dom";
-import CrudDatosFacturasVenta from "../../servicios/crudDatosFacturasVentas";
-
+import {toast} from 'sonner';
 export default function Ventas(){
 
     const navigate = useNavigate()
@@ -15,20 +14,35 @@ export default function Ventas(){
 
     const [id, setId] = useState("")
     const [nombre, setNombre] = useState("")
-    const [estado, setEStado] = useState({id: null, nombre: null})
+    const [estado, setEStado] = useState(null)
 
 
     useEffect(()=> {
-        async function cargarFacturas(){
-            try {
-                const facturas = await CrudDatosFacturasVenta.facturas()
-                setFacturas(facturas)
-            }
-            catch {
-                console.log("Error al cargar las facturas de venta")
-            }
-        }
-        cargarFacturas()
+        toast.promise(
+            fetch('http://localhost:3000/api/v1/facturas/ventas')
+                .then(async response => {
+                    if (!response.ok){
+                        throw new Error(`Error ${response.status}: ${response.statusText}`)
+                    }
+
+                    const data = await response.json()
+
+                    if (data.status === 'success'){
+                        return data
+                    }
+                    else {
+                        throw new Error(data.message)
+                    }
+                }),
+                {
+                    loading: 'Cargando facturas de ventas',
+                    success: (data) => {
+                        setFacturas(data.body)
+                        return `${data.body.length} Facturas cargadas`;
+                    },
+                    error: 'Error al cargar las facturas de venta'
+                }
+        )
     }, [])
 
     useEffect(()=>{
@@ -58,7 +72,7 @@ export default function Ventas(){
                 <div className="w-40">
                     <InputLista
                     label={"Estado"}
-                    lista={[{id: 0, nombre: "Entregado"}, {id: 1, nombre: "Por entregar"}]}
+                    lista={["Entregado", "Por entregar"]}
                     valor={estado}
                     setValor={setEStado}/>
 
