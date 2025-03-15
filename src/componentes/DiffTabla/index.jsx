@@ -12,7 +12,7 @@ export default memo(function DiffTabla(props) {
         }
     }
 
-
+    console.log('DiffTabla', props.tabla1, props.tabla2)
 
     let colspan = 0
     if (props.tabla1.length > 0){

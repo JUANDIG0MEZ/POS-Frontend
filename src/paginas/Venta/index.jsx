@@ -7,34 +7,36 @@ import RadioBoton from "../../componentes/RadioBoton"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
-import CrudDatosProductos from "../../servicios/crudDatosProductos"
-import CrudDatosFacturasVenta from "../../servicios/crudDatosFacturasVentas"
+import {toast} from 'sonner'
+import DiffTabla from "../../componentes/DiffTabla"
 
 export default function Venta(){
 
     const {id} = useParams()
 
     const [showModal, setShowModal] = useState(false)
-    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(undefined)
-    const [productoSeleccionado, setProductoSeleccionado] = useState(undefined)
+    //const [showModalConfirmar, setShowModalConfirmar] = useState(false)
+    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(null)
 
+    const [facturaOriginal, setFacturaOriginal] = useState([])
     const [facturaModificada, setFacturaModificada] = useState([])
+
     const [fecha, setFecha] = useState("")
     const [nombre, setNombre] = useState("")
     const [direccion, setDireccion] = useState("")
     const [telefono, setTelefono] = useState("")
     const [email, setEmail] = useState("")
     const [estado, setEstado] = useState("")
+
     const [total, setTotal] = useState("")
-    const [porPagar, setPorPagar] = useState("")
-    const [facturaOriginal, setFacturaOriginal] = useState([])
+    const [totalModificado, setTotalModificado] = useState(null)
+    const [totalTabla, setTotalTabla] = useState(null)
+    const [pagado, setPagado] = useState(null)
 
     useEffect(()=>{
 
         if (idProductoSeleccionado){
             setShowModal(true)      
-            const producto = CrudDatosProductos.encontrarPorId(idProductoSeleccionado, facturaModificada)
-            setProductoSeleccionado(producto)
         }
 
     }, [idProductoSeleccionado])
@@ -43,36 +45,109 @@ export default function Venta(){
         setFacturaModificada(facturaOriginal)
     }
 
+
     useEffect(()=>{
-
-        async function cargarDatos(){
-            try{
-                const factura = await CrudDatosFacturasVenta.factura(id)
-                setFacturaOriginal(factura.datos)
-                setFacturaModificada(factura.datos)
-    
-                setFecha(factura.info.fecha)
-                setNombre(factura.info.cliente)
-                setDireccion(factura.info.direccion)
-                setTelefono(factura.info.telefono)
-                setEmail(factura.info.email)
-                setEstado(factura.info.estado)
-                setTotal(factura.info.total)
-                setPorPagar(factura.info.por_pagar)
+        toast.promise(
+            fetch(`http://localhost:3000/api/v1/facturas/ventas/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(async (response)=> {
+                if (!response.ok){
+                    throw new Error(`Error ${response.status}: ${response.statusText}`)
+                }
+                const data = await response.json()
+                if (data.status === 'success'){
+                    return data.body
+                }
+                else {
+                    throw new Error(data.message)
+                }
+            })
+            ,
+            {
+                loading: "Cargando datos de la factura",
+                success: (data) => {
+                    setFacturaOriginal(data.datos)
+                    setFacturaModificada(data.datos)
+                    setFecha(data.info.fecha)
+                    setNombre(data.info.cliente)
+                    setTelefono(data.info.telefono)
+                    setEmail(data.info.email)
+                    setDireccion(data.info.direccion)
+                    setEstado(data.info.estado)
+                    setPagado(data.info.pagado)
+                    setTotal(data.info.total)
+                    setTotalTabla(data.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
+                    return "Datos cargados correctamente"
+                },
+                error: "Error al cargar los datos de la factura"
             }
-            catch{
-                console.log("Error al cargar los productos")
-            }
-        }
-
-        cargarDatos()
-
+        )
     }, [])
+
+
+    function guardarCambios(){
+        const detalles = facturaModificada.map(item => {
+            return {
+                producto_id: item.id,
+                cantidad: item.cantidad,
+                precio: item.precio ,
+                subtotal: item.subtotal
+            }
+        })
+
+        toast.promise(
+            fetch(`http://localhost:3000/api/v1/facturas/ventas/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(detalles)
+            })
+            .then(async (response)=> {
+                if (!response.ok){
+                    throw new Error(`Error ${response.status}: ${response.statusText}`)
+                }
+
+                const data = await response.json()
+
+                if (data.status === 'success'){
+                    return data
+                }
+                else {
+                    throw new Error(data.message)
+                }
+            }),
+            {
+                loading: "Guardando cambios",
+                success: (data) => {
+                    setFacturaOriginal(facturaModificada)
+                    setTotalTabla(totalModificado)
+                    setTotal(data.body.total)
+                    if ("pagado" in data.body){
+                        setPagado(data.body.pagado)
+                    }
+                    return data.message
+                },
+                error: (error) => error
+            }
+        )
+    
+    }
+
+
+    useEffect(()=> {
+        setTotalModificado(facturaModificada.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
+    }, [facturaModificada])
 
 
     function cambiarEstado(nuevoValor){
         setEstado(nuevoValor)
     }
+
     return (
         <div className="w-[1400px] flex flex-col mx-auto gap-3">
             
@@ -98,7 +173,7 @@ export default function Venta(){
                         <RadioBoton onChange={cambiarEstado} name="estado" valor="Entregado" label="Entregado" checked={estado === "Entregado"}/>
                     </div>
                     <div className="flex gap-3">
-                        <InputText estilo={"w-48"} label="Pagado" valor={porPagar} isNumber={true} isPrice={true}/>
+                        <InputText estilo={"w-48"} label="Pagado" valor={pagado} isNumber={true} isPrice={true}/>
                         <InputText estilo={"w-48"} label="Total" valor={total} isNumber={true} isPrice={true}/>
                     </div>
                     
@@ -106,7 +181,7 @@ export default function Venta(){
             </div>
             <div>
                 <h1 className="text-xl font-bold">FACTURA DE COMPRA</h1>
-                <Tabla datos={facturaModificada} total={total} setIdItemSeleccionado={setIdProductoSeleccionado}></Tabla>
+                <DiffTabla tabla1={facturaOriginal} tabla2={facturaModificada} total={totalTabla} total2= {totalModificado} setIdItemSeleccionado={setIdProductoSeleccionado}/>
             </div>
             
             <div className="flex justify-between">
@@ -114,7 +189,7 @@ export default function Venta(){
                 
                 <div className="flex gap-3">
                     <Boton texto="Cancelar cambios" isNormal={true} onClick={cancelarCambios}/>
-                    <Boton texto="Guardar Cambios"/>
+                    <Boton texto="Guardar Cambios" onClick={() => guardarCambios()}/>
                 </div>
                 
             </div>
@@ -122,7 +197,7 @@ export default function Venta(){
             <div>
                 
             </div>
-                {showModal && <ModalModificarProductoFactura setShowModal={setShowModal} productoSeleccionado={productoSeleccionado} />}
+                {showModal && <ModalModificarProductoFactura setShowModal={setShowModal} idProductoSeleccionado={idProductoSeleccionado} datos={facturaModificada} setDatos={setFacturaModificada} />}
             <div>
             </div>
         </div>

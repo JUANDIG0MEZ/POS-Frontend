@@ -11,7 +11,7 @@ export class FiltradoDatos {
         
     }
     static filtroNumero(datos, propiedad, valor){
-        if (valor === null){
+        if (!valor){
             return datos
         }
         return datos.filter(dato => dato[propiedad].toString().toLowerCase().includes(valor.toString()))

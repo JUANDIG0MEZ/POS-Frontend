@@ -13,8 +13,8 @@ export default function InputLista(props) {
             const nuevoValor = valor
             setShowLista(false)
             props.setValor(nuevoValor)
-            if (props.idSeleccionado){
-                props.idSeleccionado(id)
+            if (props.setIdSeleccionado){
+                props.setIdSeleccionado(id)
             }
         }      
     }
@@ -31,7 +31,9 @@ export default function InputLista(props) {
         const nuevoValor = e.target.value.replace(regex, "")
         if (props.setValor){
             props.setValor(nuevoValor)
-
+            if (props.setIdSeleccionado){
+                props.setIdSeleccionado(null)
+            }
         }        
     }
 
@@ -86,7 +88,7 @@ export default function InputLista(props) {
                 className={`absolute w-full z-10 bg-white border overflow-y-auto rounded-b-lg shadow-lg max-h-52 ${showLista ? "block" : "hidden"}`}>
                     {
                         listaFiltrada(props.valor) && listaFiltrada(props.valor).slice(0, 20).map((item, indice)=>{
-                            return <li key={indice} data-id={item.id} className="hover:bg-red-300 text-stone-800  p-2 rounded-lg">{item.nombre}</li>
+                            return <li key={indice} data-id={item.id} className="hover:bg-red-300 text-gray-600  p-2 rounded-lg">{item.nombre}</li>
                         })
                     }
             </ul>

@@ -5,16 +5,14 @@ import InputText from "../../componentes/InputText";
 import InputLista from "../../componentes/InputLista";
 import Boton from "../../componentes/Boton";
 import {Link, useNavigate } from "react-router-dom";
-import CrudDatosFacturasCompra from "../../servicios/crudDatosFacturasCompra";
 import { FiltradoDatos } from "../../servicios/filtradoDatos";
 import { toast} from 'sonner';
 export default function Compras(){
 
     const [facturas, setFacturas] = useState([])
-    const [facturasFiltradas, setFacturasFiltradas] = useState([])
+    const [facturasFiltradas, setFacturasFiltradas] = useState(facturas)
     const navigate = useNavigate()
 
-    
     const renombrar = {
         id: 'ID',
         fecha: 'Fecha',
@@ -31,10 +29,9 @@ export default function Compras(){
     const [estado, setEstado] = useState(null)
     const [fechaInicio, setFechaInicio] = useState("")
     const [fechaFinal, setFechaFinal] = useState("")
+    const [idEstado, setIdEstado] = useState(null)
 
-    useEffect(()=> {
-        setFacturasFiltradas(FiltradoDatos.filtroFecha(facturas, 'fecha', fechaInicio, fechaFinal))
-    }, [facturas, fechaInicio, fechaFinal])
+    
 
     useEffect(()=> {
         toast.promise(
@@ -70,16 +67,11 @@ export default function Compras(){
     }, [idSeleleccionado])
 
     useEffect(()=> { 
-        setFacturasFiltradas(FiltradoDatos.filtroNumero(facturas, 'id',id))
-    }, [facturas, id])
-
-    useEffect(()=> {
-        setFacturasFiltradas(FiltradoDatos.filtroCadena(facturas, 'cliente',nombre))
-    }, [facturas, nombre])
-
-    useEffect(()=> {
-        setFacturasFiltradas(FiltradoDatos.filtroCadena(facturas, 'estado',estado))
-    }, [facturas, estado])
+        let filtradas = FiltradoDatos.filtroNumero(facturas, 'estado_id', idEstado)
+        filtradas = FiltradoDatos.filtroNumero(filtradas, 'id', id)
+        filtradas = FiltradoDatos.filtroCadena(filtradas, 'cliente', nombre)
+        setFacturasFiltradas(FiltradoDatos.filtroFecha(filtradas, 'fecha', fechaInicio, fechaFinal))
+    }, [facturas, id, idEstado, nombre, fechaInicio, fechaFinal])
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-2 overflow-auto">
@@ -96,7 +88,7 @@ export default function Compras(){
                 
                 <InputText label={"Cliente"} setValor={setNombre} valor={nombre}/>
                 <div className="w-40">
-                    <InputLista label={"Estado"} lista={[{id: 1, nombre: "Entregado"}, {id: 2, nombre: "No entregado"}]} valor={estado} setValor={setEstado}/>
+                    <InputLista label={"Estado"} lista={[{id: 1, nombre: "Recibidos"}, {id: 2, nombre: "No recibido"}]} valor={estado} setValor={setEstado} setIdSeleccionado={setIdEstado}/>
 
                 </div>
                 

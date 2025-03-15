@@ -40,7 +40,6 @@ export default function ModalModificarProductoFactura(props){
         }
         const nuevosDatos = [...props.datos]
         nuevosDatos[indiceFila] = productoModificado
-        console.log(nuevosDatos)
         props.setDatos(nuevosDatos)
         cerrarModal()
     }

@@ -32,7 +32,7 @@ export default function InputText(props){
             onChange={establecerValor}
             type="text" 
             value={props.valor || ""}
-            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-rose-600 ring-red-300 font-semibold text-gray-600`}/>
+            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500 ring-red-300 font-semibold text-gray-600`}/>
         </div>
     )
 }

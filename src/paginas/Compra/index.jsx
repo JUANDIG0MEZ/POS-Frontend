@@ -17,20 +17,10 @@ export default function Compra(){
 
     const [showModal, setShowModal] = useState(false)
     const [showModalConfirmar, setShowModalConfirmar] = useState(false)
-    const [showModalSobrante, setShowModalSobrante] = useState(false)
-    const [pagadoSobrante, setPagadoSobrante] = useState(false)
-    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(undefined)
-    const [productoSeleccionado, setProductoSeleccionado] = useState(undefined)
+    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(null)
 
     const [facturaOriginal, setFacturaOriginal] = useState([])
     const [facturaModificada, setFacturaModificada] = useState([])
-
-    const mensajesPrueba = [
-        {titulo: "Error", mensaje: "No se pudo guardar los cambios, este mensaje es un poco mas largo", tipo: "error"},
-        {titulo: "Exito", mensaje: "Cambios guardados correctamente", tipo: "success"},
-        {titulo: "Advertencia", mensaje: "No se puede modificar el producto", tipo: "warning"},
-        {titulo: "Informacion", mensaje: "El producto se ha eliminado", tipo: "info"}
-    ]
 
     const [fecha, setFecha] = useState("")
     const [nombre, setNombre] = useState("")
