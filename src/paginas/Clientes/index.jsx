@@ -16,6 +16,18 @@ export default  function Clientes() {
         clientes
     } = useContext(ContextInventario)
 
+    const renombrar = {
+        id: 'ID',
+        nombre: 'Nombre',
+        direccion: 'Direccion',
+        telefono: 'Telefono',
+        email: 'Email',
+        tipo: 'Tipo',
+        total: 'Total',
+        por_pagarle: 'Por Pagarle',
+        debe: 'Debe'
+
+    }
 
     const [idSeleleccionado, setIdSeleccionado] = useState("")
     const [clientesFiltrados, setClientesFiltrados] = useState([])
@@ -39,7 +51,7 @@ export default  function Clientes() {
     }, [ idSeleleccionado ])
 
     return (
-        <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
+        <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 ">
             <div className="flex flex-col gap-2">
                 <div className="flex justify-between">
                     <h2 className="text-2xl font-semibold mb-5">CLIENTES</h2>
@@ -61,7 +73,7 @@ export default  function Clientes() {
                     
                     <InputLista 
                     estilo={"w-40"}
-                    lista = {["Proveedor", "Cliente", "Ambos"]}
+                    lista = {[{id: 1, nombre: "Proveedor"}, {id: 2, nombre: "Cliente"}, {id:3, nombre: "Ambos"}]}
                     label="tipo"
                     valor={tipo}
                     setValor={setTipo}/>
@@ -69,8 +81,8 @@ export default  function Clientes() {
                 </div>
             </div>
             
-            <div>
-                <Tabla datos = {clientesFiltrados} setIdItemSeleccionado={setIdSeleccionado}/>
+            <div className="overflow-auto">
+                <Tabla datos = {clientesFiltrados} setIdItemSeleccionado={setIdSeleccionado} rename = {renombrar}/>
             </div>    
             
             {

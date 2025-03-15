@@ -9,7 +9,7 @@ export default function InputText(props){
                     {
                     <span className="text-black">
                         {props.isPrice ? "$ ": ""}
-                        {props.format ? formattedValue(props.labelSeleccionado) : props.labelSeleccionado}
+                        {formattedValue(props.labelSeleccionado, true)}
                     </span>
                     }
                 </>               
@@ -25,7 +25,7 @@ export default function InputText(props){
         const nuevoValor = e.target.value.replace(regex, "")
 
         if (props.setValor){
-            props.setValor(parseInt(nuevoValor))            
+            props.setValor(parseInt(nuevoValor || 0))            
         }
     }
 
@@ -37,7 +37,7 @@ export default function InputText(props){
             onChange={establecerValor}
             type="text" 
             value={ props.format ? formattedValue(props.valor, props.format) : props.valor || ""}
-            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} w-full border rounded-md px-2 py-1 focus:outline-none focus:border-black focus:ring-neutral-600 focus:ring-2 transition duration-200`}/>
+            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} font-semibold w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-rose-600 ring-red-300 text-gray-600 transition duration-200`}/>
         </div>
     )
 }

@@ -11,13 +11,14 @@ import ModalModificarProductoFactura from "../../componentes/Modales/ModalModifi
 import ModalConfirmar from "../../componentes/Modales/ModalConfirmar"
 import CrudDatosFacturasCompra from "../../servicios/crudDatosFacturasCompra"
 import {toast} from 'sonner'
-
 export default function Compra(){
 
     const {id} = useParams()
 
     const [showModal, setShowModal] = useState(false)
     const [showModalConfirmar, setShowModalConfirmar] = useState(false)
+    const [showModalSobrante, setShowModalSobrante] = useState(false)
+    const [pagadoSobrante, setPagadoSobrante] = useState(false)
     const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(undefined)
     const [productoSeleccionado, setProductoSeleccionado] = useState(undefined)
 
@@ -36,9 +37,11 @@ export default function Compra(){
     const [telefono, setTelefono] = useState("")
     const [email, setEmail] = useState("")
     const [estado, setEstado] = useState("")
-    const [total, setTotal] = useState("")
-    const [totalTabla, setTotalTabla] = useState("")
-    const [pagado, setPagado] = useState("")
+
+    const [total, setTotal] = useState(null)
+    const [totalModificado, setTotalModificado] = useState(null)
+    const [totalTabla, setTotalTabla] = useState(null)
+    const [pagado, setPagado] = useState(null)
 
     
 
@@ -78,16 +81,19 @@ export default function Compra(){
         )
     }, [])
 
-    function guardarCambios(){
+    useEffect(()=> {
+        setTotalModificado(facturaModificada.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
+    }, [facturaModificada])
 
-        const datosFormateados = facturaModificada.map(item => {
+    function guardarCambios(){
+        const detalles = facturaModificada.map(item => {
             return {
                 producto_id: item.id,
                 cantidad: item.cantidad,
-                precio: item.precio,
+                precio: item.precio ,
                 subtotal: item.subtotal
             }
-        })
+        })  
 
         toast.promise(
             fetch(`http://localhost:3000/api/v1/facturas/compras/${id}`, {
@@ -95,7 +101,7 @@ export default function Compra(){
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(datosFormateados)
+                body: JSON.stringify(detalles)
             })
             .then(async (response) => {
                 if (!response.ok){
@@ -116,6 +122,11 @@ export default function Compra(){
                 loading: "Guardando cambios.",
                 success: (data) => {
                     setFacturaOriginal(facturaModificada)
+                    setTotalTabla(totalModificado)
+                    setTotal(data.body.total)
+                    if ("pagado" in data.body){
+                        setPagado(data.body.pagado)
+                    }
                     return data.message
                 },
                 error: (error) => error
@@ -132,8 +143,6 @@ export default function Compra(){
     }
     return (
         <div className="w-[1400px] flex flex-col mx-auto gap-3">
-            
-            
             <div className="flex justify-between my-2">
                 <h1 className="text-2xl font-bold flex items-center">FACTURA DE COMPRA ID:<p className="text-red-500 border p-1 rounded-md">{id}</p></h1>
                 <h1 className="text-xl font-bold flex items-center"> Fecha: {fecha}</h1>
@@ -161,21 +170,23 @@ export default function Compra(){
             </div>
             <div>
                 <h1 className="text-xl font-bold mb-3">FACTURA DE COMPRA</h1>
-                <DiffTabla tabla1={facturaOriginal} tabla2={facturaModificada} total={totalTabla} setIdItemSeleccionado={setIdProductoSeleccionado}/>
+                <DiffTabla tabla1={facturaOriginal} tabla2={facturaModificada} total={totalTabla} total2= {totalModificado} setIdItemSeleccionado={setIdProductoSeleccionado}/>
             </div>
             
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
                 <Boton texto="Devolver todo" isNormal={true}/>
-                
+                {
+                    (totalModificado < pagado) && <p className="text-lg font-semibold animate-bounce">Nota: En caso de realizar la modficacion debes pagarle al cliente <span className="font-semibold text-red-500">{pagado - totalModificado}</span></p>
+                }
                 <div className="flex gap-3">
                     <Boton texto="Cancelar cambios" isNormal={true} onClick={cancelarCambios}/>
-                    <Boton texto="Guardar Cambios" onClick = {guardarCambios}/>
+                    <Boton texto="Guardar Cambios" onClick = {() => guardarCambios()}/>
                 </div>
                 
             </div>
             <div>
                 {showModal && <ModalModificarProductoFactura setShowModal={setShowModal} idProductoSeleccionado={idProductoSeleccionado} datos={facturaModificada} setDatos={setFacturaModificada}/>}
-                {showModalConfirmar &&  <ModalConfirmar titulo="Estado del pedido" mensaje="¿Estás seguro de que deseas establecer como entregado este pedido? No podras revertir esta accion." setShowModal={setShowModal}/>}
+                {showModalConfirmar &&  <ModalConfirmar titulo="Estado del pedido" mensaje="¿Estás seguro de que deseas establecer como entregado este pedido? No podras revertir esta accion." setConfirmacion={setConfirmacionEntrega}/>}
             </div>
         </div>
     )

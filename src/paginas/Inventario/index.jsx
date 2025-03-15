@@ -93,12 +93,12 @@ export default function Inventario() {
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
-            <div className="flex items-cente justify-between h-56 w-full mx-auto gap-4">
-                <figure className="h-52 w-[400px]">
+            <div className="flex items-cente justify-between w-full mx-auto gap-4">
+                <figure className="w-[500PX] h-64">
                     <img className="h-full w-full object-contain border rounded-xl" src={imagen} alt="" />
                 </figure>
 
-                <div className="flex flex-col h-full w-full gap-6 justify-center">
+                <div className="flex flex-col h-full w-full gap-8 justify-center">
                     <h2 className="text-2xl font-semibold w-full text-left mb-2">ENCONTRAR PRODUCTOS</h2>
                     <div className="flex w-full gap-4 items-center">
                         <div className="flex gap-1 items-center">

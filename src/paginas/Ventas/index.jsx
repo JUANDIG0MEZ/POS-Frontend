@@ -16,6 +16,16 @@ export default function Ventas(){
     const [nombre, setNombre] = useState("")
     const [estado, setEStado] = useState(null)
 
+    const renombrar = {
+        id: 'ID',
+        fecha: 'Fecha',
+        hora: 'Hora',
+        cliente: 'Cliente',
+        pagado: 'Pagado',
+        total: 'Total',
+        estado: 'Estado',
+        direccion: 'Direccion'
+    }
 
     useEffect(()=> {
         toast.promise(
@@ -64,6 +74,14 @@ export default function Ventas(){
                     isNumber = {true}
                     />
                 </div>
+
+                <div className="flex gap-3">
+                    <FechaInput
+                    label={"Desde"}/>
+                    <FechaInput
+                    label={"Hasta"}/>
+                </div>
+
                 <InputText 
                 label={"Cliente"}
                 valor = {nombre}
@@ -72,16 +90,10 @@ export default function Ventas(){
                 <div className="w-40">
                     <InputLista
                     label={"Estado"}
-                    lista={["Entregado", "Por entregar"]}
+                    lista={[{id: 1, nombre: "Entregado"},{id: 2, nombre: "Por entregar"}]}
                     valor={estado}
                     setValor={setEStado}/>
 
-                </div>
-                <div className="flex gap-3">
-                    <FechaInput
-                    label={"Desde"}/>
-                    <FechaInput
-                    label={"Hasta"}/>
                 </div>
                 <Link className="" to={'/vender'}><Boton texto={"+"}/></Link>
 
@@ -91,6 +103,7 @@ export default function Ventas(){
             <Tabla
                 datos={facturas}
                 setIdItemSeleccionado={setIdSeleccionado}
+                rename = {renombrar}
                 />
             </div>
         </div>

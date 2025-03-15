@@ -15,13 +15,8 @@ export default memo(function DiffTabla(props) {
 
 
     let colspan = 0
-    if (props.isVisible){
-        colspan = Object.keys(props.isVisible).filter(key => props.isVisible[key] === true).length
-    }
-    else{
-        if (props.tabla1.length > 0){
-            colspan = Object.keys(props.tabla1[0]).length
-        }
+    if (props.tabla1.length > 0){
+        colspan = Object.keys(props.tabla1[0]).length
     }
 
     function comparar(indice, clave){
@@ -45,6 +40,7 @@ export default memo(function DiffTabla(props) {
         }
     }
 
+    
 
     return (
         <table onClick={seleccionFila} className="w-full">
@@ -67,7 +63,7 @@ export default memo(function DiffTabla(props) {
                         return (<tr
                             key={indice} 
                             data-id = {fila1.id}
-                            className={`hover:bg-gray-300 cursor-pointer text-center`}>
+                            className={`hover:bg-red-300 cursor-pointer text-center`}>
                             {   
                                 Object.keys(fila1).map((key, indice2)=>{
                                     return <td key={indice2} className="p-2 border justify-center">
@@ -83,17 +79,17 @@ export default memo(function DiffTabla(props) {
 
 
                 {   
-                    props.total && props.tabla1.length> 0 &&
+                     props.tabla1.length> 0 &&
                 <tr className=''>
                     {
-                        colspan-3 >= 0 && <td colSpan={colspan-2} ></td>
+                        colspan-3 >= 0 && <td colSpan={colspan-2} />
                     }
  
                     {
                         colspan-1 > 0 && <td className="bg-gray-50 p-2 border text-center font-bold">Total</td>
                     }
                     {
-                        colspan > 0 && <td className='p-2 border text-center font-bold'>{props.total}</td>
+                        colspan > 0 && <td className='p-2 border text-center font-bold'>{compararTotales(props.total, props.total2)}</td>
                     }
                 </tr>
                 }
@@ -105,3 +101,21 @@ export default memo(function DiffTabla(props) {
         
     )
 })
+
+
+
+function compararTotales(total1, total2){
+    if(total1 === total2){
+        return total1
+    }
+    else if (total1 > total2){
+        return (
+            <span className="flex gap-2 justify-center items-center">{total1}<FaLongArrowAltRight size={20}/>{<span className='text-red-500'>{total2}</span>}</span>
+        )
+    }
+    else {
+        return (
+            <span className="flex gap-2 justify-center">{total1}<FaLongArrowAltRight size={20}/>{<span className='text-green-700'>{total2}</span>}</span>
+        )
+    }
+}

@@ -15,7 +15,15 @@ export default function Compras(){
     const navigate = useNavigate()
 
     
-
+    const renombrar = {
+        id: 'ID',
+        fecha: 'Fecha',
+        hora: 'Hora',
+        cliente: 'Cliente',
+        pagado: 'Pagado',
+        total: 'Total',
+        estado: 'Estado'
+    }
 
     const [idSeleleccionado, setIdSeleccionado] = useState(null)
     const [id, setId] = useState(null)
@@ -37,7 +45,6 @@ export default function Compras(){
                     }
 
                     const data = await response.json()
-                    console.log(data)
                     if (data.status === 'success'){
                         return data
                     }
@@ -62,7 +69,7 @@ export default function Compras(){
         }
     }, [idSeleleccionado])
 
-    useEffect(()=> {
+    useEffect(()=> { 
         setFacturasFiltradas(FiltradoDatos.filtroNumero(facturas, 'id',id))
     }, [facturas, id])
 
@@ -82,16 +89,17 @@ export default function Compras(){
                 <div className="w-24">
                     <InputText label={"Id"} valor={id} setValor = {setId}/>
                 </div>
-                
-                <InputText label={"Cliente"} setValor={setNombre} valor={nombre}/>
-                <div className="w-40">
-                    <InputLista label={"Estado"} lista={["Entregado", "No entregado"]} valor={estado} setValor={setEstado}/>
-
-                </div>
                 <div className="flex gap-3">
                     <FechaInput label={"Desde"} valor = {fechaInicio} setValor= {setFechaInicio}/>
                     <FechaInput label={"Hasta"} valor= {fechaFinal} setValor= {setFechaFinal}/>
                 </div>
+                
+                <InputText label={"Cliente"} setValor={setNombre} valor={nombre}/>
+                <div className="w-40">
+                    <InputLista label={"Estado"} lista={[{id: 1, nombre: "Entregado"}, {id: 2, nombre: "No entregado"}]} valor={estado} setValor={setEstado}/>
+
+                </div>
+                
                 <Link className="" to={'/comprar'}><Boton texto={"+"}/></Link>
 
             </div>
@@ -100,6 +108,7 @@ export default function Compras(){
             <Tabla
                 datos={facturasFiltradas}
                 setIdItemSeleccionado = {setIdSeleccionado}
+                rename = {renombrar}
                 />
             </div>
         </div>

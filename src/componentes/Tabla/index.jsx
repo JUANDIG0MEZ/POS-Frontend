@@ -47,7 +47,7 @@ export default memo(function Tabla(props) {
                         return (<tr
                             key={dato.id} 
                             data-id = {dato.id}
-                            className={`hover:bg-gray-300 cursor-pointer text-center`}>
+                            className={`hover:bg-red-300 cursor-pointer text-center`}>
                             {   
                                 Object.keys(dato).map((key, indice)=>{
                                     if (props.isVisible){
@@ -63,7 +63,7 @@ export default memo(function Tabla(props) {
                 })}    
 
                 {   
-                    props.total && props.datos.length> 0 &&
+                    ("total" in props) && props.datos.length> 0 &&
                 <tr className=''>
                     {
                         colspan-3 >= 0 && <td colSpan={colspan-2} ></td>

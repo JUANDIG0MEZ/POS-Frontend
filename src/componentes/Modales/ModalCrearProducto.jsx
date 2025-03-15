@@ -8,10 +8,14 @@ import CrudDatosProductos from "../../servicios/crudDatosProductos"
 import  {toast} from 'sonner'
 import { useContext } from "react"
 import { ContextInventario } from "../../contextInventario"
+
 export default function ModalCrearProducto(props){
 
     // Se trae la lista de productos
-    const {productos, setProductos} = useContext(ContextInventario)
+    const {
+        productos,
+        setProductos
+    } = useContext(ContextInventario)
 
     const [nombre, setNombre] = useState("")
     const [precioCompra, setPrecioCompra] = useState(null)
@@ -48,38 +52,8 @@ export default function ModalCrearProducto(props){
                     delete nuevoProducto[key]
                 }
             }
-            console.log("Promesa iniciada")
-            toast.promise(
-                fetch("http://localhost:3000/api/v1/productos",{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(nuevoProducto)
-                })
-                .then(async response => {
-                    if (!response.ok){
-                        throw new Error(`Error ${response.status}: ${response.statusText}`)
-                    }
-                    const data = await response.json()
-                    console.log(data)
-                    if (data.status === 'success'){
-
-                        return data.body
-                    }
-                    else {
-                        throw new Error(data.message)
-                    }
-                })
-            , {
-                loading: "Creando producto",
-                success: (data) => {
-                    // se agrega el nuevo producto a la lista de productos
-                    setProductos([...productos, data])
-                    return "Producto creado"
-                },
-                error: (error) => error.message
-            })
+            
+            crearProductoFetch(nuevoProducto, setProductos, productos)
         }
         else{
             toast.warning("El nombre del producto es obligatorio")
@@ -91,32 +65,8 @@ export default function ModalCrearProducto(props){
 
     useEffect(()=>{
 
-        async function cargarListas(){
-            try {
-                const marcas = await CrudDatosProductos.marcas()
-                setListaMarca(marcas)
-            }
-            catch {
-                console.log("Error al cargar las marcas del modal crear productos")
-            }
-
-            try {
-                const categorias = await CrudDatosProductos.categorias()
-                setListaCategoria(categorias)
-            }
-            catch {
-                console.log("Error al cargar las categorias del modal crear productos")
-            }
-
-            try {
-                const medidas = await CrudDatosProductos.medidas()
-                setListaMedida(medidas)
-            }
-            catch{
-                console.log("Error al cargar las medidas del modal crear productos")
-            }
-        }
-        cargarListas()
+        
+        cargarListas(setListaMarca, setListaCategoria, setListaMedida)
         }, [])
 
 
@@ -125,10 +75,9 @@ export default function ModalCrearProducto(props){
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <div className="flex bg-white p-5 rounded-lg w-[1200px] items-center gap-4">
-                <div className="items-center w-80 h-64">
-                    <DropZone></DropZone>
-                </div>
+            <div className="flex bg-white p-5 rounded-lg w-[1400px] items-center gap-4">
+                <DropZone></DropZone>
+
                 
                 <div className="flex flex-col flex-1 gap-7">
                     <h2 className="w-full text-2xl font-semibold mb-2">CREAR PRODUCTO</h2>
@@ -201,3 +150,113 @@ export default function ModalCrearProducto(props){
 }
 
 
+
+async function crearProductoFetch(nuevoProducto, setProductos, productos){
+    return toast.promise(
+        fetch("http://localhost:3000/api/v1/productos",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(nuevoProducto)
+        })
+        .then(async response => {
+            if (!response.ok){
+                throw new Error(`Error ${response.status}: ${response.statusText}`)
+            }
+            const data = await response.json()
+            if (data.status === 'success'){
+
+                return data.body
+            }
+            else {
+                throw new Error(data.message)
+            }
+        })
+    , {
+        loading: "Creando producto",
+        success: (data) => {
+            setProductos([data, ...productos])
+            return "Producto creado"
+        },
+        error: (error) => error.message
+    })
+}
+
+
+async function cargarListas(setMarcas, setCategorias, setMedidas){
+    toast.promise(
+        fetch('http://localhost:3000/api/v1/productos/marcas')
+        .then(async response => {
+            if (!response.ok){
+                throw new Error(`Error ${response.status}: ${response.statusText}`)
+            }
+            const data = await response.json()
+            if (data.status === 'success'){
+                return data.body
+            }
+            else {
+                throw new Error(data.message)
+            }
+        }),
+        {
+            loading: "Cargando marcas",
+            success: (data) => {
+                setMarcas(data)
+                return "Marcas cargadas"
+            },
+            error: (error) => error.message
+        }
+    )
+
+
+
+    toast.promise(
+        fetch('http://localhost:3000/api/v1/productos/categorias')
+        .then(async response => {
+            if (!response.ok){
+                throw new Error(`Error ${response.status}: ${response.statusText}`)
+            }
+            const data = await response.json()
+            if (data.status === 'success'){
+                return data.body
+            }
+            else {
+                throw new Error(data.message)
+            }
+        }),
+        {
+            loading: "Cargando categorias",
+            success: (data) => {
+                setCategorias(data)
+                return "Categorias cargadas"
+            },
+            error: (error) => error.message
+        }
+    )
+
+
+    toast.promise(
+        fetch('http://localhost:3000/api/v1/productos/medidas')
+        .then(async response => {
+            if (!response.ok){
+                throw new Error(`Error ${response.status}: ${response.statusText}`)
+            }
+            const data = await response.json()
+            if (data.status === 'success'){
+                return data.body
+            }
+            else {
+                throw new Error(data.message)
+            }
+        }),
+        {
+            loading: "Cargando medidas",
+            success: (data) => {
+                setMedidas(data)
+                return "Medidas cargadas"
+            },
+            error: (error) => error.message
+        }
+    )
+}

@@ -2,7 +2,14 @@
 export default function InputText(props){
     function labelSeleccionado (labelSolo) {
         if (props.labelSeleccionado){
-            return labelSolo + "  " + props.labelSeleccionado
+            return (
+                <>
+                    <span>{labelSolo}</span>
+                    <span>{" "}</span>
+                    <span className="text-red-500">{props.labelSeleccionado}</span>
+                </>
+                
+            )
         }
         return labelSolo
     }
@@ -25,7 +32,7 @@ export default function InputText(props){
             onChange={establecerValor}
             type="text" 
             value={props.valor || ""}
-            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} w-full border rounded-md px-2 py-1 focus:outline-none focus:border-black focus:ring-neutral-600 focus:ring-2 transition duration-200`}/>
+            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-rose-600 ring-red-300 font-semibold text-gray-600`}/>
         </div>
     )
 }

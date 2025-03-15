@@ -9,9 +9,13 @@ export default function InputLista(props) {
         const fila = e.target.closest('li')
         if (fila){
             const valor = fila.textContent
+            const id = fila.dataset.id
             const nuevoValor = valor
             setShowLista(false)
             props.setValor(nuevoValor)
+            if (props.idSeleccionado){
+                props.idSeleccionado(id)
+            }
         }      
     }
 
@@ -44,13 +48,13 @@ export default function InputLista(props) {
         return labelSolo
     }
 
-    function listaFiltrada(nuevoValor){
+    function listaFiltrada(){
         if (props.lista){
             if (props.isNumber){
-                return (props.lista.filter(item => item.toString().includes(nuevoValor || "")))
+                return (props.lista.filter(item => item.nombre.toString().includes(props.valor || "")))
             }
             else{
-                return (props.lista.filter(item => item.toLowerCase().includes((nuevoValor || "").toLowerCase())))
+                return (props.lista.filter(item => item.nombre.toLowerCase().includes((props.valor || "").toLowerCase())))
             }
 
         }
@@ -63,7 +67,7 @@ export default function InputLista(props) {
 
 
     return (
-        <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
+        <div className={`relative ${props.estilo ? props.estilo : "flex-1"} font-semibold`}>
             <label className="absolute -top-6  font-semibold text-gray-600 text-md">{labelSeleccionado(props.label)}</label>
             <div className="items-center flex aling-center">
                 <input 
@@ -71,18 +75,18 @@ export default function InputLista(props) {
                 onBlur={()=>{setShowLista(false)}}
                 onChange={establecerValor}
                 value = {props.valor || ""}
-                className={`${props.isNumber ? "tracking-wider" : "tracking-wide"} w-full border px-2 py-1 pr-6 focus:outline-none  ${showLista ? "rounded-t-md border-b-white": "rounded-md" }   `}/>
+                className={`${props.isNumber ? "tracking-wider" : "tracking-wide"} font-semibold w-full border p-2 pr-6 text-gray-600 focus:outline-none  ${showLista ? "rounded-t-lg border-b-white": "rounded-lg" }   `}/>
 
                 <FaChevronDown
-                className={` text-sm absolute right-2 top-2 transition-transform ${showLista ? "rotate-180" : "rotate-0"}`}/>
+                className={` text-sm absolute right-2 top-3 w-4 h-4 transition-transform ${showLista ? "rotate-180" : "rotate-0"}`}/>
             </div>
   
             <ul       
                 onMouseDown={seleccionarItem}
-                className={`absolute w-full z-10 bg-white border overflow-y-auto rounded-b-md shadow-lg max-h-52 ${showLista ? "block" : "hidden"}`}>
+                className={`absolute w-full z-10 bg-white border overflow-y-auto rounded-b-lg shadow-lg max-h-52 ${showLista ? "block" : "hidden"}`}>
                     {
                         listaFiltrada(props.valor) && listaFiltrada(props.valor).slice(0, 20).map((item, indice)=>{
-                            return <li key={indice} className="hover:bg-red-300 px-2 py-1 rounded-sm">{item}</li>
+                            return <li key={indice} data-id={item.id} className="hover:bg-red-300 text-stone-800  p-2 rounded-lg">{item.nombre}</li>
                         })
                     }
             </ul>

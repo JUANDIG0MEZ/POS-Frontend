@@ -1,13 +1,24 @@
 import Tabla from "../../componentes/Tabla"
 import {useState, useContext, useEffect} from 'react'
 import { ContextInventario } from "../../contextInventario"
-
-import InputText from "../../componentes/InputText"
 import Boton from "../../componentes/Boton"
+import InputListaMultiple from "../../componentes/InputListaMultiple"
 import InputLista from "../../componentes/InputLista"
-
-import CrudDatosProductos from "../../servicios/crudDatosProductos"
 import CrudDatosClientes from "../../servicios/crudDatosClientes"
+import InputNumber from "../../componentes/InputNumber"
+import { toast } from "sonner"
+
+
+
+const renombrar = {
+    id: "ID",
+    nombre: "Nombre",
+    marca: "Marca",
+    medida: "Medida",
+    cantidad: "Cantidad",
+    precio: "Precio",
+    subtotal: "Subtotal"
+}
 
 
 export default function Comprar() {
@@ -16,30 +27,29 @@ export default function Comprar() {
         clientes,
         productos
     } = useContext(ContextInventario)
-
-
     const [carritoDeCompras, setCarritoDeCompras] = useState([])
     
     const [nombreCliente, setNombreCliente] = useState("")
     const [nombreProducto, setNombreProducto] = useState("")
+    const [nombreProductoSeleccionado, setNombreProductoSeleccionado] = useState("")
     const [cantidadProducto, setCantidadProducto] = useState("")
     const [precioProducto, setPrecioProducto] = useState("")
     const [totalProducto, setTotalProducto] = useState("")
-    
     const [idProducto, setIdProducto]= useState("")
-
+    const [productoSelecionado, setProductoSeleccionado] = useState("")
     const [idCliente, setIdCliente]= useState("")
-    //const [filaProductoSeleccionado, setFilaProductoSeleccionado] = useState({})
+    const [total , setTotal] = useState(0)
+    const [medida, setMedida] = useState("")
 
-    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(undefined)
 
-    const [mensaje, setMensaje] = useState("")
+    const [idProductoSeleccionadoTabla, setIdProductoSeleccionadoTabla] = useState(null)
+
 
     const [totalParcial, setTotalParcial] = useState("")
     const [precioParcial, setPrecioParcial] = useState("")
+    
 
-
-
+    
 
     function limpiarCampos(){
         setNombreProducto("")
@@ -49,14 +59,18 @@ export default function Comprar() {
     }
 
     useEffect(()=>{
-        const producto = CrudDatosProductos.encontrarPorNombre(nombreProducto, productos)
+
+        const producto = productos.find(producto => producto.id == idProducto)
         if (producto){
-            setIdProducto(producto.id)
+            setNombreProductoSeleccionado(producto.nombre)
+            setMedida(producto.medida)
         }
-        else {
-            setIdProducto("")
-        }
-    }, [nombreProducto, productos])
+    
+    }, [idProducto])
+
+    useEffect(()=> {
+        setTotal(carritoDeCompras.reduce((acc, item) => acc + item.subtotal, 0))
+    }, [carritoDeCompras])
 
     useEffect(()=>{
         const cliente = CrudDatosClientes.encontrarPorNombre(nombreCliente, clientes)
@@ -86,52 +100,44 @@ export default function Comprar() {
     }, [precioProducto, cantidadProducto])
 
 
-    function listaNombreProductos(){
-        return productos.map(producto => producto.nombre)
-    }
-
-    function listaNombreClientes(){
-        return clientes.map(cliente => cliente.nombre)
-    }
-
-
     useEffect(()=>{
-        if (idProductoSeleccionado){
+        if (idProductoSeleccionadoTabla){
             // se obtiene el indice del producto seleccionado
-            const infoProductoTabla = carritoDeCompras.find(producto => producto.id == idProductoSeleccionado)
+            const infoProductoTabla = carritoDeCompras.find(producto => producto.id == idProductoSeleccionadoTabla)
+            
             // se pone en la informacion nuevamente en los inputs
             if (infoProductoTabla){
+                setIdProducto(infoProductoTabla.id)
                 setNombreProducto(infoProductoTabla.nombre)
                 setCantidadProducto(infoProductoTabla.cantidad)
                 setTotalProducto(infoProductoTabla.subtotal)
             }
             // se elimina el producto seleccionado del carrito
-
-            const nuevoCarrito = carritoDeCompras.filter(producto => producto.id != idProductoSeleccionado)
+            const nuevoCarrito = carritoDeCompras.filter(producto => producto?.id != idProductoSeleccionadoTabla)
+            toast.info("Producto eliminado")
             setCarritoDeCompras(nuevoCarrito)
-
         }
         
-    }, [idProductoSeleccionado])
+    }, [idProductoSeleccionadoTabla])
 
 
     function agregarProducto(){
         
-        if (idProducto === "" ){
-            setMensaje("El producto no fue encontrado")
+        if (!idProducto ){
+            toast.error("El producto no fue encontrado")
             return 
         }
         else if (cantidadProducto === ""){
-            setMensaje("Agrega cantidad")
+            toast.error("Agrega cantidad")
             return 
         } 
         else if (precioProducto === "" && totalProducto === ""){
-            setMensaje("Agrega el precio o el total")
+            toast.error("Agrega el precio o el total")
             return
         }
 
         else if (carritoDeCompras.some(producto => producto.id === idProducto)){
-            setMensaje("El producto ya fue agregado")
+            toast.warning("El producto ya fue agregado")
             return
         }
 
@@ -147,17 +153,20 @@ export default function Comprar() {
             precio = totalProducto / cantidadProducto
         }
 
-        const producto = {
+        const producto = productos.find(producto => producto.id == idProducto)
+        const productoFormateado = {
+            id: idProducto,
+            nombre: producto.nombre,
+            marca: producto.marca,
+            medida: producto.medida,
             cantidad: cantidadProducto,
-            nombre: nombreProducto,
             precio: precio,
             subtotal: total,
-            id: idProducto,
+            
         }
-        setIdProductoSeleccionado(undefined)
-        setMensaje("")
+        setIdProductoSeleccionadoTabla(null)
         limpiarCampos()
-        setCarritoDeCompras([...carritoDeCompras, producto])
+        setCarritoDeCompras([...carritoDeCompras, productoFormateado])
     }
 
     return (
@@ -166,26 +175,36 @@ export default function Comprar() {
                 <figure className="">
                     <img src="
                     https://www.semana.com/resizer/v2/ZBUPHEFWHNHIFE3VQP5VISURGM.jpg?auth=652e54160a25d475ded57e8c6950da4f6af5a4e7251e56525f1f0bff93b71c37&smart=true&quality=75&width=1280
-                    " className="w-[400PX] h-52 border object-contain rounded-lg"/>
+                    " className="w-[500PX] h-64 border object-contain rounded-lg"/>
                 </figure>
-                <div className="flex flex-col w-full gap-2">
+                <div className="flex flex-col w-full gap-4">
                     <h1 className="text-2xl font-bold mb-3">COMPRAR</h1>
-                    <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-8">
+                        <InputLista
+                            valor={nombreCliente}
+                            setValor={setNombreCliente}
+                            label="Cliente*"
+                            lista={clientes}
+                            //setIdSeleccionado = {setIdCliente}
+                            />
+                        <InputListaMultiple
 
-                        <InputLista 
                             valor={nombreProducto}
                             setValor={setNombreProducto}
                             label="Producto*"
-                            lista={listaNombreProductos()}/>
+                            lista={productos}
+                            setIdSeleccionado = {setIdProducto}
+                            labelSeleccionado = {nombreProductoSeleccionado}
+                            />
                         <div className="flex w-full items-center justify-between">
-                            <InputText
+                            <InputNumber
                                 estilo = {"w-28"}
                                 valor={cantidadProducto}
                                 setValor={setCantidadProducto}
                                 label="Cantidad*"
                                 isNumber={true}
                                 />
-                            <InputText
+                            <InputNumber
                                 estilo = {"w-52"}
                                 valor={precioProducto}
                                 setValor={setPrecioProducto}
@@ -194,15 +213,16 @@ export default function Comprar() {
                                 isNumber={true}
                                 isPrice={true}
                                 />
-                                <p className="p-1 border rounded-md bg-gray-100 w-52 text-center font-semibold text-gray-800">Metro Cuadrado</p> 
-                            <InputText
+                                <p className="p-2 border rounded-md bg-gray-50 w-52 text-center font-semibold text-gray-800">{medida || " Medida"}</p> 
+                            <InputNumber
                                 estilo = {"w-62"}
                                 label="Total"
                                 valor={totalProducto}
                                 setValor={setTotalProducto}
                                 labelSeleccionado = {totalParcial}
-                                isNumber={true}
-                                isPrice={true}/>
+                                format={true}
+                                isPrice= {true}
+                                />
                         
                             <Boton
                                 onClick={limpiarCampos}
@@ -214,8 +234,7 @@ export default function Comprar() {
                         </div>
 
                     </div>
-                    
-                    <p className="text-red-500 font-bold animate-bounce">{mensaje || "Agrega productos"}</p>
+                
                 </div>
             </div>
 
@@ -224,15 +243,9 @@ export default function Comprar() {
             <div>
                 <Tabla 
                 datos = {carritoDeCompras}
-                setIdItemSeleccionado = {setIdProductoSeleccionado}
-                isVisible = {{
-                    nombre: true,
-                    cantidad: true,
-                    precio: true,
-                    subtotal: true,
-                    id: false
-                }}
-                total = {2500000}
+                rename= {renombrar}
+                setIdItemSeleccionado = {setIdProductoSeleccionadoTabla}
+                total = {total}
                 />
             </div>
             <div className="flex w-full justify-end">
