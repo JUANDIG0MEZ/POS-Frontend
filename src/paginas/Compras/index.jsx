@@ -92,7 +92,7 @@ export default function Compras(){
 
                 </div>
                 
-                <Link className="" to={'/comprar'}><Boton texto={"+"}/></Link>
+                <Link className="" to={'/comprar'}><Boton texto={"Comprar"}/></Link>
 
             </div>
             

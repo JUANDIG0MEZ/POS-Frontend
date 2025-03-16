@@ -7,7 +7,7 @@ import InputLista from "../../componentes/InputLista"
 import CrudDatosClientes from "../../servicios/crudDatosClientes"
 import InputNumber from "../../componentes/InputNumber"
 import { toast } from "sonner"
-
+import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactura"
 
 
 const renombrar = {
@@ -23,6 +23,8 @@ const renombrar = {
 
 export default function Comprar() {
 
+    const [showModalConfirmacion, setShowModalConfirmacion] = useState(false)
+
     const {
         clientes,
         productos
@@ -36,8 +38,7 @@ export default function Comprar() {
     const [precioProducto, setPrecioProducto] = useState("")
     const [totalProducto, setTotalProducto] = useState("")
     const [idProducto, setIdProducto]= useState("")
-    const [productoSelecionado, setProductoSeleccionado] = useState("")
-    const [idCliente, setIdCliente]= useState("")
+    
     const [total , setTotal] = useState(0)
     const [medida, setMedida] = useState("")
 
@@ -47,8 +48,9 @@ export default function Comprar() {
 
     const [totalParcial, setTotalParcial] = useState("")
     const [precioParcial, setPrecioParcial] = useState("")
-    
 
+
+    const [idCliente, setIdCliente]= useState("")
     
 
     function limpiarCampos(){
@@ -169,6 +171,74 @@ export default function Comprar() {
         setCarritoDeCompras([...carritoDeCompras, productoFormateado])
     }
 
+
+    function finalizarCompra(pagado, estado_id){
+        if (carritoDeCompras.length === 0){
+            toast.info("Agrega productos al carrito")
+            return
+        }
+        else if (!idCliente){
+            toast.info("Selecciona un cliente")
+            return
+        }
+        else if( pagado > total){
+            toast.error("El monto pagado es mayor al total")
+            return
+        }
+        else {
+            const info = {
+                cliente_id: idCliente,
+                estado_id: estado_id,
+                pagado: pagado,
+            }
+
+            const detalles = carritoDeCompras.map(item => {
+                return {
+                    producto_id: item.id,
+                    cantidad: item.cantidad,
+                    precio: item.precio,
+                    subtotal: item.subtotal
+                }
+            })
+
+            const compraEnviar = {info: info, datos: detalles}
+            console.log(compraEnviar)
+            toast.promise(
+                fetch('http://localhost:3000/api/v1/facturas/compras', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(compraEnviar)
+                })
+                .then(async response => {
+                    if (!response.ok){
+                        throw new Error(`Error ${response.status}: ${response.statusText}`)
+                    }
+
+                    const data = await response.json()
+                    console.log(data)
+                    if (data.status === 'success'){
+                        return data
+                    }
+                    else {
+                        throw new Error(data.message)
+                    }
+                }),
+                {
+                    loading: "Finalizando compra",
+                    success: (data) => {
+                        setCarritoDeCompras([])
+                        setTotal(0)
+                        return data.message
+                    },
+                    error: "Ocurrio un error"
+                }
+            )
+        }
+
+    }
+
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
             <div className="flex gap-3 items-center">
@@ -185,7 +255,7 @@ export default function Comprar() {
                             setValor={setNombreCliente}
                             label="Cliente*"
                             lista={clientes}
-                            //setIdSeleccionado = {setIdCliente}
+                            setIdSeleccionado = {setIdCliente}
                             />
                         <InputListaMultiple
 
@@ -249,9 +319,12 @@ export default function Comprar() {
                 />
             </div>
             <div className="flex w-full justify-end">
-                <Boton texto="Finalizar Compra"/>       
+                <Boton texto="Finalizar Compra" onClick={()=>setShowModalConfirmacion(true)}/>       
             </div>
-
+            {
+                showModalConfirmacion && <ModalConfirmarFactura setShowModal={setShowModalConfirmacion} total = {total} clienteNombre={nombreCliente} onConfirm = {finalizarCompra}
+                />
+            }
         </div>
         
         

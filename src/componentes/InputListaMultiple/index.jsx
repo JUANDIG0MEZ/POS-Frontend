@@ -21,7 +21,7 @@ export default function InputListaMultiple(props) {
     function seleccionarItem(e){
         const fila = e.target.closest('li')
         if (fila){
-            const id = fila.dataset.id
+            const id = parseInt(fila.dataset.id)
             const nuevoValor = props.lista.find(item => item.id == id).nombre
             setShowLista(false)
             props.setValor(nuevoValor)

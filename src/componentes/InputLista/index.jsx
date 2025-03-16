@@ -9,7 +9,7 @@ export default function InputLista(props) {
         const fila = e.target.closest('li')
         if (fila){
             const valor = fila.textContent
-            const id = fila.dataset.id
+            const id = parseInt(fila.dataset.id)
             const nuevoValor = valor
             setShowLista(false)
             props.setValor(nuevoValor)

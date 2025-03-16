@@ -102,7 +102,7 @@ export default function Ventas(){
                     valor={estado} setValor={setEstado} setIdSeleccionado={setIdEstado}/>
 
                 </div>
-                <Link className="" to={'/vender'}><Boton texto={"+"}/></Link>
+                <Link className="" to={'/vender'}><Boton texto={"Vender"}/></Link>
 
             </div>
             
