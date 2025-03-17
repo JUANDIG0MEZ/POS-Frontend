@@ -9,7 +9,7 @@ import HabilitadorTabla from "../../componentes/HablitadorTabla"
 import ModalCrearProducto from "../../componentes/Modales/ModalCrearProducto"
 import ModalModificarProducto from "../../componentes/Modales/ModalModificarProducto"
 import { FiltradoDatos } from "../../servicios/filtradoDatos"
-
+import MostrarImagen from "../../componentes/MostrarImagen"
 import CrudDatosProductos from "../../servicios/crudDatosProductos"
 
 const urlImage = "https://files.porsche.com/filestore/image/multimedia/none/992-gt3-rs-modelimage-sideshot/model/cfbb8ed3-1a15-11ed-80f5-005056bbdc38/porsche-model.png"
@@ -93,12 +93,11 @@ export default function Inventario() {
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
-            <div className="flex items-cente justify-between w-full mx-auto gap-4">
-                <figure className="w-[500PX] h-64">
-                    <img className="h-full w-full object-contain border rounded-xl" src={imagen} alt="" />
-                </figure>
+            <div className="flex items-center justify-between w-full mx-auto gap-4">
 
-                <div className="flex flex-col h-full w-full gap-8 justify-center">
+                <MostrarImagen imagenes = {urlImage}/>
+
+                <div className="flex flex-col gap-8 justify-center">
                     <h2 className="text-2xl font-semibold w-full text-left mb-2">ENCONTRAR PRODUCTOS</h2>
                     <div className="flex w-full gap-4 items-center">
                         <div className="flex gap-1 items-center">

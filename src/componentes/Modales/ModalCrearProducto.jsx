@@ -3,7 +3,7 @@ import InputNumber from "../InputNumber"
 import InputLista from "../InputLista"
 import Boton from "../Boton"
 import { useEffect, useState} from "react"
-import DropZone from "../DropZona"
+import CargarArchivos from "../CargarArchivos"
 import CrudDatosProductos from "../../servicios/crudDatosProductos"
 import  {toast} from 'sonner'
 import { useContext } from "react"
@@ -75,8 +75,8 @@ export default function ModalCrearProducto(props){
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <div className="flex bg-white p-5 rounded-lg w-[1400px] items-center gap-4">
-                <DropZone></DropZone>
+            <div className="w-[1400px] flex bg-white p-5 rounded-lg items-center gap-4">
+                <CargarArchivos/>
 
                 
                 <div className="flex flex-col flex-1 gap-7">

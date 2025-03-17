@@ -2,7 +2,7 @@ import InputText from "../InputText"
 import InputLista from "../InputLista"
 import Boton from "../Boton"
 import { useState, useEffect} from "react"
-import DropZone from "../DropZona"
+import CargarArchivos from "../CargarArchivos"
 import CrudDatosProductos from "../../servicios/crudDatosProductos"
 
 
@@ -96,7 +96,7 @@ export default function ModalModificarProducto(props){
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="flex bg-white p-5 rounded-lg w-[1200px] items-center gap-4">
                 <div className="items-center w-80 h-64">
-                    <DropZone></DropZone>
+                    <CargarArchivos/>
                 </div>
                 
                 <div className="flex flex-col flex-1 gap-7">

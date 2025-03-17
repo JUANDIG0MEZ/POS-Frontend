@@ -8,6 +8,7 @@ import CrudDatosClientes from "../../servicios/crudDatosClientes"
 import InputNumber from "../../componentes/InputNumber"
 import { toast } from "sonner"
 import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactura"
+import MostrarImagen from "../../componentes/MostrarImagen"
 
 
 const renombrar = {
@@ -242,12 +243,8 @@ export default function Comprar() {
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
             <div className="flex gap-3 items-center">
-                <figure className="">
-                    <img src="
-                    https://www.semana.com/resizer/v2/ZBUPHEFWHNHIFE3VQP5VISURGM.jpg?auth=652e54160a25d475ded57e8c6950da4f6af5a4e7251e56525f1f0bff93b71c37&smart=true&quality=75&width=1280
-                    " className="w-[500PX] h-64 border object-contain rounded-lg"/>
-                </figure>
-                <div className="flex flex-col w-full gap-4">
+                <MostrarImagen imagenes={"https://www.semana.com/resizer/v2/ZBUPHEFWHNHIFE3VQP5VISURGM.jpg?auth=652e54160a25d475ded57e8c6950da4f6af5a4e7251e56525f1f0bff93b71c37&smart=true&quality=75&width=1280"}/>
+                <div className="flex flex-col gap-4">
                     <h1 className="text-2xl font-bold mb-3">COMPRAR</h1>
                     <div className="flex flex-col gap-8">
                         <InputLista
