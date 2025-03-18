@@ -4,7 +4,6 @@ import InputLista from "../InputLista"
 import Boton from "../Boton"
 import { useEffect, useState} from "react"
 import CargarArchivos from "../CargarArchivos"
-import CrudDatosProductos from "../../servicios/crudDatosProductos"
 import  {toast} from 'sonner'
 import { useContext } from "react"
 import { ContextInventario } from "../../contextInventario"

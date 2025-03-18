@@ -14,7 +14,7 @@ import CrudDatosProductos from "../../servicios/crudDatosProductos"
 
 const urlImage = "https://files.porsche.com/filestore/image/multimedia/none/992-gt3-rs-modelimage-sideshot/model/cfbb8ed3-1a15-11ed-80f5-005056bbdc38/porsche-model.png"
 const urlImage2 = "https://www.mercedes-benz.com.co/mercedes/site/artic/20230718/imag/foto_0000001120230718122321/gexterior_4m.jpg"
-
+const urlImagen3 = "https://i.redd.it/1gf1hklhrbud1.jpeg"
 export default function Inventario() {
     const {
         productos
@@ -95,7 +95,7 @@ export default function Inventario() {
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
             <div className="flex items-center justify-between w-full mx-auto gap-4">
 
-                <MostrarImagen imagenes = {urlImage}/>
+                <MostrarImagen imagenes = {[urlImage, urlImage2, urlImagen3]}/>
 
                 <div className="flex flex-col gap-8 justify-center">
                     <h2 className="text-2xl font-semibold w-full text-left mb-2">ENCONTRAR PRODUCTOS</h2>
