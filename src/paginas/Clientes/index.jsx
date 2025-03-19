@@ -1,5 +1,5 @@
 import Tabla from "../../componentes/Tabla"
-import {FiltradoDatos} from "../../servicios/filtradoDatos"
+import {FiltradoDatos} from "../../filtrado/filtradoDatos"
 import {useState, useContext, useEffect} from 'react'
 import { ContextInventario } from "../../contextInventario"
 import InputLista from "../../componentes/InputLista"

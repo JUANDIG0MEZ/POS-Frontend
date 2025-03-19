@@ -10,6 +10,7 @@ export class FiltradoDatos {
         return datos
         
     }
+    
     static filtroNumero(datos, propiedad, valor){
         if (!valor){
             return datos

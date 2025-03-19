@@ -5,7 +5,7 @@ import InputText from "../../componentes/InputText";
 import InputLista from "../../componentes/InputLista";
 import Boton from "../../componentes/Boton";
 import {Link, useNavigate } from "react-router-dom";
-import { FiltradoDatos } from "../../servicios/filtradoDatos";
+import { FiltradoDatos } from "../../filtrado/filtradoDatos";
 import { toast} from 'sonner';
 export default function Compras(){
 

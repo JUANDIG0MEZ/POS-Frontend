@@ -3,7 +3,7 @@ import InputLista from "../InputLista"
 import Boton from "../Boton"
 import { useState, useEffect} from "react"
 import CargarArchivos from "../CargarArchivos"
-import CrudDatosProductos from "../../servicios/crudDatosProductos"
+import CrudDatosProductos from "../../serviciosYFunciones/crudDatosProductos"
 
 
 

@@ -8,13 +8,11 @@ import Boton from "../../componentes/Boton"
 import HabilitadorTabla from "../../componentes/HablitadorTabla"
 import ModalCrearProducto from "../../componentes/Modales/ModalCrearProducto"
 import ModalModificarProducto from "../../componentes/Modales/ModalModificarProducto"
-import { FiltradoDatos } from "../../servicios/filtradoDatos"
+import { FiltradoDatos } from "../../serviciosYFunciones/filtradoDatos"
 import MostrarImagen from "../../componentes/MostrarImagen"
-import CrudDatosProductos from "../../servicios/crudDatosProductos"
+import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
 
-const urlImage = "https://files.porsche.com/filestore/image/multimedia/none/992-gt3-rs-modelimage-sideshot/model/cfbb8ed3-1a15-11ed-80f5-005056bbdc38/porsche-model.png"
-const urlImage2 = "https://www.mercedes-benz.com.co/mercedes/site/artic/20230718/imag/foto_0000001120230718122321/gexterior_4m.jpg"
-const urlImagen3 = "https://i.redd.it/1gf1hklhrbud1.jpeg"
+
 export default function Inventario() {
     const {
         productos
@@ -52,7 +50,7 @@ export default function Inventario() {
     const [productosFiltrados, setProductosFiltrados] = useState([])
     const [productoSeleccionado, setProductoSeleccionado] = useState([])
     const [idProductoSeleccionado, setIdProductoSeleccionado] = useState("")
-    const [imagen, setImagen] = useState("")
+    const [imagenes, setImagenes] = useState([])
 
     const [showModalCrear, setShowModalCrear] = useState(false)
     const [showModalModificar, setShowModalModificar] = useState(false)
@@ -66,19 +64,14 @@ export default function Inventario() {
         setProductosFiltrados(datosFiltrados)
     }, [productos, busquedaNombre, busquedaMarca, busquedaCategoria, busquedaMedida, busquedaId])
 
-    useEffect(()=>{
-        const dato = CrudDatosProductos.encontrarPorId(idProductoSeleccionado, productos) 
-        if (dato){
-            setProductoSeleccionado(dato)
 
-            if (imagen === urlImage){
-                setImagen(urlImage2)
-            }
-            else{
-                setImagen(urlImage)
-            }
+    useEffect(()=>{
+        // Se trae de la base de datos la imagen del producto
+        if (idProductoSeleccionado){
+            // se establece el producot seleccionado
+            setProductoSeleccionado(productos.find(producto => producto.id == idProductoSeleccionado))
+            obtenerImagenes(idProductoSeleccionado, setImagenes)
         }
-        
     }, [idProductoSeleccionado])
 
 
@@ -91,11 +84,12 @@ export default function Inventario() {
         setBusquedaMedida(null)
     }
 
+
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
             <div className="flex items-center justify-between w-full mx-auto gap-4">
 
-                <MostrarImagen imagenes = {[urlImage, urlImage2, urlImagen3]}/>
+                <MostrarImagen imagenes = {imagenes}/>
 
                 <div className="flex flex-col gap-8 justify-center">
                     <h2 className="text-2xl font-semibold w-full text-left mb-2">ENCONTRAR PRODUCTOS</h2>

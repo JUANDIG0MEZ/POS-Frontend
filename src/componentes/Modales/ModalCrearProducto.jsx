@@ -28,6 +28,8 @@ export default function ModalCrearProducto(props){
     const [listaMarca, setListaMarca] = useState([])
     const [listaCategoria, setListaCategoria] = useState([])
     const [listaMedida, setListaMedida] = useState([])
+    const [files, setFiles] = useState([])
+
     function cerrarModal(){
         if (props.setShowModal){
             props.setShowModal(false)
@@ -52,7 +54,7 @@ export default function ModalCrearProducto(props){
                 }
             }
             
-            crearProductoFetch(nuevoProducto, setProductos, productos)
+            crearProductoFetch(nuevoProducto, setProductos, productos, files)
         }
         else{
             toast.warning("El nombre del producto es obligatorio")
@@ -75,7 +77,7 @@ export default function ModalCrearProducto(props){
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="w-[1400px] flex bg-white p-5 rounded-lg items-center gap-4">
-                <CargarArchivos/>
+                <CargarArchivos setFiles = {setFiles} files={files}/>
 
                 
                 <div className="flex flex-col flex-1 gap-7">
@@ -150,14 +152,23 @@ export default function ModalCrearProducto(props){
 
 
 
-async function crearProductoFetch(nuevoProducto, setProductos, productos){
+async function crearProductoFetch(nuevoProducto, setProductos, productos, imagenes){
+
+    const formData = new FormData()
+    
+    formData.append("data", JSON.stringify(nuevoProducto))
+
+
+    imagenes.forEach((imagen) => {
+        formData.append("imagenes", imagen)
+    })
+
+    console.log(imagenes)
+
     return toast.promise(
         fetch("http://localhost:3000/api/v1/productos",{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(nuevoProducto)
+            method: "POST",
+            body: formData
         })
         .then(async response => {
             if (!response.ok){
@@ -169,7 +180,8 @@ async function crearProductoFetch(nuevoProducto, setProductos, productos){
                 return data.body
             }
             else {
-                throw new Error(data.message)
+                console.log(data)
+                throw new Error(data.error)
             }
         })
     , {

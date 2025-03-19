@@ -1,43 +1,41 @@
 import { useState, useEffect } from "react";
 import { FaUpload, FaTrash } from "react-icons/fa";
 import MostrarImagen from "../MostrarImagen";
-import { FaUserLargeSlash } from "react-icons/fa6";
 
 
 const urlPrueba = "https://images.unsplash.com/photo-1554629947-334ff61d85dc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&h=1000&q=90"
 
 
-export default function CargarArchivos() {
-  const [files, setFiles] = useState([]);
+export default function CargarArchivos(props) {
+
   const [urls, setUrls] = useState([]);
   const [indice, setIndice] = useState(0);
 
   useEffect(()=> {
-    const urls = files.map((file) => {
+    const urls = props.files.map((file) => {
       return URL.createObjectURL(file);
     });
     setUrls(urls);
-  }, [files])
+  }, [props.files])
 
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
     // Se deben eliminar los archivos que ya estan en el estado
     const filteredFiles = selectedFiles.filter((selectedFile) => {
-      return !files.some((file) => {
+      return !props.files.some((file) => {
         return selectedFile.name === file.name;
       });
     }
     );
-    setFiles(files.concat(filteredFiles));
+    props.setFiles(props.files.concat(filteredFiles));
   };
 
   function eliminarImagen(){
-    const nuevoFiles = [...files]
+    const nuevoFiles = [...props.files]
     nuevoFiles.splice(indice, 1)
-    setFiles(nuevoFiles)
+    props.setFiles(nuevoFiles)
   }
-
 
   return (
     <div className="flex flex-col items-center p-4 gap-2">
