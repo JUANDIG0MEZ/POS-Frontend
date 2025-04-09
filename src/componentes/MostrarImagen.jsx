@@ -44,11 +44,11 @@ export default function MostrarImagen(props){
     return (    
         <div className="flex flex-col items-center">
             <figure className='overflow-hidden relative rounded-lg border'>
-                <div onClick={() => anteriorImagen()} className='absolute top-1/2 left-1 bg-gray-50 rounded-md cursor-pointer border text-gray-600 hover:text-red-500 hover:shadow-lg'>
+                <div onClick={() => anteriorImagen()} className='absolute top-1/2 -left-2 bg-gray-50 rounded-md cursor-pointer border text-gray-600 hover:text-red-500 hover:shadow-lg'>
                     <FaChevronLeft className='text-inherit m-1 w-5 h-5 '/>
                 </div>
                 <img className="w-[400px] h-80 object-contain" src={props.imagenes[indexImagen]} alt="" />
-                <div onClick={()=> siguienteImagen()} className='absolute top-1/2 right-1 bg-gray-50 rounded-md cursor-pointer border text-gray-600 hover:text-red-500 hover:shadow-lg'>
+                <div onClick={()=> siguienteImagen()} className='absolute top-1/2 -right-2 bg-gray-50 rounded-md cursor-pointer border text-gray-600 hover:text-red-500 hover:shadow-lg'>
                     <FaChevronRight className='text-inherit m-1 w-5 h-5'/>
                 </div>
             </figure>

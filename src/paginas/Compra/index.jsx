@@ -9,8 +9,7 @@ import { useState } from "react"
 import { useParams } from "react-router-dom"
 import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
 import ModalConfirmar from "../../componentes/Modales/ModalConfirmar"
-import CrudDatosFacturasCompra from "../../servicios/crudDatosFacturasCompra"
-import {toast} from 'sonner'
+import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 export default function Compra(){
 
     const {id} = useParams()
@@ -48,27 +47,19 @@ export default function Compra(){
     }
 
     useEffect(()=>{
-
-        toast.promise(
-            CrudDatosFacturasCompra.factura(id),
-            {
-                loading: "Cargando datos de la factura",
-                success: (data) => {
-                    setFacturaOriginal(data.datos)
-                    setFacturaModificada(data.datos)
-                    setFecha(data.info.fecha)
-                    setNombre(data.info.cliente)
-                    setTelefono(data.info.telefono)
-                    setEmail(data.info.email)
-                    setEstado(data.info.estado)
-                    setPagado(data.info.pagado)
-                    setTotal(data.info.total)
-                    setTotalTabla(data.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
-                    return "Datos cargados correctamente"
-                },
-                error: "Error al cargar los datos de la factura"
-            }
-        )
+        function cbFactura(resData){
+            setFacturaOriginal(resData.datos)
+            setFacturaModificada(resData.datos)
+            setFecha(resData.info.fecha)
+            setNombre(resData.info.cliente)
+            setTelefono(resData.info.telefono)
+            setEmail(resData.info.email)
+            setEstado(resData.info.estado)
+            setPagado(resData.info.pagado)
+            setTotal(resData.info.total)
+            setTotalTabla(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
+        }
+        fetchManager(`http://localhost:3000/api/v1/facturas/compras/${id}`, cbFactura, "GET")
     }, [])
 
     useEffect(()=> {
@@ -85,44 +76,17 @@ export default function Compra(){
             }
         })  
 
-        toast.promise(
-            fetch(`http://localhost:3000/api/v1/facturas/compras/${id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(detalles)
-            })
-            .then(async (response) => {
-                if (!response.ok){
-                    throw new Error(`Error ${response.status}: ${response.statusText}`)
-                }
-
-                const data = await response.json()
-                
-                if (data.status === "success"){
-                    return data;
-                }
-                else {
-                    throw new Error(data.message)
-                }
-            })
-            ,
-            {
-                loading: "Guardando cambios.",
-                success: (data) => {
-                    setFacturaOriginal(facturaModificada)
-                    setTotalTabla(totalModificado)
-                    setTotal(data.body.total)
-                    if ("pagado" in data.body){
-                        setPagado(data.body.pagado)
-                    }
-                    return data.message
-                },
-                error: (error) => error
+        function cb(resData){
+            setFacturaOriginal(facturaModificada)
+            setTotalTabla(resData.total)
+            setTotal(resData.total)
+            console.log("resData de la factura modfiicada", resData)
+            if ("pagado" in resData){
+                setPagado(resData.pagado)
             }
-
-        )
+        }
+        
+        fetchManager(`http://localhost:3000/api/v1/facturas/compras/${id}`, cb, "PATCH", detalles)
     }
 
     function cambiarEstado(nuevoValor){

@@ -1,5 +1,5 @@
 import Tabla from "../../componentes/Tabla"
-import {FiltradoDatos} from "../../filtrado/filtradoDatos"
+import {FiltradoDatos} from "../../serviciosYFunciones/filtradoDatos"
 import {useState, useContext, useEffect} from 'react'
 import { ContextInventario } from "../../contextInventario"
 import InputLista from "../../componentes/InputLista"
@@ -49,6 +49,7 @@ export default  function Clientes() {
             navigate(`/cliente/${idSeleleccionado}`)
         }
     }, [ idSeleleccionado ])
+
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 ">

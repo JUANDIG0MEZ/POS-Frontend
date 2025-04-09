@@ -3,9 +3,9 @@ import InputText from '../../componentes/InputText';
 import {useParams} from 'react-router-dom';
 import Boton from '../../componentes/Boton';
 import Tabla from '../../componentes/Tabla';
-import { cargarCliente, clientePagos, clienteCompras, clienteAbonos, clienteVentas } from '../../servicios/obtenerDatos';
-export default function Cliente() {
+import { fetchManager, toastFetchPromise } from '../../serviciosYFunciones/fetchFunciones';
 
+export default function Cliente() {
     const {id} = useParams();
     const [nombre, setNombre]= useState("")
     const [direccion, setDireccion] = useState("")
@@ -28,21 +28,17 @@ export default function Cliente() {
     })
 
     useEffect(()=>{
-        async function cargar(){
-            try{
-                const cliente = await cargarCliente(id)
-                setNombre(cliente.nombre)
-                setDireccion(cliente.direccion)
-                setTelefono(cliente.telefono)
-                setEmail(cliente.email)
-                setTipo(cliente.tipo)
-                setPorPagarle(cliente.porPagarle)
-                setDebe(cliente.debe)
-
+        function cargar(){
+            function cbCliente(resData){
+                setNombre(resData.nombre)
+                setDireccion(resData.direccion)
+                setTelefono(resData.telefono)
+                setEmail(resData.email)
+                setTipo(resData.tipo)
+                setPorPagarle(resData.porPagarle)
+                setDebe(resData.debe)
             }
-            catch{
-                console.log(`error al cargar el cliente ${id}`)
-            }   
+            fetchManager(`http://localhost:3000/api/v1/clientes/${id}`, cbCliente, "GET")
         }
         cargar()
     }, [])
@@ -58,51 +54,24 @@ export default function Cliente() {
     }
 
     async function cargarVentas(){
-        try{
-            const consultaVentas = await clienteVentas(id)
-            setVentas(consultaVentas)
-            cambiarTabla("ventas")
-        }
-        catch{
-            console.log(`error al cargar los pagos del cliente ${id}`)
-        } 
+        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/ventas`, setVentas, "GET")
+        cambiarTabla("ventas")
     }
 
     async function cargarcompras(){
-        try{
-            const consultaCompras = await clienteCompras(id)
-            setCompras(consultaCompras)
-            cambiarTabla("compras")
-        }
-        catch{
-            console.log(`error al cargar los pagos del cliente ${id}`)
-        } 
+        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/compras`, setCompras, "GET")
+        cambiarTabla("compras")
     }
 
     async function cargarAbonos(){
-        try{
-            const consultaAbonos = await clienteAbonos(id)
-            setAbonos(consultaAbonos)
-            cambiarTabla("abonos")
-        }
-        catch{
-            console.log(`error al cargar los pagos del cliente ${id}`)
-        } 
+        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/abonos`, setAbonos, "GET")
+        cambiarTabla("abonos")
     }
 
     async function cargarPagos(){
-        try{
-            const consultaPagos = await clientePagos(id)
-            setPagos(consultaPagos)
-            cambiarTabla("pagos")
-        }
-        catch{
-            console.log(`error al cargar los pagos del cliente ${id}`)
-        } 
+        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/pagos`, setPagos, "GET")
+        cambiarTabla("pagos")
     }
-
-    
-
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
@@ -135,10 +104,12 @@ export default function Cliente() {
                         <Boton 
                         onClick={cargarcompras}
                         texto="Compras" isNormal={true}/>
+
                         <Boton
                         onClick={cargarAbonos}
                         texto="Abonos"
                         isNormal={true}/>
+
                         <Boton texto="Pagos" 
                         onClick={cargarPagos}
                         isNormal={true}/>

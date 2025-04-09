@@ -4,12 +4,13 @@ import { ContextInventario } from "../../contextInventario"
 import Boton from "../../componentes/Boton"
 import InputListaMultiple from "../../componentes/InputListaMultiple"
 import InputLista from "../../componentes/InputLista"
-import CrudDatosClientes from "../../servicios/crudDatosClientes"
+import CrudDatosClientes from "../../serviciosYFunciones/crudDatosClientes"
 import InputNumber from "../../componentes/InputNumber"
 import { toast } from "sonner"
 import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactura"
 import MostrarImagen from "../../componentes/MostrarImagen"
 
+import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
 
 const renombrar = {
     id: "ID",
@@ -42,7 +43,7 @@ export default function Comprar() {
     
     const [total , setTotal] = useState(0)
     const [medida, setMedida] = useState("")
-
+    const [imagenes, setImagenes] = useState([])
 
     const [idProductoSeleccionadoTabla, setIdProductoSeleccionadoTabla] = useState(null)
 
@@ -67,6 +68,7 @@ export default function Comprar() {
         if (producto){
             setNombreProductoSeleccionado(producto.nombre)
             setMedida(producto.medida)
+            obtenerImagenes(idProducto, setImagenes)
         }
     
     }, [idProducto])
@@ -119,6 +121,7 @@ export default function Comprar() {
             const nuevoCarrito = carritoDeCompras.filter(producto => producto?.id != idProductoSeleccionadoTabla)
             toast.info("Producto eliminado")
             setCarritoDeCompras(nuevoCarrito)
+
         }
         
     }, [idProductoSeleccionadoTabla])
@@ -243,7 +246,7 @@ export default function Comprar() {
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
             <div className="flex gap-3 items-center">
-                <MostrarImagen imagenes={"https://www.semana.com/resizer/v2/ZBUPHEFWHNHIFE3VQP5VISURGM.jpg?auth=652e54160a25d475ded57e8c6950da4f6af5a4e7251e56525f1f0bff93b71c37&smart=true&quality=75&width=1280"}/>
+                <MostrarImagen imagenes={imagenes}/>
                 <div className="flex flex-col gap-4">
                     <h1 className="text-2xl font-bold mb-3">COMPRAR</h1>
                     <div className="flex flex-col gap-8">
@@ -263,7 +266,7 @@ export default function Comprar() {
                             setIdSeleccionado = {setIdProducto}
                             labelSeleccionado = {nombreProductoSeleccionado}
                             />
-                        <div className="flex w-full items-center justify-between">
+                        <div className="flex w-full items-center justify-between gap-3">
                             <InputNumber
                                 estilo = {"w-28"}
                                 valor={cantidadProducto}

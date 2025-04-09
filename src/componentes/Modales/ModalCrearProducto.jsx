@@ -163,7 +163,6 @@ async function crearProductoFetch(nuevoProducto, setProductos, productos, imagen
         formData.append("imagenes", imagen)
     })
 
-    console.log(imagenes)
 
     return toast.promise(
         fetch("http://localhost:3000/api/v1/productos",{
@@ -180,7 +179,6 @@ async function crearProductoFetch(nuevoProducto, setProductos, productos, imagen
                 return data.body
             }
             else {
-                console.log(data)
                 throw new Error(data.error)
             }
         })

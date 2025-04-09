@@ -5,9 +5,8 @@ import InputText from "../../componentes/InputText";
 import InputLista from "../../componentes/InputLista";
 import Boton from "../../componentes/Boton";
 import {Link, useNavigate } from "react-router-dom";
-
-import { FiltradoDatos } from "../../filtrado/filtradoDatos";
-import {toast} from 'sonner';
+import { FiltradoDatos } from "../../serviciosYFunciones/filtradoDatos";
+import { fetchManager } from "../../serviciosYFunciones/fetchFunciones";
 export default function Ventas(){
 
     const navigate = useNavigate()
@@ -34,31 +33,7 @@ export default function Ventas(){
     const [idEstado, setIdEstado] = useState(null)
 
     useEffect(()=> {
-        toast.promise(
-            fetch('http://localhost:3000/api/v1/facturas/ventas')
-                .then(async response => {
-                    if (!response.ok){
-                        throw new Error(`Error ${response.status}: ${response.statusText}`)
-                    }
-
-                    const data = await response.json()
-
-                    if (data.status === 'success'){
-                        return data
-                    }
-                    else {
-                        throw new Error(data.message)
-                    }
-                }),
-                {
-                    loading: 'Cargando facturas de ventas',
-                    success: (data) => {
-                        setFacturas(data.body)
-                        return `${data.body.length} Facturas cargadas`;
-                    },
-                    error: 'Error al cargar las facturas de venta'
-                }
-        )
+        fetchManager('http://localhost:3000/api/v1/facturas/ventas', setFacturas, "GET")
     }, [])
 
     useEffect(()=>{

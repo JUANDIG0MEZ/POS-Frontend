@@ -1,14 +1,12 @@
 import { useEffect } from "react"
-import Tabla  from "../../componentes/Tabla"
-import InputLista from "../../componentes/InputLista"
 import InputText from "../../componentes/InputText"
 import Boton from "../../componentes/Boton"
 import RadioBoton from "../../componentes/RadioBoton"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
-import {toast} from 'sonner'
 import DiffTabla from "../../componentes/DiffTabla"
+import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 
 export default function Venta(){
 
@@ -47,45 +45,20 @@ export default function Venta(){
 
 
     useEffect(()=>{
-        toast.promise(
-            fetch(`http://localhost:3000/api/v1/facturas/ventas/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(async (response)=> {
-                if (!response.ok){
-                    throw new Error(`Error ${response.status}: ${response.statusText}`)
-                }
-                const data = await response.json()
-                if (data.status === 'success'){
-                    return data.body
-                }
-                else {
-                    throw new Error(data.message)
-                }
-            })
-            ,
-            {
-                loading: "Cargando datos de la factura",
-                success: (data) => {
-                    setFacturaOriginal(data.datos)
-                    setFacturaModificada(data.datos)
-                    setFecha(data.info.fecha)
-                    setNombre(data.info.cliente)
-                    setTelefono(data.info.telefono)
-                    setEmail(data.info.email)
-                    setDireccion(data.info.direccion)
-                    setEstado(data.info.estado)
-                    setPagado(data.info.pagado)
-                    setTotal(data.info.total)
-                    setTotalTabla(data.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
-                    return "Datos cargados correctamente"
-                },
-                error: "Error al cargar los datos de la factura"
-            }
-        )
+        function cb(resData){
+            setFacturaOriginal(resData.datos)
+            setFacturaModificada(resData.datos)
+            setFecha(resData.info.fecha)
+            setNombre(resData.info.cliente)
+            setTelefono(resData.info.telefono)
+            setEmail(resData.info.email)
+            setDireccion(resData.info.direccion)
+            setEstado(resData.info.estado)
+            setPagado(resData.info.pagado)
+            setTotal(resData.info.total)
+            setTotalTabla(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
+        }
+        fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${id}`, cb, "GET")
     }, [])
 
 
@@ -98,44 +71,16 @@ export default function Venta(){
                 subtotal: item.subtotal
             }
         })
-
-        toast.promise(
-            fetch(`http://localhost:3000/api/v1/facturas/ventas/${id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(detalles)
-            })
-            .then(async (response)=> {
-                if (!response.ok){
-                    throw new Error(`Error ${response.status}: ${response.statusText}`)
-                }
-
-                const data = await response.json()
-
-                if (data.status === 'success'){
-                    return data
-                }
-                else {
-                    throw new Error(data.message)
-                }
-            }),
-            {
-                loading: "Guardando cambios",
-                success: (data) => {
-                    setFacturaOriginal(facturaModificada)
-                    setTotalTabla(totalModificado)
-                    setTotal(data.body.total)
-                    if ("pagado" in data.body){
-                        setPagado(data.body.pagado)
-                    }
-                    return data.message
-                },
-                error: (error) => error
+        
+        function cb(resData){
+            setFacturaOriginal(facturaModificada)
+            setTotalTabla(totalModificado)
+            setTotal(resData.total)
+            if ("pagado" in resData){
+                setPagado(resData.pagado)
             }
-        )
-    
+        }
+        fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${id}`,cb, "PATCH", detalles)    
     }
 
 
