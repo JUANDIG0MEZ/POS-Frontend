@@ -32,6 +32,20 @@ export async function otherFetch(url, method, body) {
     return await checkResponse(res)
 }
 
+export async function fetchFiles(url){
+    const res = await fetch(url)
+    return await checkResponse(res)
+}
+
+
+export async function otherFetchFiles(url, method, formData) {
+    const res = await fetch(url, {
+        method: method,
+        body: formData
+    })
+    return await checkResponse(res)
+}
+
 export async function toastFetchPromise(promise, cb) {
     toast.promise(promise,
         {
@@ -59,4 +73,62 @@ export function fetchManager(url, cb, method="GET", body = null) {
         toast.info("Peticion mal construida")
     }
 
+}
+
+
+
+// Ahora se deben agregar funciones para enviar imagenes y archivos.
+
+export function fetchFilesManager(url, cb, method="GET", formData = null) {
+    if (method === "GET"){
+        toastFetchPromise(otherFetchFiles(url), cb)
+    }
+    else if (formData && ["POST", "PATCH", "DELETE"].includes(method)) {
+        toastFetchPromise(otherFetchFiles(url, method, formData), cb)
+    }
+    else {
+        toast.info("Peticion mal construida")
+    }
+}
+
+
+
+async function crearProductoFetch(nuevoProducto, setProductos, productos, imagenes){
+
+    const formData = new FormData()
+    
+    formData.append("data", JSON.stringify(nuevoProducto))
+
+
+    imagenes.forEach((imagen) => {
+        formData.append("imagenes", imagen)
+    })
+
+
+    return toast.promise(
+        fetch("http://localhost:3000/api/v1/productos",{
+            method: "POST",
+            body: formData
+        })
+        .then(async response => {
+            if (!response.ok){
+                throw new Error(`Error ${response.status}: ${response.statusText}`)
+            }
+            const data = await response.json()
+            if (data.status === 'success'){
+
+                return data.body
+            }
+            else {
+                throw new Error(data.error)
+            }
+        })
+    , {
+        loading: "Creando producto",
+        success: (data) => {
+            setProductos([data, ...productos])
+            return "Producto creado"
+        },
+        error: (error) => error.message
+    })
 }

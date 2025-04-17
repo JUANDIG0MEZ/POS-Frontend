@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { FaUpload, FaTrash } from "react-icons/fa";
 import MostrarImagen from "../MostrarImagen";
+import {toast} from 'sonner';
 
-
-const urlPrueba = "https://images.unsplash.com/photo-1554629947-334ff61d85dc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&h=1000&q=90"
-
+const numeroMaximoArchivos = 20;
 
 export default function CargarArchivos(props) {
 
@@ -20,15 +19,38 @@ export default function CargarArchivos(props) {
 
 
   const handleFileChange = (event) => {
-    const selectedFiles = Array.from(event.target.files);
+    const archivosSeleccionados = Array.from(event.target.files);
     // Se deben eliminar los archivos que ya estan en el estado
-    const filteredFiles = selectedFiles.filter((selectedFile) => {
-      return !props.files.some((file) => {
+    const archivosFiltrados = archivosSeleccionados.filter((selectedFile) => {
+      // Se verifica si el archivo ya existe en el estado
+      const existe = props.files.some((file) => {
         return selectedFile.name === file.name;
       });
+
+      const esImagen = selectedFile.type.startsWith("image/");
+
+      if (!esImagen || existe) {
+        return false;
+      }
+      return true;
     }
     );
-    props.setFiles(props.files.concat(filteredFiles));
+
+    const totalArchivos = props.files.length
+    const disponibles = numeroMaximoArchivos - totalArchivos
+
+    if (disponibles <=0 ){
+      toast.error("No puedes subir mas archivos")
+      return
+    }
+
+    if (archivosFiltrados.length > disponibles){
+      toast.warning(`Solo se pueden subir ${disponibles} archivos`)
+    }
+
+    const archivosPermitidos = archivosFiltrados.slice(0, disponibles)
+
+    props.setFiles(props.files.concat(archivosPermitidos));
   };
 
   function eliminarImagen(){

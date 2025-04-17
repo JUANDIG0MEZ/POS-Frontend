@@ -3,7 +3,7 @@ import InputText from '../../componentes/InputText';
 import {useParams} from 'react-router-dom';
 import Boton from '../../componentes/Boton';
 import Tabla from '../../componentes/Tabla';
-import { fetchManager, toastFetchPromise } from '../../serviciosYFunciones/fetchFunciones';
+import { fetchManager } from '../../serviciosYFunciones/fetchFunciones';
 
 export default function Cliente() {
     const {id} = useParams();
@@ -28,19 +28,17 @@ export default function Cliente() {
     })
 
     useEffect(()=>{
-        function cargar(){
-            function cbCliente(resData){
-                setNombre(resData.nombre)
-                setDireccion(resData.direccion)
-                setTelefono(resData.telefono)
-                setEmail(resData.email)
-                setTipo(resData.tipo)
-                setPorPagarle(resData.porPagarle)
-                setDebe(resData.debe)
-            }
-            fetchManager(`http://localhost:3000/api/v1/clientes/${id}`, cbCliente, "GET")
+        function cbCliente(resData){
+            console.log("resData:", resData)
+            setNombre(resData.nombre)
+            setDireccion(resData.direccion)
+            setTelefono(resData.telefono)
+            setEmail(resData.email)
+            setTipo(resData.tipo)
+            setPorPagarle(resData.por_pagarle)
+            setDebe(resData.debe)
         }
-        cargar()
+        fetchManager(`http://localhost:3000/api/v1/clientes/${id}`, cbCliente, "GET")
     }, [])
 
     function cambiarTabla(tabla){

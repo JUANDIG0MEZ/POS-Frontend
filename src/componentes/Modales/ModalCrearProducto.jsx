@@ -7,6 +7,7 @@ import CargarArchivos from "../CargarArchivos"
 import  {toast} from 'sonner'
 import { useContext } from "react"
 import { ContextInventario } from "../../contextInventario"
+import { fetchFilesManager, fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 
 export default function ModalCrearProducto(props){
 
@@ -53,26 +54,32 @@ export default function ModalCrearProducto(props){
                     delete nuevoProducto[key]
                 }
             }
-            
-            crearProductoFetch(nuevoProducto, setProductos, productos, files)
+
+            function cbCrearProducto(resData){
+                setProductos([...productos, resData])
+                return "Producto creado"
+            }
+
+            const formData = new FormData()
+            formData.append("data", JSON.stringify(nuevoProducto))
+
+            files.forEach((imagen) => {
+                formData.append("files", imagen)
+            })
+
+            fetchFilesManager('http://localhost:3000/api/v1/productos', cbCrearProducto, "POST", formData)
         }
         else{
             toast.warning("El nombre del producto es obligatorio")
         }
-        
-        
-    
     }
 
     useEffect(()=>{
+        fetchManager('http://localhost:3000/api/v1/productos/marcas', setListaMarca, "GET")
+        fetchManager('http://localhost:3000/api/v1/productos/categorias', setListaCategoria, "GET")
+        fetchManager('http://localhost:3000/api/v1/productos/medidas', setListaMedida, "GET")
 
-        
-        cargarListas(setListaMarca, setListaCategoria, setListaMedida)
         }, [])
-
-
-        
-
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
@@ -147,125 +154,5 @@ export default function ModalCrearProducto(props){
             
             
         </div>
-    )
-}
-
-
-
-async function crearProductoFetch(nuevoProducto, setProductos, productos, imagenes){
-
-    const formData = new FormData()
-    
-    formData.append("data", JSON.stringify(nuevoProducto))
-
-
-    imagenes.forEach((imagen) => {
-        formData.append("imagenes", imagen)
-    })
-
-
-    return toast.promise(
-        fetch("http://localhost:3000/api/v1/productos",{
-            method: "POST",
-            body: formData
-        })
-        .then(async response => {
-            if (!response.ok){
-                throw new Error(`Error ${response.status}: ${response.statusText}`)
-            }
-            const data = await response.json()
-            if (data.status === 'success'){
-
-                return data.body
-            }
-            else {
-                throw new Error(data.error)
-            }
-        })
-    , {
-        loading: "Creando producto",
-        success: (data) => {
-            setProductos([data, ...productos])
-            return "Producto creado"
-        },
-        error: (error) => error.message
-    })
-}
-
-
-async function cargarListas(setMarcas, setCategorias, setMedidas){
-    toast.promise(
-        fetch('http://localhost:3000/api/v1/productos/marcas')
-        .then(async response => {
-            if (!response.ok){
-                throw new Error(`Error ${response.status}: ${response.statusText}`)
-            }
-            const data = await response.json()
-            if (data.status === 'success'){
-                return data.body
-            }
-            else {
-                throw new Error(data.message)
-            }
-        }),
-        {
-            loading: "Cargando marcas",
-            success: (data) => {
-                setMarcas(data)
-                return "Marcas cargadas"
-            },
-            error: (error) => error.message
-        }
-    )
-
-
-
-    toast.promise(
-        fetch('http://localhost:3000/api/v1/productos/categorias')
-        .then(async response => {
-            if (!response.ok){
-                throw new Error(`Error ${response.status}: ${response.statusText}`)
-            }
-            const data = await response.json()
-            if (data.status === 'success'){
-                return data.body
-            }
-            else {
-                throw new Error(data.message)
-            }
-        }),
-        {
-            loading: "Cargando categorias",
-            success: (data) => {
-                setCategorias(data)
-                return "Categorias cargadas"
-            },
-            error: (error) => error.message
-        }
-    )
-
-
-    toast.promise(
-        fetch('http://localhost:3000/api/v1/productos/medidas')
-        .then(async response => {
-            if (!response.ok){
-                throw new Error(`Error ${response.status}: ${response.statusText}`)
-            }
-            const data = await response.json()
-            if (data.status === 'success'){
-                return data.body
-            }
-            else {
-                throw new Error(data.message)
-            }
-        }),
-        {
-            loading: "Cargando medidas",
-            success: (data) => {
-                setMedidas(data)
-                return "Medidas cargadas"
-            },
-            error: (error) => error.message
-        }
     )
 }

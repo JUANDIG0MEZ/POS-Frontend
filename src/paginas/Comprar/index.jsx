@@ -11,6 +11,7 @@ import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactu
 import MostrarImagen from "../../componentes/MostrarImagen"
 
 import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
+import { fetchFilesManager, fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 
 const renombrar = {
     id: "ID",
@@ -68,7 +69,9 @@ export default function Comprar() {
         if (producto){
             setNombreProductoSeleccionado(producto.nombre)
             setMedida(producto.medida)
-            obtenerImagenes(idProducto, setImagenes)
+
+            fetchFilesManager(`http://localhost:3000/api/v1/productos/${idProducto}/imagenes`, setImagenes)
+            //obtenerImagenes(idProducto, setImagenes)
         }
     
     }, [idProducto])
@@ -207,38 +210,45 @@ export default function Comprar() {
 
             const compraEnviar = {info: info, datos: detalles}
             console.log(compraEnviar)
-            toast.promise(
-                fetch('http://localhost:3000/api/v1/facturas/compras', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(compraEnviar)
-                })
-                .then(async response => {
-                    if (!response.ok){
-                        throw new Error(`Error ${response.status}: ${response.statusText}`)
-                    }
 
-                    const data = await response.json()
-                    console.log(data)
-                    if (data.status === 'success'){
-                        return data
-                    }
-                    else {
-                        throw new Error(data.message)
-                    }
-                }),
-                {
-                    loading: "Finalizando compra",
-                    success: (data) => {
-                        setCarritoDeCompras([])
-                        setTotal(0)
-                        return data.message
-                    },
-                    error: "Ocurrio un error"
-                }
-            )
+            function cbCompra(resData) {
+                setCarritoDeCompras([])
+                setTotal(0)
+            }
+            fetchManager(`http://localhost:3000/api/v1/facturas/compras`, cbCompra, "POST", compraEnviar)
+
+            // toast.promise(
+            //     fetch('http://localhost:3000/api/v1/facturas/compras', {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         body: JSON.stringify(compraEnviar)
+            //     })
+            //     .then(async response => {
+            //         if (!response.ok){
+            //             throw new Error(`Error ${response.status}: ${response.statusText}`)
+            //         }
+
+            //         const data = await response.json()
+            //         console.log(data)
+            //         if (data.status === 'success'){
+            //             return data
+            //         }
+            //         else {
+            //             throw new Error(data.message)
+            //         }
+            //     }),
+            //     {
+            //         loading: "Finalizando compra",
+            //         success: (data) => {
+            //             setCarritoDeCompras([])
+            //             setTotal(0)
+            //             return data.message
+            //         },
+            //         error: "Ocurrio un error"
+            //     }
+            // )
         }
 
     }

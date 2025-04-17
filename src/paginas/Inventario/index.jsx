@@ -11,7 +11,7 @@ import ModalModificarProducto from "../../componentes/Modales/ModalModificarProd
 import { FiltradoDatos } from "../../serviciosYFunciones/filtradoDatos"
 import MostrarImagen from "../../componentes/MostrarImagen"
 import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
-
+import { fetchManager} from "../../serviciosYFunciones/fetchFunciones"
 
 export default function Inventario() {
     const {
@@ -70,7 +70,13 @@ export default function Inventario() {
         if (idProductoSeleccionado){
             // se establece el producot seleccionado
             setProductoSeleccionado(productos.find(producto => producto.id == idProductoSeleccionado))
-            obtenerImagenes(idProductoSeleccionado, setImagenes)
+
+
+
+            function cbObtenerUrlImagagenes(resData){
+                setImagenes(resData)
+            }
+            fetchManager(`http://localhost:3000/api/v1/productos/${idProductoSeleccionado}/imagenes`, cbObtenerUrlImagagenes)
         }
     }, [idProductoSeleccionado])
 
@@ -135,13 +141,9 @@ export default function Inventario() {
                         valor={busquedaMedida}
                         setValor={setBusquedaMedida}
                         labelSeleccionado={productoSeleccionado.medida}/>
-
                         <Boton texto="Limpiar" onClick={limipiarBusquedas} isNormal={true}/>
-                        
-
                         <Boton onClick={()=>setShowModalModificar(true)} texto="Modificar" isNormal={true}/>
-                        <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar" isNormal={false}/>
-                        
+                        <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar" isNormal={false}/>                    
                     </div>
                 </div>
             </div>

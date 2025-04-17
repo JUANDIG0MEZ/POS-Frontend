@@ -1,4 +1,3 @@
-
 import InputNumber from "../InputNumber"
 import Boton from "../Boton"
 import { useState, useEffect} from "react"
