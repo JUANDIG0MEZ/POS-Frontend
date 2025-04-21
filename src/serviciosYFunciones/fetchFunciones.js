@@ -95,14 +95,10 @@ export function fetchFilesManager(url, cb, method="GET", formData = null) {
 
 async function crearProductoFetch(nuevoProducto, setProductos, productos, imagenes){
 
-    const formData = new FormData()
     
-    formData.append("data", JSON.stringify(nuevoProducto))
 
 
-    imagenes.forEach((imagen) => {
-        formData.append("imagenes", imagen)
-    })
+    
 
 
     return toast.promise(

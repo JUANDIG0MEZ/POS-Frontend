@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom"
 import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
 import DiffTabla from "../../componentes/DiffTabla"
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
-
+import InputNumber from "../../componentes/InputNumber"
 export default function Venta(){
 
     const {id} = useParams()
@@ -118,8 +118,8 @@ export default function Venta(){
                         <RadioBoton onChange={cambiarEstado} name="estado" valor="Entregado" label="Entregado" checked={estado === "Entregado"}/>
                     </div>
                     <div className="flex gap-3">
-                        <InputText estilo={"w-48"} label="Pagado" valor={pagado} isNumber={true} isPrice={true}/>
-                        <InputText estilo={"w-48"} label="Total" valor={total} isNumber={true} isPrice={true}/>
+                        <InputNumber estilo={"w-48"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
+                        <InputNumber estilo={"w-48"} label="Total" valor={total} isPrice={true} format={true}/>
                     </div>
                     
                 </div>

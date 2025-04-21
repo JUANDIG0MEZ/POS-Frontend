@@ -48,6 +48,7 @@ export default function Compra(){
 
     useEffect(()=>{
         function cbFactura(resData){
+            console.log("resData:", resData)
             setFacturaOriginal(resData.datos)
             setFacturaModificada(resData.datos)
             setFecha(resData.info.fecha)
@@ -80,10 +81,7 @@ export default function Compra(){
             setFacturaOriginal(facturaModificada)
             setTotalTabla(resData.total)
             setTotal(resData.total)
-            console.log("resData de la factura modfiicada", resData)
-            if ("pagado" in resData){
-                setPagado(resData.pagado)
-            }
+            setPagado(resData.pagado)
         }
         
         fetchManager(`http://localhost:3000/api/v1/facturas/compras/${id}`, cb, "PATCH", detalles)

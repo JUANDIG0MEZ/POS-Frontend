@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 import Boton from '../../componentes/Boton';
 import Tabla from '../../componentes/Tabla';
 import { fetchManager } from '../../serviciosYFunciones/fetchFunciones';
-
+import InputNumber from '../../componentes/InputNumber';
 export default function Cliente() {
     const {id} = useParams();
     const [nombre, setNombre]= useState("")
@@ -85,10 +85,18 @@ export default function Cliente() {
                     <InputText estilo="w-48" label="Telefono"  valor={telefono} isNumber={true}/>
                     <InputText estilo="w-96" label="Email"  valor={email} />
                     <InputText estilo="w-40" label="Tipo"  valor={tipo} />
-
-                    <InputText estilo="w-48" label="Por pagarle"  valor={porPagarle} isNumber={true}/>
+                    
+                    <InputNumber estilo = {"w-62"} label="Por pagarle" valor={porPagarle} format={true} isPrice= {true}/>
+                    {/* <InputText estilo="w-48" label="Por pagarle"  valor={porPagarle} isNumber={true}/> */}
                     <Boton texto="Pagar"/>
-                    <InputText estilo="w-48" label="Debe"  valor={debe} isNumber={true}/>
+                    <InputNumber
+                        estilo = {"w-62"}
+                        label="Debe"
+                        valor={debe}
+                        format={true}
+                        isPrice= {true}
+                        />
+                    {/* <InputText estilo="w-48" label="Debe"  valor={debe} isNumber={true}/> */}
                     <Boton texto="Abonar"/>
                     
                 </div>

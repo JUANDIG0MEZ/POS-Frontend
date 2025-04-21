@@ -155,13 +155,12 @@ export default function Inventario() {
                     datos = {productosFiltrados}
                     isVisible = {isColumnasVisible}
                     setIdItemSeleccionado={setIdProductoSeleccionado}
-                    total = {4500000}
                     rename = {renombrar}
                 />
             </div>
             {
                 showModalCrear && <ModalCrearProducto setShowModal={setShowModalCrear}/> ||
-                showModalModificar && <ModalModificarProducto setShowModal={setShowModalModificar} productoSeleccionado={productoSeleccionado}/>
+                showModalModificar && <ModalModificarProducto setShowModal={setShowModalModificar} productoSeleccionado={productoSeleccionado} imagenes={imagenes}/>
             }
         </div>
     )
