@@ -209,7 +209,6 @@ export default function Comprar() {
             })
 
             const compraEnviar = {info: info, datos: detalles}
-            console.log(compraEnviar)
 
             function cbCompra(resData) {
                 setCarritoDeCompras([])
@@ -283,6 +282,7 @@ export default function Comprar() {
                                 setValor={setCantidadProducto}
                                 label="Cantidad*"
                                 isNumber={true}
+                                format={true}
                                 />
                             <InputNumber
                                 estilo = {"w-52"}
@@ -292,6 +292,7 @@ export default function Comprar() {
                                 label="Precio"
                                 isNumber={true}
                                 isPrice={true}
+                                format={true}
                                 />
                                 <p className="p-2 border rounded-md bg-gray-50 w-52 text-center font-semibold text-gray-800">{medida || " Medida"}</p> 
                             <InputNumber

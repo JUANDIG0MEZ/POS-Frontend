@@ -48,7 +48,6 @@ export default function Compra(){
 
     useEffect(()=>{
         function cbFactura(resData){
-            console.log("resData:", resData)
             setFacturaOriginal(resData.datos)
             setFacturaModificada(resData.datos)
             setFecha(resData.info.fecha)

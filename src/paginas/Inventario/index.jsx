@@ -141,6 +141,7 @@ export default function Inventario() {
                         valor={busquedaMedida}
                         setValor={setBusquedaMedida}
                         labelSeleccionado={productoSeleccionado.medida}/>
+                        
                         <Boton texto="Limpiar" onClick={limipiarBusquedas} isNormal={true}/>
                         <Boton onClick={()=>setShowModalModificar(true)} texto="Modificar" isNormal={true}/>
                         <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar" isNormal={false}/>                    

@@ -2,7 +2,7 @@ import InputText from "../InputText"
 import InputLista from "../InputLista"
 import Boton from "../Boton"
 import { useState, useEffect} from "react"
-
+import InputNumber from "../InputNumber"
 export default function ModalCrearCliente(props){
 
     const [nombre, setNombre] = useState("")
@@ -23,6 +23,16 @@ export default function ModalCrearCliente(props){
         
     }
 
+    // function crearCliente(){
+    //     const cliente = {
+    //         nombre: nombre,
+    //         direccion: direccion,
+    //         telefono: telefono,
+    //         email: email,
+    //         tip
+    //     }
+    // }
+
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
@@ -37,18 +47,18 @@ export default function ModalCrearCliente(props){
                         
                     </div>
                     <div className="flex gap-3">
-                        <InputText label = "Direccion" valor = {direccion} setDireccion = {setDireccion}/> 
+                        <InputText label = "Direccion" valor = {direccion} setValor = {setDireccion}/> 
                         <InputText estilo="w-80" label = "Email" valor = {email} setValor={setEmail}/>
                         <InputText estilo="w-48" label="Telefono" valor={telefono} setValor={setTelefono} isNumber={true}/>
                         
                     </div>
                     <div className="flex justify-between">
                         <div className="flex gap-3 items-center">
-                            <InputText
-                            estilo="w-44" label="Debe" valor={debe} setValor={setDebe} isNumber={true}/>
-                            <InputText 
+                            <InputNumber
+                            estilo="w-44" label="Debe" valor={debe} setValor={setDebe} format={true}/>
+                            <InputNumber
                             estilo="w-44"
-                            label="Por pagarle" valor={porPagarle} setValor={setPorPagarle} isNumber={true}/>
+                            label="Por pagarle" valor={porPagarle} setValor={setPorPagarle} format={true}/>
                             <Boton
                             texto="Limpiar"
                             isNormal={true}/>

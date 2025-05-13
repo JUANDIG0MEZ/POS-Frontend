@@ -93,7 +93,7 @@ export function fetchFilesManager(url, cb, method="GET", formData = null) {
 
 
 
-async function crearProductoFetch(nuevoProducto, setProductos, productos, imagenes){
+// async function crearProductoFetch(nuevoProducto, setProductos, productos, imagenes){
 
     
 
@@ -101,30 +101,30 @@ async function crearProductoFetch(nuevoProducto, setProductos, productos, imagen
     
 
 
-    return toast.promise(
-        fetch("http://localhost:3000/api/v1/productos",{
-            method: "POST",
-            body: formData
-        })
-        .then(async response => {
-            if (!response.ok){
-                throw new Error(`Error ${response.status}: ${response.statusText}`)
-            }
-            const data = await response.json()
-            if (data.status === 'success'){
+//     return toast.promise(
+//         fetch("http://localhost:3000/api/v1/productos",{
+//             method: "POST",
+//             body: formData
+//         })
+//         .then(async response => {
+//             if (!response.ok){
+//                 throw new Error(`Error ${response.status}: ${response.statusText}`)
+//             }
+//             const data = await response.json()
+//             if (data.status === 'success'){
 
-                return data.body
-            }
-            else {
-                throw new Error(data.error)
-            }
-        })
-    , {
-        loading: "Creando producto",
-        success: (data) => {
-            setProductos([data, ...productos])
-            return "Producto creado"
-        },
-        error: (error) => error.message
-    })
-}
+//                 return data.body
+//             }
+//             else {
+//                 throw new Error(data.error)
+//             }
+//         })
+//     , {
+//         loading: "Creando producto",
+//         success: (data) => {
+//             setProductos([data, ...productos])
+//             return "Producto creado"
+//         },
+//         error: (error) => error.message
+//     })
+// }

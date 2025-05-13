@@ -2,10 +2,11 @@ import InputText from "../InputText"
 import InputLista from "../InputLista"
 import Boton from "../Boton"
 import { useState, useEffect, useContext} from "react"
-import MostrarImagen from "../MostrarImagen"
+import ModificarImagenes from "../ModificarImagenes"
 
 import { ContextInventario } from "../../contextInventario"
-import { toastFetchPromise } from "../../serviciosYFunciones/fetchFunciones"
+import { fetchFilesManager } from "../../serviciosYFunciones/fetchFunciones"
+import InputNumber from "../InputNumber"
 
 export default function ModalModificarProducto(props){
 
@@ -17,16 +18,19 @@ export default function ModalModificarProducto(props){
     const productoSeleccionado = props.productoSeleccionado
 
     const [precioVenta, setPrecioVenta] = useState(productoSeleccionado.precio_venta)
-    const [marca, setMarca] = useState(productoSeleccionado.marca)
+    const [precioCompra, setPrecioCompra] = useState(productoSeleccionado.precio_compra)
     const [categoria, setCategoria] = useState(productoSeleccionado.categoria)
+    const [idCategoria, setIdCategoria] = useState(NaN)
     const [imagenes, setImagenes] = useState(props.imagenes)
-    console.log(imagenes)
+    const [files, setFiles] = useState([])
+    const [borradas, setBorradas] = useState([])
+    
+    console.log("borradas", borradas)
 
     function cerrarModal(){
         if (props.setShowModal){
             props.setShowModal(false)
         }
-        
     }
 
 
@@ -34,26 +38,49 @@ export default function ModalModificarProducto(props){
     function modificarProducto(){
         // El nombre y la marca no se pueden modificar
         if (productoSeleccionado.id){
-            const modificaciones = {}
-            modificaciones.id = productoSeleccionado.id
-            modificaciones.marca = marca
-            modificaciones.categoria = categoria
-            modificaciones.precio_venta = precioVenta
-            fetch('http://localhost:3000/api/v1/productos', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(modificaciones)
-            }).then(response=> {
-                if (response.ok){
-                    return response.json()
-                }
-            }).then(data => {
-                console.log("Producto modificado", data)
-            }).catch(error => {
-                console.log("Error al modificar el producto", error)
-            })
+
+            const formData = new FormData()
+
+
+            const body = {}
+
+            if (idCategoria){
+                body.categoria_id = idCategoria
+            }else {
+                body.categoria = categoria
+            }
+
+            if (precioCompra !== productoSeleccionado.precio_compra){
+                body.precio_compra = precioCompra
+            }
+            if (precioVenta !== productoSeleccionado.precio_venta){
+                body.precio_venta = precioVenta
+            }
+
+            if (borradas.length > 0){
+                body.borradas = borradas
+            }
+
+            if (files.length > 0){
+                files.forEach((file) => {
+                    formData.append("files", file)
+                })
+            }
+
+            formData.append("data", JSON.stringify(body))
+
+
+            function cbModificar(data){
+                console.log(data)
+            }
+
+
+            fetchFilesManager(`http://localhost:3000/api/v1/productos/${productoSeleccionado.id}`, cbModificar, "PATCH", formData)
+
+
+            // fetchFilesManager('http://localhost:3000/api/v1/productos', cbModificar')
+
+            //fetchFilesManager(`http://localhost:3000/api/v1/productos/${productoSeleccionado.id}`, cbModificar, "PATCH", modificaciones)
 
         }
         
@@ -62,7 +89,7 @@ export default function ModalModificarProducto(props){
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="flex bg-white p-5 rounded-lg w-[1200px] items-center gap-4">
                 <div className="">
-                    <MostrarImagen imagenes={imagenes}/>
+                    <ModificarImagenes imagenes={imagenes} files={files} setFiles = {setFiles} borradas={borradas} setBorradas= {setBorradas} />
                 </div>
                 
                 <div className="flex flex-col flex-1 gap-7">
@@ -73,12 +100,12 @@ export default function ModalModificarProducto(props){
                     </div>
                     <div className="flex w-full gap-3">
                         <InputText label = "Marca" valor={productoSeleccionado.marca}/>
-                        <InputLista label="Categoria" valor={categoria} lista = {categorias} />
+                        <InputLista label="Categoria" valor={categoria} setValor={setCategoria} lista = {categorias} setIdSeleccionado={setIdCategoria} />
                     </div>
                     <div className="flex gap-3">
-                        <InputText label="Cantidad" valor={productoSeleccionado.cantidad} isNumber={true}/>
-                        <InputText label="Valor Compra" valor={productoSeleccionado.precio_compra} isNumber={true}/>
-                        <InputText label="Valor Venta" valor={productoSeleccionado.precio_venta} isNumber={true}/>
+                        <InputNumber label="Cantidad" valor={productoSeleccionado.cantidad} format={true}/>
+                        <InputNumber label="Valor Compra" valor={precioCompra} setValor={setPrecioCompra} format={true}/>
+                        <InputNumber label="Valor Venta" valor={precioVenta} setValor={setPrecioVenta} format={true}/>
                     </div>
                     <div className="flex w-full justify-end gap-3">
                         <Boton onClick={cerrarModal} texto = "Cancelar"  isNormal = {true}/>

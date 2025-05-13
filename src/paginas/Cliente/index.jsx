@@ -29,7 +29,6 @@ export default function Cliente() {
 
     useEffect(()=>{
         function cbCliente(resData){
-            console.log("resData:", resData)
             setNombre(resData.nombre)
             setDireccion(resData.direccion)
             setTelefono(resData.telefono)

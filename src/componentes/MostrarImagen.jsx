@@ -4,7 +4,7 @@ import {FaChevronRight, FaChevronLeft, FaImages} from 'react-icons/fa'
 export default function MostrarImagen(props){
 
     const [indexImagen, setIndexImagen] = useState(0)
-
+    
 
     useEffect(()=> {
         if (indexImagen >= props.imagenes.length){
