@@ -24,8 +24,6 @@ export default function ModalModificarProducto(props){
     const [imagenes, setImagenes] = useState(props.imagenes)
     const [files, setFiles] = useState([])
     const [borradas, setBorradas] = useState([])
-    
-    console.log("borradas", borradas)
 
     function cerrarModal(){
         if (props.setShowModal){
@@ -71,7 +69,7 @@ export default function ModalModificarProducto(props){
 
 
             function cbModificar(data){
-                console.log(data)
+                //console.log(data)
             }
 
 

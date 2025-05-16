@@ -7,10 +7,10 @@ async function checkResponse(response) {
     }
     
     const res = await response.json();
-
     if (res.success === true) {
         return res;
     }
+    
     else {
         throw new Error(res.message);
     }
@@ -55,7 +55,8 @@ export async function toastFetchPromise(promise, cb) {
                 return `${res.message}`;
             },
             error: (error) => {
-                return error}
+                return error.message
+            }
         }   
     )
 }

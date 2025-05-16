@@ -216,38 +216,6 @@ export default function Comprar() {
             }
             fetchManager(`http://localhost:3000/api/v1/facturas/compras`, cbCompra, "POST", compraEnviar)
 
-            // toast.promise(
-            //     fetch('http://localhost:3000/api/v1/facturas/compras', {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json'
-            //         },
-            //         body: JSON.stringify(compraEnviar)
-            //     })
-            //     .then(async response => {
-            //         if (!response.ok){
-            //             throw new Error(`Error ${response.status}: ${response.statusText}`)
-            //         }
-
-            //         const data = await response.json()
-            //         console.log(data)
-            //         if (data.status === 'success'){
-            //             return data
-            //         }
-            //         else {
-            //             throw new Error(data.message)
-            //         }
-            //     }),
-            //     {
-            //         loading: "Finalizando compra",
-            //         success: (data) => {
-            //             setCarritoDeCompras([])
-            //             setTotal(0)
-            //             return data.message
-            //         },
-            //         error: "Ocurrio un error"
-            //     }
-            // )
         }
 
     }

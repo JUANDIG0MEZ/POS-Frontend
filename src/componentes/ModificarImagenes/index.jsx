@@ -65,12 +65,14 @@ export default function ModificarImagenes(props) {
                 nuevoFiles.splice(indice, 1)
                 props.setFiles(nuevoFiles)
             }
-            else if ( indice >= 0){
+            else if ( indice >= 0 && urlsMostrar.length > 0){
+                
                 const urlsOriginales = [... urlsSinBorradas]
                 const borrada = urlsMostrar[indice]
+            
 
                 props.setBorradas([...props.borradas, borrada])
-                urlsOriginales.splice(indice, 1)
+                urlsOriginales.splice(indice - urlsFiles.length, 1)
                 setUrlsSinBorradas(urlsOriginales)
             }
         }

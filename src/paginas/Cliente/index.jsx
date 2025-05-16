@@ -5,6 +5,7 @@ import Boton from '../../componentes/Boton';
 import Tabla from '../../componentes/Tabla';
 import { fetchManager } from '../../serviciosYFunciones/fetchFunciones';
 import InputNumber from '../../componentes/InputNumber';
+import ModalPagarCliente from '../../componentes/Modales/ModalPagarCliente';
 export default function Cliente() {
     const {id} = useParams();
     const [nombre, setNombre]= useState("")
@@ -19,6 +20,8 @@ export default function Cliente() {
     const [compras, setCompras]= useState([])
     const [abonos, setAbonos]= useState([])
     const [ventas, setVentas]= useState([])
+
+    const [showModalPago, setShowModalPago] = useState(false)
 
     const [mostrarTabla, setMostrarTabla] = useState({
         pagos: true,
@@ -87,7 +90,8 @@ export default function Cliente() {
                     
                     <InputNumber estilo = {"w-62"} label="Por pagarle" valor={porPagarle} format={true} isPrice= {true}/>
                     {/* <InputText estilo="w-48" label="Por pagarle"  valor={porPagarle} isNumber={true}/> */}
-                    <Boton texto="Pagar"/>
+                    <Boton texto="Pagar"
+                    onClick={() => setShowModalPago(true)}/>
                     <InputNumber
                         estilo = {"w-62"}
                         label="Debe"
@@ -131,6 +135,7 @@ export default function Cliente() {
                 {mostrarTabla.abonos && <Tabla datos={abonos}/>}
                 {mostrarTabla.ventas && <Tabla datos={ventas}/>}
             </div>
+            {showModalPago && <ModalPagarCliente clienteId={id} porPagar = {porPagarle} setShowModal = {setShowModalPago} setPorPagarle={setPorPagarle}/>}
         </div>
 
         

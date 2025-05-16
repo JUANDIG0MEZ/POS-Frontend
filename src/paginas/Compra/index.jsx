@@ -9,6 +9,7 @@ import { useState } from "react"
 import { useParams } from "react-router-dom"
 import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
 import ModalConfirmar from "../../componentes/Modales/ModalConfirmar"
+import ModalPagarCompra from "../../componentes/Modales/ModalPagarCompra"
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 export default function Compra(){
 
@@ -16,6 +17,7 @@ export default function Compra(){
 
     const [showModal, setShowModal] = useState(false)
     const [showModalConfirmar, setShowModalConfirmar] = useState(false)
+    const [showModalAbonar, setShowModalAbonar] = useState(false)
     const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(null)
 
     const [facturaOriginal, setFacturaOriginal] = useState([])
@@ -109,7 +111,7 @@ export default function Compra(){
                     <div className="flex gap-3 items-center">
                         <InputNumber estilo={"w-48"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
                         <InputNumber estilo={"w-48"} label="Total" valor={total} isPrice={true} format={true}/>
-                        <Boton texto="Abonar"></Boton>
+                        <Boton texto="Abonar" onClick={() => setShowModalAbonar(true)}></Boton>
                     </div>   
                     <div className="flex gap-4 items-center">
                         <RadioBoton onChange={cambiarEstado} name="estado" valor="Por entregar" label="Por entregar" checked={estado === "Por entregar"}/>
@@ -138,6 +140,7 @@ export default function Compra(){
             <div>
                 {showModal && <ModalModificarProductoFactura setShowModal={setShowModal} idProductoSeleccionado={idProductoSeleccionado} datos={facturaModificada} setDatos={setFacturaModificada}/>}
                 {showModalConfirmar &&  <ModalConfirmar titulo="Estado del pedido" mensaje="¿Estás seguro de que deseas establecer como entregado este pedido? No podras revertir esta accion." setConfirmacion={setConfirmacionEntrega}/>}
+                {showModalAbonar && <ModalPagarCompra setShowModal={setShowModalAbonar} numeroFactura={id} pagado = {pagado} setPagado = {setPagado} total = {total}/>}
             </div>
         </div>
     )
