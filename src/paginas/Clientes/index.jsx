@@ -6,7 +6,9 @@ import InputLista from "../../componentes/InputLista"
 import InputText from "../../componentes/InputText"
 import Boton from "../../componentes/Boton"
 
-import {FaSearch} from "react-icons/fa"
+
+
+import {FaSearch, FaUser} from "react-icons/fa"
 import BotonIcono from "../../componentes/BotonIcono";
 
 
@@ -57,11 +59,9 @@ export default  function Clientes() {
 
 
     return (
-        <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 ">
+        <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
             <div className="flex flex-col gap-2">
-                <div className="flex justify-between">
-                    <h2 className="text-3xl font-semibold mb-5">Lista de clientes</h2>
-                </div>
+                <h2 className="titulo mb-5">Lista de clientes</h2>
                 <div className="flex gap-3 items-center">
                     <InputText
                     estilo={"w-20"}
@@ -84,7 +84,7 @@ export default  function Clientes() {
                     valor={tipo}
                     setValor={setTipo}/>
                     <BotonIcono texto ={<FaSearch/>} onClick={()=>{}}/>
-                    <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar"/>      
+                    <BotonIcono onClick={()=>setShowModalCrear(true)} texto={<FaUser/>}/>      
                 </div>
             </div>
             

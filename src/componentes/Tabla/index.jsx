@@ -39,7 +39,7 @@ export default memo(function Tabla(props) {
                         <tr
                             key={dato.id} 
                             data-id = {dato.id}
-                            className={`hover:bg-red-300 cursor-pointer text-center`}>
+                            className={`bg-hover cursor-pointer text-center`}>
                             {   
                                 Object.keys(dato).map((key, indice)=>{
                                     if (props.isVisible){

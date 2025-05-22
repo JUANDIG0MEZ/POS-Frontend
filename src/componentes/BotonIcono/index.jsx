@@ -8,7 +8,7 @@ export default function BotonIcono(props){
     return (
         <button
         onClick={handleClick}
-        className={'hover:text-red-500 text-gray-600 bg-gray-50 border hover:shadow-md px-3 py-3 rounded-lg font-bold text-md'}>
+        className={'texto-hover texto-color bg-color texto-size borde hover:shadow-md px-3 py-3 rounded-lg font-bold'}>
             {props.texto}
         </button>
     )

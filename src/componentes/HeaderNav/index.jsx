@@ -6,7 +6,7 @@ const navItems = {
         icon: <FaHome />,
         to: '/'
     },
-    'Inventario': {
+    'Productos': {
         icon: <FaBox />,
         to: '/inventario'
     },
@@ -26,14 +26,14 @@ const navItems = {
 
 export default function HeaderNav() {
     return (
-        <nav className='flex bg-black justify-between p-3 text-lg px-6'>
-            <h1 className='flex text-xl text-white items-center gap-2'><FaReact className='animate-spin rain'/>Inventario</h1>
+        <nav className='flex bg-black justify-between p-3 text-xl px-6'>
+            <h1 className='flex font-bold text-white items-center gap-2'><FaReact className='animate-spin rain'/>Inventario</h1>
             <ul className='flex gap-6'>
                 {
                     Object.keys(navItems).map((item, index)=>{
                         return (
                             <li key={index}>
-                                <NavLink to={navItems[item].to} className={({isActive}) => `${isActive ? "font-bold": "font-thin"} text-white flex items-center gap-3`}>
+                                <NavLink to={navItems[item].to} className={({isActive}) => `${isActive ? "font-bold": "font-normal"} text-white flex items-center gap-3`}>
                                     {item}
                                 </NavLink>
                             </li>

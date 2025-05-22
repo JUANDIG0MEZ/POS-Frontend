@@ -9,7 +9,13 @@ import Ventas from './paginas/Ventas'
 import Vender from './paginas/Vender'
 import Venta from './paginas/Venta'
 import Perfil from './paginas/Perfil'
+
 import './App.css'
+import './styles/estilos.css'
+import './styles/colores.css'
+import './styles/size.css'
+import './styles/bordes.css'
+
 import Dashboard from './componentes/Dashboard'
 import Cliente from './paginas/Cliente'
 import {Toaster} from 'sonner'

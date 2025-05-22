@@ -3,12 +3,11 @@ import Tabla from "../../componentes/Tabla";
 import FechaInput from "../../componentes/FechaInput";
 import InputText from "../../componentes/InputText";
 import InputLista from "../../componentes/InputLista";
-import Boton from "../../componentes/Boton";
+import BotonIcono from "../../componentes/BotonIcono";
 import {Link, useNavigate } from "react-router-dom";
 import { FiltradoDatos } from "../../serviciosYFunciones/filtradoDatos";
 import { fetchManager} from "../../serviciosYFunciones/fetchFunciones";
-import BotonIcono from "../../componentes/BotonIcono";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaShoppingCart } from "react-icons/fa";
 export default function Compras(){
 
     const [facturas, setFacturas] = useState([])
@@ -55,7 +54,7 @@ export default function Compras(){
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-2 overflow-auto">
-            <h1 className="text-3xl font-bold w-fit mb-5">Facturas de compra</h1>
+            <h1 className="titulo mb-5">Facturas de compra</h1>
 
             <div className="flex items-center gap-3">
                 <div className="w-24">
@@ -73,11 +72,11 @@ export default function Compras(){
                 </div>
                 <BotonIcono texto={<FaSearch/>} onClick={()=>{}}/>
                 
-                <Link className="" to={'/comprar'}><Boton texto={"Comprar"}/></Link>
+                <Link className="" to={'/comprar'}><BotonIcono texto={<FaShoppingCart/>}/></Link>
 
             </div>
             
-            <div>
+            <div className="overflow-auto">
             <Tabla
                 datos={facturasFiltradas}
                 setIdItemSeleccionado = {setIdSeleccionado}

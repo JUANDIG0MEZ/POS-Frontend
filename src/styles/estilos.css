@@ -1,0 +1,7 @@
+.titulo {
+    @apply text-3xl font-bold
+}
+
+.sombra-boton {
+    @apply shadow-lg
+}

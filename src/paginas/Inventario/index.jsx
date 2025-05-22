@@ -118,7 +118,7 @@ export default function Inventario() {
                 
 
                 <div className="flex w-full flex-col gap-8 justify-center">
-                    <h2 className="text-3xl font-bold w-full text-left mb-6">Lista de productos</h2>
+                    <h2 className="titulo">Lista de productos</h2>
                     <div className="flex w-full gap-4 items-center">
                         <div className="flex gap-1 items-center">
                             <BotonIcono texto={<FaChevronLeft/>}/>

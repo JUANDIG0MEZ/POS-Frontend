@@ -32,12 +32,12 @@ export default function InputText(props){
 
     return (
         <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
-            <label className="font-semibold absolute -top-6 text-gray-600 text-md text-nowrap">{labelSeleccionado(props.label)}</label>
+            <label className="font-semibold absolute -top-6 texto-color text-md text-nowrap">{labelSeleccionado(props.label)}</label>
             <input 
             onChange={establecerValor}
             type="text" 
             value={ props.format ? formattedValue(props.valor, props.format) : props.valor || "0"}
-            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} font-semibold w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500 ring-red-300 text-gray-600 transition duration-200`}/>
+            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} font-semibold w-full border rounded-md p-2  borde-input texto-color`}/>
         </div>
     )
 }

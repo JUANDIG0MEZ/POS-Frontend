@@ -7,6 +7,10 @@ import { fetchManager } from '../../serviciosYFunciones/fetchFunciones';
 import InputNumber from '../../componentes/InputNumber';
 import ModalPagarCliente from '../../componentes/Modales/ModalPagarCliente';
 import ModalAbonarCliente from '../../componentes/Modales/ModalAbonarCliente';
+import BotonIcono from '../../componentes/BotonIcono';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+
+
 export default function Cliente() {
     const {id} = useParams();
     const [nombre, setNombre]= useState("")
@@ -25,6 +29,13 @@ export default function Cliente() {
     const [showModalPago, setShowModalPago] = useState(false)
     const [showModalAbono, setShowModalAbono] = useState(false)
 
+    const [pagina, setPagina] = useState(1)
+    const [limite, setLimite] = useState(30)
+    const [offset, setOffset] = useState(0)
+    const [numFilas, setNumFilas] = useState(0)
+
+    const [totalPaginas, setTotalPaginas] = useState(1)
+
     const [mostrarTabla, setMostrarTabla] = useState({
         pagos: true,
         compras: false,
@@ -33,7 +44,12 @@ export default function Cliente() {
     })
 
     useEffect(()=>{
+
+
+
+
         function cbCliente(resData){
+
             setNombre(resData.nombre)
             setDireccion(resData.direccion)
             setTelefono(resData.telefono)
@@ -55,8 +71,28 @@ export default function Cliente() {
         })
     }
 
+    function paginaSiguiente(){
+        if (totalPaginas > pagina){
+            setPagina(pagina + 1)
+        }
+    }
+
+    function paginaAnterior(){
+        if (pagina > 1){
+            setPagina(pagina - 1)
+        }
+    }
+
+
+
     async function cargarVentas(){
-        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/ventas`, setVentas, "GET")
+        const cbVentas =(resData) => {
+            console.log(resData)
+            setVentas(resData.rows)
+            setTotalPaginas(Math.ceil(resData.count / limite))
+            setNumFilas(resData.count)
+        }
+        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/ventas`, cbVentas, "GET")
         cambiarTabla("ventas")
     }
 
@@ -82,7 +118,7 @@ export default function Cliente() {
                 <div className='flex gap-3 mb-2'>
                     <InputText label="Nombre"  valor={nombre}/>
                     <InputText label="Direccion"  valor={direccion}/>
-
+                    <Boton texto="Modificar datos" isNormal="true"/>
 
                 </div>
                 <div className='flex gap-3 items-center'>
@@ -91,7 +127,6 @@ export default function Cliente() {
                     <InputText estilo="w-40" label="Tipo"  valor={tipo} />
                     
                     <InputNumber estilo = {"w-62"} label="Por pagarle" valor={porPagarle} format={true} isPrice= {true}/>
-                    {/* <InputText estilo="w-48" label="Por pagarle"  valor={porPagarle} isNumber={true}/> */}
                     <Boton texto="Pagar"
                     onClick={() => setShowModalPago(true)}/>
                     <InputNumber
@@ -101,7 +136,6 @@ export default function Cliente() {
                         format={true}
                         isPrice= {true}
                         />
-                    {/* <InputText estilo="w-48" label="Debe"  valor={debe} isNumber={true}/> */}
                     <Boton texto="Abonar"
                     onClick={() => setShowModalAbono(true)}/>
                 
@@ -127,7 +161,12 @@ export default function Cliente() {
                         onClick={cargarPagos}
                         isNormal={true}/>
                     </div>
-                    <Boton texto="Modificar datos" isNormal="true"/>
+                    
+                    <div className="flex items-center justify-center">
+                        <BotonIcono texto={<FaChevronLeft />} onClick={()=>paginaAnterior()}/>
+                        <p className="px-2"> {pagina} de {totalPaginas}</p>
+                        <BotonIcono texto={<FaChevronRight/>} onClick={()=>paginaSiguiente()}/> 
+                    </div>
 
                 </div>
                 
