@@ -4,6 +4,8 @@ import FechaInput from "../../componentes/FechaInput";
 import InputText from "../../componentes/InputText";
 import InputLista from "../../componentes/InputLista";
 import Boton from "../../componentes/Boton";
+import {FaSearch} from "react-icons/fa"
+import BotonIcono from "../../componentes/BotonIcono";
 import {Link, useNavigate } from "react-router-dom";
 import { FiltradoDatos } from "../../serviciosYFunciones/filtradoDatos";
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones";
@@ -53,7 +55,7 @@ export default function Ventas(){
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-2 overflow-auto">
-            <h1 className="text-2xl font-bold w-fit mb-5">FACTURAS DE VENTAS</h1>
+            <h1 className="text-3xl font-bold w-fit mb-5">Facturas de venta</h1>
 
             <div className="flex items-center gap-3">
                 <div className="w-24">
@@ -73,10 +75,11 @@ export default function Ventas(){
                 <div className="w-40">
                     <InputLista
                     label={"Estado"}
-                    lista={[{id: 1, nombre: "Recibido"}, {id: 2, nombre: "No recibido"}]}
+                    lista={[{id: 1, nombre: "Entregado"}, {id: 2, nombre: "No entregado"}]}
                     valor={estado} setValor={setEstado} setIdSeleccionado={setIdEstado}/>
 
                 </div>
+                <BotonIcono texto={<FaSearch/>} onClick={()=>{}}/>
                 <Link className="" to={'/vender'}><Boton texto={"Vender"}/></Link>
 
             </div>

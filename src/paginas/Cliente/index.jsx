@@ -6,6 +6,7 @@ import Tabla from '../../componentes/Tabla';
 import { fetchManager } from '../../serviciosYFunciones/fetchFunciones';
 import InputNumber from '../../componentes/InputNumber';
 import ModalPagarCliente from '../../componentes/Modales/ModalPagarCliente';
+import ModalAbonarCliente from '../../componentes/Modales/ModalAbonarCliente';
 export default function Cliente() {
     const {id} = useParams();
     const [nombre, setNombre]= useState("")
@@ -22,6 +23,7 @@ export default function Cliente() {
     const [ventas, setVentas]= useState([])
 
     const [showModalPago, setShowModalPago] = useState(false)
+    const [showModalAbono, setShowModalAbono] = useState(false)
 
     const [mostrarTabla, setMostrarTabla] = useState({
         pagos: true,
@@ -75,7 +77,7 @@ export default function Cliente() {
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
-            <h1 className="text-2xl font-bold mb-3">CLIENTE ID <span className='text-red-500 p-1 border rounded-md'>{id}</span></h1>
+            <h1 className="text-3xl font-bold mb-3">Cliente ID <span className='text-red-500 p-1 border rounded-md'>{id}</span></h1>
             <div className='flex flex-col gap-4'>
                 <div className='flex gap-3 mb-2'>
                     <InputText label="Nombre"  valor={nombre}/>
@@ -100,7 +102,9 @@ export default function Cliente() {
                         isPrice= {true}
                         />
                     {/* <InputText estilo="w-48" label="Debe"  valor={debe} isNumber={true}/> */}
-                    <Boton texto="Abonar"/>
+                    <Boton texto="Abonar"
+                    onClick={() => setShowModalAbono(true)}/>
+                
                     
                 </div>
                 <div className='flex justify-between'>
@@ -136,6 +140,7 @@ export default function Cliente() {
                 {mostrarTabla.ventas && <Tabla datos={ventas}/>}
             </div>
             {showModalPago && <ModalPagarCliente clienteId={id} porPagar = {porPagarle} setShowModal = {setShowModalPago} setPorPagarle={setPorPagarle}/>}
+            {showModalAbono && <ModalAbonarCliente clienteId={id} debe = {debe} setShowModal = {setShowModalAbono} setDebe={setDebe}/>}
         </div>
 
         

@@ -1,6 +1,12 @@
 import {memo} from 'react'
 
 export default memo(function Tabla(props) {
+
+    const pagina = props.pagina ? props.pagina : 1
+    const limite = props.limite ? props.limite : 25
+
+    const offset = (pagina - 1) * limite
+    
     function seleccionFila(e){
         const fila = e.target.closest('tr')
         if (fila && props.setIdItemSeleccionado){
@@ -9,30 +15,12 @@ export default memo(function Tabla(props) {
         }
     }
 
-
-    let colspan = 0
-    if (props.isVisible){
-        colspan = Object.keys(props.isVisible).filter(key => props.isVisible[key] === true).length
-    }
-    else{
-        if (props.datos.length > 0){
-            colspan = Object.keys(props.datos[0]).length
-        }
-    }
-
-
     return (
         <table className="w-full">
             <thead>
-
                 <tr className="bg-gray-50">
                 {
                 props.datos.length > 0 && Object.keys(props.datos[0]).map((key, indice)=>{
-                    if (props.isVisible){
-                        if (props.isVisible[key] === false) {
-                            return null
-                        }
-                    }
                     if (props.rename && props.rename[key]){
                         return <th key={indice} className="p-2 border">{props.rename[key]}</th>
                     }
@@ -43,8 +31,12 @@ export default memo(function Tabla(props) {
             </thead>
             <tbody onClick={seleccionFila} className=" p-1 h-full w-full overflow-auto">
                 { 
-                    props.datos.length > 0 && props.datos.map((dato)=>{
-                        return (<tr
+                    props.datos.length > 0 && props.datos.map((dato, indiceDato)=>{
+                        if (indiceDato < offset || indiceDato >= offset + limite){
+                            return null
+                        }
+                        return (
+                        <tr
                             key={dato.id} 
                             data-id = {dato.id}
                             className={`hover:bg-red-300 cursor-pointer text-center`}>
@@ -60,27 +52,8 @@ export default memo(function Tabla(props) {
                             }
                         </tr>)
                     
-                })}    
-
-                {   
-                    ("total" in props) && props.datos.length> 0 &&
-                <tr className=''>
-                    {
-                        colspan-3 >= 0 && <td colSpan={colspan-2} ></td>
-                    }
- 
-                    {
-                        colspan-1 > 0 && <td className="bg-gray-50 p-2 border text-center font-bold">Total</td>
-                    }
-                    {
-                        colspan > 0 && <td className='p-2 border text-center font-bold'>{props.total}</td>
-                    }
-                </tr>
-                }
-                
-            </tbody>
-            
-            
+                })}                    
+            </tbody> 
         </table>
         
     )

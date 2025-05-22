@@ -8,12 +8,16 @@ import ModalModificarProductoFactura from "../../componentes/Modales/ModalModifi
 import DiffTabla from "../../componentes/DiffTabla"
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 import InputNumber from "../../componentes/InputNumber"
+
+import ModalAbonarFactura from "../../componentes/Modales/ModalAbonarFactura"
 export default function Venta(){
 
     const {id} = useParams()
 
     const [showModal, setShowModal] = useState(false)
     //const [showModalConfirmar, setShowModalConfirmar] = useState(false)
+    const [showModalAbonar, setShowModalAbonar] = useState(false)
+
     const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(null)
 
     const [facturaOriginal, setFacturaOriginal] = useState([])
@@ -105,22 +109,27 @@ export default function Venta(){
             <div className="flex flex-col gap-6 w-full">
                 <div className="w-full flex gap-3">
                     <InputText estilo={"w-[500px]"} label="Nombre cliente" valor = {nombre}/>
-                    <InputText estilo={"w-[500px]"} label="Direccion" valor={direccion}/>
+                    <InputText estilo={"w-[500px]"} label="Direccion entrega" valor={direccion}/>
                 </div>
                 <div className="w-full flex justify-between">
+                    
                     <div className="flex gap-3">
-                        <InputText estilo={"w-48"} label="Telefono" valor={telefono} isNumber={true}/>
-                        <InputText estilo={"w-96"} label="Email" valor={email} />
+                        <InputNumber estilo={"w-48"} label="Total" valor={total} isPrice={true} format={true}/>
+                        <button className='font-bold'>-</button>
+                        <InputNumber estilo={"w-48"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
+                        <button className='font-bold'>=</button>
+                        <InputNumber estilo={"w-48"} label="Por pagar" valor={total - pagado} isPrice={true} format={true}/>
+                        <Boton texto="Abonar" onClick={() => setShowModalAbonar(true)}></Boton>
                     </div>
+                    
+                    
+
                     
                     <div className="flex gap-4">
                         <RadioBoton onChange={cambiarEstado} name="estado" valor="Por entregar" label="No entregado" checked={estado === "Por entregar"}/>
                         <RadioBoton onChange={cambiarEstado} name="estado" valor="Entregado" label="Entregado" checked={estado === "Entregado"}/>
                     </div>
-                    <div className="flex gap-3">
-                        <InputNumber estilo={"w-48"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
-                        <InputNumber estilo={"w-48"} label="Total" valor={total} isPrice={true} format={true}/>
-                    </div>
+                    
                     
                 </div>
             </div>
@@ -143,6 +152,7 @@ export default function Venta(){
                 
             </div>
                 {showModal && <ModalModificarProductoFactura setShowModal={setShowModal} idProductoSeleccionado={idProductoSeleccionado} datos={facturaModificada} setDatos={setFacturaModificada} />}
+                {showModalAbonar && <ModalAbonarFactura setShowModal={setShowModalAbonar} numeroFactura={id} total={total} pagado={pagado} setPagado={setPagado}/>}
             <div>
             </div>
         </div>

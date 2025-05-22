@@ -5,6 +5,11 @@ import { ContextInventario } from "../../contextInventario"
 import InputLista from "../../componentes/InputLista"
 import InputText from "../../componentes/InputText"
 import Boton from "../../componentes/Boton"
+
+import {FaSearch} from "react-icons/fa"
+import BotonIcono from "../../componentes/BotonIcono";
+
+
 import ModalCrearCliente from "../../componentes/Modales/ModalCrearCliente"
 import { useNavigate } from "react-router-dom"
 
@@ -55,7 +60,7 @@ export default  function Clientes() {
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 ">
             <div className="flex flex-col gap-2">
                 <div className="flex justify-between">
-                    <h2 className="text-2xl font-semibold mb-5">CLIENTES</h2>
+                    <h2 className="text-3xl font-semibold mb-5">Lista de clientes</h2>
                 </div>
                 <div className="flex gap-3 items-center">
                     <InputText
@@ -78,6 +83,7 @@ export default  function Clientes() {
                     label="tipo"
                     valor={tipo}
                     setValor={setTipo}/>
+                    <BotonIcono texto ={<FaSearch/>} onClick={()=>{}}/>
                     <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar"/>      
                 </div>
             </div>

@@ -7,6 +7,8 @@ import Boton from "../../componentes/Boton";
 import {Link, useNavigate } from "react-router-dom";
 import { FiltradoDatos } from "../../serviciosYFunciones/filtradoDatos";
 import { fetchManager} from "../../serviciosYFunciones/fetchFunciones";
+import BotonIcono from "../../componentes/BotonIcono";
+import { FaSearch } from "react-icons/fa";
 export default function Compras(){
 
     const [facturas, setFacturas] = useState([])
@@ -53,7 +55,7 @@ export default function Compras(){
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-2 overflow-auto">
-            <h1 className="text-2xl font-bold w-fit mb-5">FACTURAS DE COMPRAS</h1>
+            <h1 className="text-3xl font-bold w-fit mb-5">Facturas de compra</h1>
 
             <div className="flex items-center gap-3">
                 <div className="w-24">
@@ -69,6 +71,7 @@ export default function Compras(){
                     <InputLista label={"Estado"} lista={[{id: 1, nombre: "Recibidos"}, {id: 2, nombre: "No recibido"}]} valor={estado} setValor={setEstado} setIdSeleccionado={setIdEstado}/>
 
                 </div>
+                <BotonIcono texto={<FaSearch/>} onClick={()=>{}}/>
                 
                 <Link className="" to={'/comprar'}><Boton texto={"Comprar"}/></Link>
 

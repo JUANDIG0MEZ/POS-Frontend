@@ -97,7 +97,7 @@ export default function Compra(){
     return (
         <div className="w-[1400px] flex flex-col mx-auto gap-3">
             <div className="flex justify-between my-2">
-                <h1 className="text-2xl font-bold flex items-center">FACTURA DE COMPRA ID:<p className="text-red-500 border p-1 rounded-md">{id}</p></h1>
+                <h1 className="text-3xl font-bold flex items-center">Factura de compra ID:<p className="text-red-500 border p-1 rounded-md">{id}</p></h1>
                 <h1 className="text-xl font-bold flex items-center"> Fecha: {fecha}</h1>
             </div>
 
@@ -109,8 +109,11 @@ export default function Compra(){
                 </div>
                 <div className="w-full flex gap-6 justify-between items-center">                 
                     <div className="flex gap-3 items-center">
-                        <InputNumber estilo={"w-48"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
                         <InputNumber estilo={"w-48"} label="Total" valor={total} isPrice={true} format={true}/>
+                        <button className='font-bold'>-</button>
+                        <InputNumber estilo={"w-48"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
+                        <button className='font-bold'>=</button>
+                        <InputNumber estilo={"w-48"} label="Por pagar" valor={total - pagado} isPrice={true} format={true}/>
                         <Boton texto="Abonar" onClick={() => setShowModalAbonar(true)}></Boton>
                     </div>   
                     <div className="flex gap-4 items-center">
@@ -122,7 +125,7 @@ export default function Compra(){
                 </div>
             </div>
             <div>
-                <h1 className="text-xl font-bold mb-3">FACTURA DE COMPRA</h1>
+                <h1 className="text-2xl font-bold mb-3">Producto comprados</h1>
                 <DiffTabla tabla1={facturaOriginal} tabla2={facturaModificada} total={totalTabla} total2= {totalModificado} setIdItemSeleccionado={setIdProductoSeleccionado}/>
             </div>
             

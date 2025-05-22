@@ -9,9 +9,10 @@ import InputNumber from "../../componentes/InputNumber"
 import { toast } from "sonner"
 import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactura"
 import MostrarImagen from "../../componentes/MostrarImagen"
-
+import { FaTrash } from "react-icons/fa"
 import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
 import { fetchFilesManager, fetchManager } from "../../serviciosYFunciones/fetchFunciones"
+import BotonIcono from "../../componentes/BotonIcono"
 
 const renombrar = {
     id: "ID",
@@ -61,6 +62,7 @@ export default function Comprar() {
         setCantidadProducto("")
         setPrecioProducto("")
         setTotalProducto("")
+        setNombreProductoSeleccionado("")
     }
 
     useEffect(()=>{
@@ -71,10 +73,9 @@ export default function Comprar() {
             setMedida(producto.medida)
 
             fetchFilesManager(`http://localhost:3000/api/v1/productos/${idProducto}/imagenes`, setImagenes)
-            //obtenerImagenes(idProducto, setImagenes)
         }
     
-    }, [idProducto])
+    }, [productos, idProducto])
 
     useEffect(()=> {
         setTotal(carritoDeCompras.reduce((acc, item) => acc + item.subtotal, 0))
@@ -174,6 +175,7 @@ export default function Comprar() {
             
         }
         setIdProductoSeleccionadoTabla(null)
+        setIdProducto(null)
         limpiarCampos()
         setCarritoDeCompras([...carritoDeCompras, productoFormateado])
     }
@@ -222,15 +224,17 @@ export default function Comprar() {
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
-            <div className="flex gap-3 items-center">
-                <MostrarImagen imagenes={imagenes}/>
+            <div className="flex gap-3 justify-between">
+                <div>
+                    <MostrarImagen imagenes={imagenes}/>
+                </div>
                 <div className="flex flex-col gap-4">
-                    <h1 className="text-2xl font-bold mb-3">COMPRAR</h1>
+                    <h1 className="text-3xl font-bold mb-8">Crear compra</h1>
                     <div className="flex flex-col gap-8">
                         <InputLista
                             valor={nombreCliente}
                             setValor={setNombreCliente}
-                            label="Cliente*"
+                            label="Cliente"
                             lista={clientes}
                             setIdSeleccionado = {setIdCliente}
                             />
@@ -238,7 +242,7 @@ export default function Comprar() {
 
                             valor={nombreProducto}
                             setValor={setNombreProducto}
-                            label="Producto*"
+                            label="Producto"
                             lista={productos}
                             setIdSeleccionado = {setIdProducto}
                             labelSeleccionado = {nombreProductoSeleccionado}
@@ -248,7 +252,7 @@ export default function Comprar() {
                                 estilo = {"w-28"}
                                 valor={cantidadProducto}
                                 setValor={setCantidadProducto}
-                                label="Cantidad*"
+                                label="Cantidad"
                                 isNumber={true}
                                 format={true}
                                 />
@@ -273,9 +277,9 @@ export default function Comprar() {
                                 isPrice= {true}
                                 />
                         
-                            <Boton
+                            <BotonIcono
                                 onClick={limpiarCampos}
-                                texto="Limpiar"
+                                texto={<FaTrash />}
                                 isNormal={true}/>
                             <Boton
                                 onClick={agregarProducto}
@@ -287,7 +291,7 @@ export default function Comprar() {
                 </div>
             </div>
 
-            <h2 className="text-2xl font-semibold">FACTURA DE COMPRA</h2>
+            <h2 className="text-3xl font-semibold">Factura de compra</h2>
             
             <div>
                 <Tabla 

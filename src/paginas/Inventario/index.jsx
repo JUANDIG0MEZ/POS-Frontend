@@ -2,9 +2,13 @@ import { ContextInventario } from "../../contextInventario"
 import { useContext, useEffect } from "react"
 import { useState } from "react"
 
+import { FaSearch, FaTrash } from "react-icons/fa"
+import { FaChevronRight, FaChevronLeft, FaDotCircle } from "react-icons/fa"
+
 import Tabla from "../../componentes/Tabla"
 import InputText from "../../componentes/InputText"
 import Boton from "../../componentes/Boton"
+import BotonIcono from "../../componentes/BotonIcono"
 import HabilitadorTabla from "../../componentes/HablitadorTabla"
 import ModalCrearProducto from "../../componentes/Modales/ModalCrearProducto"
 import ModalModificarProducto from "../../componentes/Modales/ModalModificarProducto"
@@ -17,17 +21,6 @@ export default function Inventario() {
     const {
         productos
     } = useContext(ContextInventario)
-    const columnas = {
-        id: true,
-        nombre: true,
-        marca: true,
-        categoria: true,
-        medida: true,
-        precio_compra: true,
-        precio_venta: true,
-        cantidad: true,
-        total: true,
-    }
 
     const renombrar = {
         id: 'ID',
@@ -41,7 +34,7 @@ export default function Inventario() {
         total: 'Total',
     }
 
-    const [isColumnasVisible, setIsColumnasVisible] = useState(columnas)
+    // const [isColumnasVisible, setIsColumnasVisible] = useState(columnas)
     const [busquedaNombre, setBusquedaNombre] = useState(null)
     const [busquedaMarca, setBusquedaMarca] = useState(null)
     const [busquedaCategoria, setBusquedaCategoria] = useState(null)
@@ -52,18 +45,30 @@ export default function Inventario() {
     const [idProductoSeleccionado, setIdProductoSeleccionado] = useState("")
     const [imagenes, setImagenes] = useState([])
 
+    const [pagina, setPagina] = useState(1)
+    const [totalPaginas, setTotalPaginas] = useState(0)
+    const [limite, setLimite] = useState(30)
+
     const [showModalCrear, setShowModalCrear] = useState(false)
     const [showModalModificar, setShowModalModificar] = useState(false)
 
-    useEffect(()=>{
+    function filtrarDatos() {
         let datosFiltrados = FiltradoDatos.filtroCadena(productos, "nombre", busquedaNombre)
         datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "marca", busquedaMarca)
         datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "categoria", busquedaCategoria)
         datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "medida", busquedaMedida)
         datosFiltrados = FiltradoDatos.filtroNumero(datosFiltrados, "id", busquedaId)
         setProductosFiltrados(datosFiltrados)
-    }, [productos, busquedaNombre, busquedaMarca, busquedaCategoria, busquedaMedida, busquedaId])
+    }
 
+    useEffect(()=> {
+        setProductosFiltrados(productos)
+    }, [productos])
+
+    useEffect(()=> {
+        setTotalPaginas(Math.ceil(productosFiltrados.length / limite))
+        setPagina(1)
+    }, [productosFiltrados, limite])
 
     useEffect(()=>{
         // Se trae de la base de datos la imagen del producto
@@ -81,6 +86,19 @@ export default function Inventario() {
     }, [idProductoSeleccionado])
 
 
+    function paginaSiguiente() {
+        if (totalPaginas > pagina) {
+            setPagina(pagina + 1)
+        }
+
+    }
+
+    function paginaAnterior() {
+        if (pagina > 1) {
+            setPagina(pagina - 1)
+        }
+    }
+
 
     function limipiarBusquedas(){
         setBusquedaNombre(null)
@@ -92,16 +110,18 @@ export default function Inventario() {
 
 
     return (
-        <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
-            <div className="flex items-center justify-between w-full mx-auto gap-4">
+        <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-1 overflow-auto">
+            <div className="flex items-center gap-3">
+                <div>
+                    <MostrarImagen imagenes = {imagenes}/>
+                </div>
+                
 
-                <MostrarImagen imagenes = {imagenes}/>
-
-                <div className="flex flex-col gap-8 justify-center">
-                    <h2 className="text-2xl font-semibold w-full text-left mb-2">ENCONTRAR PRODUCTOS</h2>
+                <div className="flex w-full flex-col gap-8 justify-center">
+                    <h2 className="text-3xl font-bold w-full text-left mb-6">Lista de productos</h2>
                     <div className="flex w-full gap-4 items-center">
                         <div className="flex gap-1 items-center">
-                            <Boton texto="<" isNormal={true}/>
+                            <BotonIcono texto={<FaChevronLeft/>}/>
                             <InputText
                             estilo="w-20" 
                             label="Id" 
@@ -109,7 +129,7 @@ export default function Inventario() {
                             setValor={setBusquedaId} 
                             isNumber = {true} 
                             labelSeleccionado={productoSeleccionado.id}/>
-                            <Boton texto=">" isNormal={true}/>
+                            <BotonIcono texto={<FaChevronRight/>} />
                         </div>
                         <InputText
                         label="Nombre" 
@@ -126,9 +146,6 @@ export default function Inventario() {
 
                     </div>
                     <div className="flex w-full items-center justify-between gap-3">
-                        <div>
-                            
-                        </div>
                         <InputText 
                         estilo="w-72"
                         label="Categoria" 
@@ -142,23 +159,33 @@ export default function Inventario() {
                         setValor={setBusquedaMedida}
                         labelSeleccionado={productoSeleccionado.medida}/>
                         
-                        <Boton texto="Limpiar" onClick={limipiarBusquedas} isNormal={true}/>
+                        <BotonIcono texto={<FaSearch className=""/>} onClick={filtrarDatos} isNormal={true}/>
+                        <BotonIcono texto={<FaTrash/>} onClick={limipiarBusquedas} isNormal={true}/>
                         <Boton onClick={()=>setShowModalModificar(true)} texto="Modificar" isNormal={true}/>
                         <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar" isNormal={false}/>                    
+                    </div>
+                    <div className="justify-end flex mt-3">
+                        <div className="flex items-center justify-center">
+                            <BotonIcono texto={<FaChevronLeft />} onClick={()=>paginaAnterior()}/>
+                            <p className="px-2"> {pagina} de {totalPaginas}</p>
+                            <BotonIcono texto={<FaChevronRight/>} onClick={()=>paginaSiguiente()}/> 
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="w-full px-2">
-                <HabilitadorTabla isVisible = {isColumnasVisible} setVisible={setIsColumnasVisible} rename={renombrar}/>
             </div>
-            <div className="w-full overflow-auto p-1 text-md mb-10">
+            <div className="w-full overflow-auto text-md ">
                 <Tabla
                     datos = {productosFiltrados}
-                    isVisible = {isColumnasVisible}
                     setIdItemSeleccionado={setIdProductoSeleccionado}
+                    pagina={pagina}
+                    limite={limite}
                     rename = {renombrar}
                 />
+                
             </div>
+            
             {
                 showModalCrear && <ModalCrearProducto setShowModal={setShowModalCrear}/> ||
                 showModalModificar && <ModalModificarProducto setShowModal={setShowModalModificar} productoSeleccionado={productoSeleccionado} imagenes={imagenes}/>
