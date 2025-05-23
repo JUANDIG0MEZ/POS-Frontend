@@ -3,6 +3,8 @@ import InputLista from "../InputLista"
 import Boton from "../Boton"
 import { useState, useEffect} from "react"
 import InputNumber from "../InputNumber"
+import { FaTrash } from "react-icons/fa"
+import Botonicono from "../BotonIcono"
 export default function ModalCrearCliente(props){
 
     const [nombre, setNombre] = useState("")
@@ -36,37 +38,42 @@ export default function ModalCrearCliente(props){
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <div className="flex bg-white p-5 rounded-lg w-[1100px] items-center gap-4">
+            <div className="flex bg-white p-5 rounded-lg w-[1000px] items-center gap-4">
                 <div className="flex flex-col flex-1 gap-7">
-                    <h2 className="w-full text-2xl font-semibold">CREAR CLIENTE</h2>
+                    <h2 className="titulo">Crear cliente</h2>
                     <div className="flex gap-3">
                         <InputText label="Nombre" valor={nombre} setValor={setNombre}/>
+                        <InputText label = "Direccion" valor = {direccion} setValor = {setDireccion}/> 
                         <InputLista 
                         estilo="w-48"
                         label="Tipo" valor = {tipo} setValor={setTipo} lista = {listaTipo}/>                        
                         
                     </div>
-                    <div className="flex gap-3">
-                        <InputText label = "Direccion" valor = {direccion} setValor = {setDireccion}/> 
-                        <InputText estilo="w-80" label = "Email" valor = {email} setValor={setEmail}/>
-                        <InputText estilo="w-48" label="Telefono" valor={telefono} setValor={setTelefono} isNumber={true}/>
+                    <div className="flex justify-between">
+                        <div className="flex gap-3">
+                            <InputText estilo="w-80" label = "Email" valor = {email} setValor={setEmail}/>
+                            <InputText estilo="w-44" label="Telefono" valor={telefono} setValor={setTelefono} isNumber={true}/>
+                        </div>
+                        
+                        <div className="flex gap-3">  
+                            <InputNumber
+                            estilo="w-32" label="Debe" valor={debe} setValor={setDebe} format={true}/>
+                            <InputNumber
+                            estilo="w-32"
+                            label="Por pagarle" valor={porPagarle} setValor={setPorPagarle} format={true}/>
+                            <Botonicono
+                            texto={<FaTrash/>}/>
+                        </div>
                         
                     </div>
                     <div className="flex justify-between">
                         <div className="flex gap-3 items-center">
-                            <InputNumber
-                            estilo="w-44" label="Debe" valor={debe} setValor={setDebe} format={true}/>
-                            <InputNumber
-                            estilo="w-44"
-                            label="Por pagarle" valor={porPagarle} setValor={setPorPagarle} format={true}/>
-                            <Boton
-                            texto="Limpiar"
-                            isNormal={true}/>
+                            
                         </div>
                         
                         <div className="flex w-full justify-end gap-3">  
                             <Boton onClick={cerrarModal} texto = "Cancelar"  isNormal = {true}/>
-                            <Boton texto = "Agregar" />  
+                            <Boton texto = "Crear" />  
                         </div>
                     </div>
                     

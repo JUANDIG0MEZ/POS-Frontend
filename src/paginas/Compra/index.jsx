@@ -97,7 +97,7 @@ export default function Compra(){
     return (
         <div className="w-[1400px] flex flex-col mx-auto gap-3">
             <div className="flex justify-between my-2">
-                <h1 className="text-3xl font-bold flex items-center">Factura de compra ID:<p className="text-red-500 border p-1 rounded-md">{id}</p></h1>
+                <h1 className="titulo flex items-center">Factura de compra:  <p className="subtitulo etiqueta border p-1 rounded-md ml-6">{}{id}</p></h1>
                 <h1 className="text-xl font-bold flex items-center"> Fecha: {fecha}</h1>
             </div>
 
@@ -125,7 +125,7 @@ export default function Compra(){
                 </div>
             </div>
             <div>
-                <h1 className="text-2xl font-bold mb-3">Producto comprados</h1>
+                <h1 className="subtitulo mb-3">Producto comprados</h1>
                 <DiffTabla tabla1={facturaOriginal} tabla2={facturaModificada} total={totalTabla} total2= {totalModificado} setIdItemSeleccionado={setIdProductoSeleccionado}/>
             </div>
             

@@ -11,7 +11,7 @@ export default function InputListaMultiple(props) {
             return (
                 <>
                     {props.label}
-                    {<span className="text-red-500">    {props.labelSeleccionado}</span>}
+                    {<span className="etiqueta">    {props.labelSeleccionado}</span>}
                 </>               
             )
         }
@@ -59,17 +59,13 @@ export default function InputListaMultiple(props) {
 
     function mostrarObjeto(item) {
         return (
-        <p className="font-semibold">
-            <span className="text-gray-800">{item.id}</span>
-            <span > - </span>
-            <span className="font-bold text-red-500" >{item.nombre}</span>
-            <span > - </span>
-            <span className="text-slate-600">{item.marca}</span>
-            <span > - </span>
-            <span className="text-teal-500">{item.medida}</span>
-            <span > - </span>
-            <span className="text-stone-800">{item.categoria}</span>
-            </p>
+        <div className="flex gap-3 text-nowrap">
+            <p className="">{item.id}</p>
+            <p className="w-[220px] overflow-hidden font-bold text-color-" >{item.nombre}</p>
+            <p className="w-[160px] overflow-hidden text-gray-500">{item.marca}</p>
+            <p className="w-[100px] overflow-hidden text-teal-500">{item.medida}</p>
+            <p className="w-[160px] overflow-hidden text-gray-500">{item.categoria}</p>
+        </div>
         )
     }
 
@@ -78,14 +74,14 @@ export default function InputListaMultiple(props) {
 
     return (
         <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
-            <label className="absolute -top-6 font-semibold text-gray-600 text-md">{labelSeleccionado()}</label>
+            <label className="absolute -top-6 font-semibold text-md">{labelSeleccionado()}</label>
             <div className="items-center flex aling-center">
                 <input 
                 onFocus={()=>{setShowLista(true)}} 
                 onBlur={()=>{setShowLista(false)}}
                 onChange={establecerValor}
                 value = {props.valor || ""}
-                className={`${props.isNumber ? "tracking-wider" : "tracking-wide"} w-full border p-2 pr-6 font-semibold text-gray-600 focus:outline-none  ${showLista ? "rounded-t-lg border-b-white": "rounded-lg" }   `}/>
+                className={`${props.isNumber ? "tracking-wider" : "tracking-wide"} w-full border p-2 pr-6  focus:outline-none  ${showLista ? "rounded-t-lg border-b-white": "rounded-lg" }   `}/>
 
                 <FaChevronDown
                 className={` text-sm absolute right-2 top-3 w-4 h-4 transition-transform ${showLista ? "rotate-180" : "rotate-0"}`}/>
@@ -93,10 +89,10 @@ export default function InputListaMultiple(props) {
   
             <ul       
                 onMouseDown={seleccionarItem}
-                className={`absolute w-full z-10 bg-white border overflow-y-auto rounded-b-lg shadow-lg max-h-72 ${showLista ? "block" : "hidden"}`}>
+                className={`bg-white absolute w-full z-10  border overflow-y-auto rounded-b-lg shadow-lg max-h-72 ${showLista ? "block" : "hidden"}`}>
                     {
                         listaFiltrada(props.valor) && listaFiltrada(props.valor).slice(0, 20).map((item, indice)=>{
-                            return <li key={indice} data-id={item.id} className="hover:bg-red-300 p-2 rounded-lg font-semibold">{mostrarObjeto(item)}</li>
+                            return <li key={indice} data-id={item.id} className=" hover-1 p-2 rounded-lg font-semibold">{mostrarObjeto(item)}</li>
                         })
                     }
             </ul>

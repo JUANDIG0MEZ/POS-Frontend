@@ -4,7 +4,10 @@ import {useState, useContext, useEffect} from 'react'
 import { ContextInventario } from "../../contextInventario"
 import InputLista from "../../componentes/InputLista"
 import InputText from "../../componentes/InputText"
-import Boton from "../../componentes/Boton"
+
+import Select from "../../componentes/Select"
+
+import CambiarPagina from "../../componentes/CambiarPagina"
 
 
 
@@ -15,15 +18,8 @@ import BotonIcono from "../../componentes/BotonIcono";
 import ModalCrearCliente from "../../componentes/Modales/ModalCrearCliente"
 import { useNavigate } from "react-router-dom"
 
-export default  function Clientes() {
 
-    const navigate = useNavigate()
-
-    const {
-        clientes
-    } = useContext(ContextInventario)
-
-    const renombrar = {
+const renombrar = {
         id: 'ID',
         nombre: 'Nombre',
         direccion: 'Direccion',
@@ -36,11 +32,37 @@ export default  function Clientes() {
 
     }
 
+
+const tipoObjeto = {
+    1: 'Proveedor',
+    2: 'Cliente',
+    3: 'Ambos'
+}
+
+
+
+export default  function Clientes() {
+
+    const navigate = useNavigate()
+
+    const {
+        clientes
+    } = useContext(ContextInventario)
+
+    
+
     const [idSeleleccionado, setIdSeleccionado] = useState("")
     const [clientesFiltrados, setClientesFiltrados] = useState([])
     const [nombre, setNombre] = useState("")
     const [tipo, setTipo] = useState("")
     const [id, setId] = useState("")
+
+
+
+    const [pagina, setPagina] = useState(1)
+    const [totalPaginas, setTotalPaginas] = useState(1)
+    const [limite, setLimite] = useState(50)
+    const [offset, setOffset] = useState(0)
 
     const [showModalCrear, setShowModalCrear] = useState(false)
 
@@ -49,6 +71,7 @@ export default  function Clientes() {
         datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "tipo", (tipo.nombre || ""))
         datosFiltrados = FiltradoDatos.filtroNumero(datosFiltrados, "id", id)
         setClientesFiltrados(datosFiltrados)
+        setTotalPaginas(Math.ceil(datosFiltrados.length / limite))
     }, [clientes, nombre, tipo, id])
 
     useEffect(()=>{
@@ -68,7 +91,7 @@ export default  function Clientes() {
                     label="Id"
                     valor={id}
                     setValor={setId}
-                    isNumber={true}
+                    isNumber= {true}
                     />
 
                     <InputText
@@ -77,20 +100,24 @@ export default  function Clientes() {
                     setValor = {setNombre}
                     />
                     
-                    <InputLista 
-                    estilo={"w-40"}
-                    lista = {[{id: 1, nombre: "Proveedor"}, {id: 2, nombre: "Cliente"}, {id:3, nombre: "Ambos"}]}
-                    label="tipo"
-                    valor={tipo}
-                    setValor={setTipo}/>
+                    <Select objeto={tipoObjeto} label={"Tipo cliente"}/>
+
                     <BotonIcono texto ={<FaSearch/>} onClick={()=>{}}/>
                     <BotonIcono onClick={()=>setShowModalCrear(true)} texto={<FaUser/>}/>      
                 </div>
             </div>
             
-            <div className="overflow-auto">
-                <Tabla datos = {clientesFiltrados} setIdItemSeleccionado={setIdSeleccionado} rename = {renombrar}/>
+            <div className="overflow-auto h-full">
+                <Tabla datos = {clientesFiltrados.slice(offset, offset + limite)} setIdItemSeleccionado={setIdSeleccionado} rename = {renombrar}/>
             </div>    
+            <CambiarPagina 
+                pagina={pagina}
+                setPagina={setPagina}
+                setOffset={setOffset}
+                limite={limite} 
+                totalPaginas={totalPaginas}
+                setTotalPaginas={setTotalPaginas}
+                />
             
             {
                 showModalCrear && <ModalCrearCliente setShowModal={setShowModalCrear}/>

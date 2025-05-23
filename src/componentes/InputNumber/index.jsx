@@ -7,7 +7,7 @@ export default function InputText(props){
                 <>
                     {labelSolo + "  "}  
                     {
-                    <span className="text-red-500">
+                    <span className="etiqueta">
                         {props.isPrice ? "$ ": ""}
                         {formattedValue(props.labelSeleccionado, true)}
                     </span>
@@ -32,12 +32,12 @@ export default function InputText(props){
 
     return (
         <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
-            <label className="font-semibold absolute -top-6 texto-color text-md text-nowrap">{labelSeleccionado(props.label)}</label>
+            <label className="font-semibold absolute -top-6 text-nowrap">{labelSeleccionado(props.label)}</label>
             <input 
             onChange={establecerValor}
             type="text" 
             value={ props.format ? formattedValue(props.valor, props.format) : props.valor || "0"}
-            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} font-semibold w-full border rounded-md p-2  borde-input texto-color`}/>
+            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} w-full border rounded-md p-2  borde-input `}/>
         </div>
     )
 }

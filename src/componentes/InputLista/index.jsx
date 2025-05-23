@@ -69,15 +69,15 @@ export default function InputLista(props) {
 
 
     return (
-        <div className={`relative ${props.estilo ? props.estilo : "flex-1"} font-semibold`}>
-            <label className="absolute -top-6  font-semibold text-gray-600 text-md">{labelSeleccionado(props.label)}</label>
+        <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
+            <label className="absolute -top-6  font-semibold  text-md">{labelSeleccionado(props.label)}</label>
             <div className="items-center flex aling-center">
                 <input 
                 onFocus={()=>{setShowLista(true)}} 
                 onBlur={()=>{setShowLista(false)}}
                 onChange={establecerValor}
                 value = {props.valor || ""}
-                className={`${props.isNumber ? "tracking-wider" : "tracking-wide"} font-semibold w-full border p-2 pr-6 text-gray-600 focus:outline-none  ${showLista ? "rounded-t-lg border-b-white": "rounded-lg" }   `}/>
+                className={`${props.isNumber ? "tracking-wider" : "tracking-wide"} w-full border p-2 pr-6 focus:outline-none  ${showLista ? "rounded-t-lg border-b-white": "rounded-lg" }   `}/>
 
                 <FaChevronDown
                 className={` text-sm absolute right-2 top-3 w-4 h-4 transition-transform ${showLista ? "rotate-180" : "rotate-0"}`}/>
@@ -88,7 +88,7 @@ export default function InputLista(props) {
                 className={`absolute w-full z-10 bg-white border overflow-y-auto rounded-b-lg shadow-lg max-h-52 ${showLista ? "block" : "hidden"}`}>
                     {
                         listaFiltrada(props.valor) && listaFiltrada(props.valor).slice(0, 20).map((item, indice)=>{
-                            return <li key={indice} data-id={item.id} className="hover:bg-red-300 text-gray-600  p-2 rounded-lg">{item.nombre}</li>
+                            return <li key={indice} data-id={item.id} className="hover-1 hover:font-semibold p-2 rounded-lg">{item.nombre}</li>
                         })
                     }
             </ul>

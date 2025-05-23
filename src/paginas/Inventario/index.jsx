@@ -2,27 +2,24 @@ import { ContextInventario } from "../../contextInventario"
 import { useContext, useEffect } from "react"
 import { useState } from "react"
 
-import { FaSearch, FaTrash } from "react-icons/fa"
-import { FaChevronRight, FaChevronLeft, FaDotCircle } from "react-icons/fa"
+import { FaSearch, FaTrash, FaCheck , FaSortAlphaDown, FaSortAlphaUp } from "react-icons/fa"
+import { FaChevronRight, FaChevronLeft, FaPlus } from "react-icons/fa"
 
 import Tabla from "../../componentes/Tabla"
 import InputText from "../../componentes/InputText"
 import Boton from "../../componentes/Boton"
 import BotonIcono from "../../componentes/BotonIcono"
-import HabilitadorTabla from "../../componentes/HablitadorTabla"
 import ModalCrearProducto from "../../componentes/Modales/ModalCrearProducto"
 import ModalModificarProducto from "../../componentes/Modales/ModalModificarProducto"
 import { FiltradoDatos } from "../../serviciosYFunciones/filtradoDatos"
 import MostrarImagen from "../../componentes/MostrarImagen"
-import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
 import { fetchManager} from "../../serviciosYFunciones/fetchFunciones"
+import CambiarPagina from "../../componentes/CambiarPagina"
 
-export default function Inventario() {
-    const {
-        productos
-    } = useContext(ContextInventario)
+import Select from "../../componentes/Select"
 
-    const renombrar = {
+
+const columnasObjeto = {
         id: 'ID',
         nombre: 'Nombre',
         marca: 'Marca',
@@ -31,8 +28,36 @@ export default function Inventario() {
         precio_compra: 'Precio Compra',
         precio_venta: 'Precio Venta',
         cantidad: 'Cantidad',
-        total: 'Total',
+        total: 'Total'
     }
+
+const ordenObjeto = {
+    DESC: "Descendente",
+    SC: "Ascendente"
+    
+}
+
+const limiteObjeto = {
+    10: 10,
+    20: 20,
+    30: 30,
+    50: 50,
+    100: 100
+}
+
+
+    
+    
+
+
+
+export default function Inventario() {
+    const {
+        productos
+    } = useContext(ContextInventario)
+
+    
+
 
     // const [isColumnasVisible, setIsColumnasVisible] = useState(columnas)
     const [busquedaNombre, setBusquedaNombre] = useState(null)
@@ -48,9 +73,14 @@ export default function Inventario() {
     const [pagina, setPagina] = useState(1)
     const [totalPaginas, setTotalPaginas] = useState(0)
     const [limite, setLimite] = useState(30)
+    const [offset, setOffset] = useState(0)
 
     const [showModalCrear, setShowModalCrear] = useState(false)
     const [showModalModificar, setShowModalModificar] = useState(false)
+
+
+    const [propiedadOrden, setPropiedadOrden] = useState("id")
+    const [orden, setOrden] = useState("DESC")
 
     function filtrarDatos() {
         let datosFiltrados = FiltradoDatos.filtroCadena(productos, "nombre", busquedaNombre)
@@ -71,33 +101,18 @@ export default function Inventario() {
     }, [productosFiltrados, limite])
 
     useEffect(()=>{
-        // Se trae de la base de datos la imagen del producto
         if (idProductoSeleccionado){
-            // se establece el producot seleccionado
             setProductoSeleccionado(productos.find(producto => producto.id == idProductoSeleccionado))
-
-
 
             function cbObtenerUrlImagagenes(resData){
                 setImagenes(resData)
             }
             fetchManager(`http://localhost:3000/api/v1/productos/${idProductoSeleccionado}/imagenes`, cbObtenerUrlImagagenes)
         }
-    }, [idProductoSeleccionado])
+    }, [idProductoSeleccionado, productos])
 
 
-    function paginaSiguiente() {
-        if (totalPaginas > pagina) {
-            setPagina(pagina + 1)
-        }
 
-    }
-
-    function paginaAnterior() {
-        if (pagina > 1) {
-            setPagina(pagina - 1)
-        }
-    }
 
 
     function limipiarBusquedas(){
@@ -146,30 +161,46 @@ export default function Inventario() {
 
                     </div>
                     <div className="flex w-full items-center justify-between gap-3">
-                        <InputText 
-                        estilo="w-72"
-                        label="Categoria" 
-                        valor={busquedaCategoria} 
-                        setValor={setBusquedaCategoria} 
-                        labelSeleccionado={productoSeleccionado.categoria}/>
-                        <InputText
-                        label="Medida"
-                        estilo="w-72"
-                        valor={busquedaMedida}
-                        setValor={setBusquedaMedida}
-                        labelSeleccionado={productoSeleccionado.medida}/>
-                        
-                        <BotonIcono texto={<FaSearch className=""/>} onClick={filtrarDatos} isNormal={true}/>
-                        <BotonIcono texto={<FaTrash/>} onClick={limipiarBusquedas} isNormal={true}/>
-                        <Boton onClick={()=>setShowModalModificar(true)} texto="Modificar" isNormal={true}/>
-                        <Boton onClick={()=>setShowModalCrear(true)} texto="Agregar" isNormal={false}/>                    
-                    </div>
-                    <div className="justify-end flex mt-3">
-                        <div className="flex items-center justify-center">
-                            <BotonIcono texto={<FaChevronLeft />} onClick={()=>paginaAnterior()}/>
-                            <p className="px-2"> {pagina} de {totalPaginas}</p>
-                            <BotonIcono texto={<FaChevronRight/>} onClick={()=>paginaSiguiente()}/> 
+                        <div className="flex gap-3">
+                            <InputText 
+                            estilo="w-72"
+                            label="Categoria" 
+                            valor={busquedaCategoria} 
+                            setValor={setBusquedaCategoria} 
+                            labelSeleccionado={productoSeleccionado.categoria}/>
+                            <InputText
+                            label="Medida"
+                            estilo="w-72"
+                            valor={busquedaMedida}
+                            setValor={setBusquedaMedida}
+                            labelSeleccionado={productoSeleccionado.medida}/>
+                            
+                            <BotonIcono texto={<FaSearch className=""/>} onClick={filtrarDatos} isNormal={true}/>
+                            <BotonIcono texto={<FaTrash/>} onClick={limipiarBusquedas} isNormal={true}/>
                         </div>
+                        
+                        <div className="flex items-center gap-3">
+                            <Boton onClick={()=>setShowModalModificar(true)} texto="Modificar" isNormal={true}/>
+                            <Boton onClick={()=>setShowModalCrear(true)} texto={"Agregar"} isNormal={true}/>   
+                        </div>
+                                         
+                    </div>
+                    <div className="justify-between flex mt-3">
+                        <CambiarPagina
+                            pagina={pagina}
+                            setPagina={setPagina}
+                            totalPaginas={totalPaginas}
+                            setLimite={setLimite}
+                            limite={limite}
+                            setOffset={setOffset}
+                            />
+                        <div className="flex gap-3">
+                            <Select objeto={columnasObjeto} label={"Ordenar columna"}/>
+                            <Select objeto={limiteObjeto} label={"No. filas"}/>
+                            <Select objeto={ordenObjeto} label={"Ordenar"}/>
+                            <BotonIcono texto={<FaCheck/>}/>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -177,11 +208,9 @@ export default function Inventario() {
             </div>
             <div className="w-full overflow-auto text-md ">
                 <Tabla
-                    datos = {productosFiltrados}
+                    datos = {productosFiltrados.slice(offset, offset + limite)}
                     setIdItemSeleccionado={setIdProductoSeleccionado}
-                    pagina={pagina}
-                    limite={limite}
-                    rename = {renombrar}
+                    rename = {columnasObjeto}
                 />
                 
             </div>

@@ -7,9 +7,7 @@ import { fetchManager } from '../../serviciosYFunciones/fetchFunciones';
 import InputNumber from '../../componentes/InputNumber';
 import ModalPagarCliente from '../../componentes/Modales/ModalPagarCliente';
 import ModalAbonarCliente from '../../componentes/Modales/ModalAbonarCliente';
-import BotonIcono from '../../componentes/BotonIcono';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-
+import CambiarPagina from '../../componentes/CambiarPagina';
 
 export default function Cliente() {
     const {id} = useParams();
@@ -21,13 +19,11 @@ export default function Cliente() {
     const [porPagarle, setPorPagarle] = useState("")
     const [debe, setDebe] = useState("")
 
-    const [pagos, setPagos]= useState([])
-    const [compras, setCompras]= useState([])
-    const [abonos, setAbonos]= useState([])
-    const [ventas, setVentas]= useState([])
+    const [datos, setDatos] = useState([])
 
     const [showModalPago, setShowModalPago] = useState(false)
     const [showModalAbono, setShowModalAbono] = useState(false)
+
 
     const [pagina, setPagina] = useState(1)
     const [limite, setLimite] = useState(30)
@@ -36,17 +32,7 @@ export default function Cliente() {
 
     const [totalPaginas, setTotalPaginas] = useState(1)
 
-    const [mostrarTabla, setMostrarTabla] = useState({
-        pagos: true,
-        compras: false,
-        abonos: false,
-        ventas: false
-    })
-
     useEffect(()=>{
-
-
-
 
         function cbCliente(resData){
 
@@ -59,61 +45,31 @@ export default function Cliente() {
             setDebe(resData.debe)
         }
         fetchManager(`http://localhost:3000/api/v1/clientes/${id}`, cbCliente, "GET")
-    }, [])
+    }, [id])
 
-    function cambiarTabla(tabla){
-        setMostrarTabla({
-            pagos: false,
-            compras: false,
-            abonos: false,
-            ventas: false,
-            [tabla]: true
-        })
+
+    function cbTablas(res) {
+        setDatos(res.rows)
+        setTotalPaginas(Math.ceil(res.count / limite))
+        setNumFilas(res.count)
     }
-
-    function paginaSiguiente(){
-        if (totalPaginas > pagina){
-            setPagina(pagina + 1)
-        }
-    }
-
-    function paginaAnterior(){
-        if (pagina > 1){
-            setPagina(pagina - 1)
-        }
-    }
-
-
 
     async function cargarVentas(){
-        const cbVentas =(resData) => {
-            console.log(resData)
-            setVentas(resData.rows)
-            setTotalPaginas(Math.ceil(resData.count / limite))
-            setNumFilas(resData.count)
-        }
-        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/ventas`, cbVentas, "GET")
-        cambiarTabla("ventas")
+        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/ventas?limit=${limite}&offset=${offset}`, cbTablas, "GET")
     }
-
     async function cargarcompras(){
-        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/compras`, setCompras, "GET")
-        cambiarTabla("compras")
+        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/compras?limit=${limite}&offset=${offset}`, cbTablas, "GET")
     }
-
     async function cargarAbonos(){
-        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/abonos`, setAbonos, "GET")
-        cambiarTabla("abonos")
-    }
+        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/abonos?limit=${limite}&offset=${offset}`, cbTablas, "GET")
 
+    }
     async function cargarPagos(){
-        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/pagos`, setPagos, "GET")
-        cambiarTabla("pagos")
+        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/pagos?limit=${limite}&offset=${offset}`, cbTablas, "GET")
     }
-
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
-            <h1 className="text-3xl font-bold mb-3">Cliente ID <span className='text-red-500 p-1 border rounded-md'>{id}</span></h1>
+            <h1 className="text-3xl font-bold mb-3">Cliente ID <span className='text-color-2 p-1 border rounded-md'>{id}</span></h1>
             <div className='flex flex-col gap-4'>
                 <div className='flex gap-3 mb-2'>
                     <InputText label="Nombre"  valor={nombre}/>
@@ -152,31 +108,33 @@ export default function Cliente() {
                         onClick={cargarcompras}
                         texto="Compras" isNormal={true}/>
 
-                        <Boton
-                        onClick={cargarAbonos}
-                        texto="Abonos"
-                        isNormal={true}/>
+                        
 
                         <Boton texto="Pagos" 
                         onClick={cargarPagos}
                         isNormal={true}/>
+                        <Boton
+                        onClick={cargarAbonos}
+                        texto="Abonos"
+                        isNormal={true}/>
                     </div>
-                    
-                    <div className="flex items-center justify-center">
-                        <BotonIcono texto={<FaChevronLeft />} onClick={()=>paginaAnterior()}/>
-                        <p className="px-2"> {pagina} de {totalPaginas}</p>
-                        <BotonIcono texto={<FaChevronRight/>} onClick={()=>paginaSiguiente()}/> 
-                    </div>
+
+                    <CambiarPagina 
+                        pagina={pagina}
+                        setPagina={setPagina}
+                        setOffset={setOffset}
+                        limite={limite} 
+                        totalPaginas={totalPaginas}
+                        setTotalPaginas={setTotalPaginas}
+                        />
 
                 </div>
                 
             </div>
             <div className='w-full overflow-auto p-1 text-md mb-10'>
 
-                {mostrarTabla.pagos && <Tabla datos={pagos}/>}
-                {mostrarTabla.compras && <Tabla datos={compras}/>}
-                {mostrarTabla.abonos && <Tabla datos={abonos}/>}
-                {mostrarTabla.ventas && <Tabla datos={ventas}/>}
+                <Tabla datos={datos}/>
+
             </div>
             {showModalPago && <ModalPagarCliente clienteId={id} porPagar = {porPagarle} setShowModal = {setShowModalPago} setPorPagarle={setPorPagarle}/>}
             {showModalAbono && <ModalAbonarCliente clienteId={id} debe = {debe} setShowModal = {setShowModalAbono} setDebe={setDebe}/>}

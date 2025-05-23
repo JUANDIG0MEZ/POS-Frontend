@@ -9,7 +9,7 @@ import InputNumber from "../../componentes/InputNumber"
 import { toast } from "sonner"
 import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactura"
 import MostrarImagen from "../../componentes/MostrarImagen"
-import { FaTrash } from "react-icons/fa"
+import { FaTrash, FaBalanceScale } from "react-icons/fa"
 import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
 import { fetchFilesManager, fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 import BotonIcono from "../../componentes/BotonIcono"
@@ -266,7 +266,12 @@ export default function Comprar() {
                                 isPrice={true}
                                 format={true}
                                 />
-                                <p className="p-2 border rounded-md bg-gray-50 w-52 text-center font-semibold text-gray-800">{medida || " Medida"}</p> 
+                            <div className="flex py-2 px-3 borde-1 rounded-lg w-48 text-center items-center justify-end gap-4">
+                                
+                                <p className="font-bold" >{medida || " Medida"}</p> 
+                                <FaBalanceScale className="text-gray-700 text-xl"/>
+                            </div>
+                            
                             <InputNumber
                                 estilo = {"w-62"}
                                 label="Total"

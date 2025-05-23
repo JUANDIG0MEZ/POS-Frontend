@@ -2,6 +2,7 @@ import Tabla from "../../componentes/Tabla"
 import {useState, useContext, useEffect} from 'react'
 import { ContextInventario } from "../../contextInventario"
 import Boton from "../../componentes/Boton"
+import BotonIcono from "../../componentes/BotonIcono"
 import InputListaMultiple from "../../componentes/InputListaMultiple"
 import InputLista from "../../componentes/InputLista"
 import CrudDatosClientes from "../../serviciosYFunciones/crudDatosClientes"
@@ -10,8 +11,11 @@ import { toast } from "sonner"
 import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactura"
 import MostrarImagen from "../../componentes/MostrarImagen"
 
-import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
+
+//import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
 import { fetchFilesManager, fetchManager } from "../../serviciosYFunciones/fetchFunciones"
+
+import { FaTrash } from "react-icons/fa"
 
 const renombrar = {
     id: "ID",
@@ -225,7 +229,7 @@ export default function Comprar() {
             <div className="flex gap-3 items-center">
                 <MostrarImagen imagenes={imagenes}/>
                 <div className="flex flex-col gap-4">
-                    <h1 className="text-2xl font-bold mb-3">VENDER</h1>
+                    <h1 className="titulo mb-3">Crear venta</h1>
                     <div className="flex flex-col gap-8">
                         <InputLista
                             valor={nombreCliente}
@@ -262,7 +266,11 @@ export default function Comprar() {
                                 isPrice={true}
                                 format={true}
                                 />
-                                <p className="p-2 border rounded-md bg-gray-50 w-52 text-center font-semibold text-gray-800">{medida || " Medida"}</p> 
+                                <div>
+                                    <p></p>
+                                    <p className="p-2 border borde-1 w-52 text-center font-bold">{medida || " Medida"}</p> 
+                                </div>
+                                
                             <InputNumber
                                 estilo = {"w-62"}
                                 label="Total"
@@ -273,10 +281,9 @@ export default function Comprar() {
                                 isPrice= {true}
                                 />
                         
-                            <Boton
+                            <BotonIcono
                                 onClick={limpiarCampos}
-                                texto="Limpiar"
-                                isNormal={true}/>
+                                texto={<FaTrash/>}/>
                             <Boton
                                 onClick={agregarProducto}
                                 texto="Agregar"/>
@@ -287,7 +294,7 @@ export default function Comprar() {
                 </div>
             </div>
 
-            <h2 className="text-2xl font-semibold">FACTURA DE VENDER</h2>
+            <h2 className="text-2xl font-semibold">Producto vendidos</h2>
             
             <div>
                 <Tabla 

@@ -8,22 +8,33 @@ import {Link, useNavigate } from "react-router-dom";
 import { FiltradoDatos } from "../../serviciosYFunciones/filtradoDatos";
 import { fetchManager} from "../../serviciosYFunciones/fetchFunciones";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
+import CambiarPagina from "../../componentes/CambiarPagina";
+
+import Select from "../../componentes/Select";
+
+const renombrar = {
+    id: 'ID',
+    fecha: 'Fecha',
+    hora: 'Hora',
+    cliente: 'Cliente',
+    pagado: 'Pagado',
+    total: 'Total',
+    estado: 'Estado'
+}
+
+
+const estadoObjeto = {
+    1: 'Recibido',
+    2: 'No recibido'
+}
+
 export default function Compras(){
 
     const [facturas, setFacturas] = useState([])
     const [facturasFiltradas, setFacturasFiltradas] = useState(facturas)
     const navigate = useNavigate()
 
-    const renombrar = {
-        id: 'ID',
-        fecha: 'Fecha',
-        hora: 'Hora',
-        cliente: 'Cliente',
-        pagado: 'Pagado',
-        total: 'Total',
-        estado: 'Estado'
-    }
-
+ 
     const [idSeleleccionado, setIdSeleccionado] = useState(null)
     const [id, setId] = useState(null)
     const [nombre, setNombre] = useState(null)
@@ -32,12 +43,21 @@ export default function Compras(){
     const [fechaFinal, setFechaFinal] = useState("")
     const [idEstado, setIdEstado] = useState(null)
 
+    const [pagina, setPagina] = useState(1)
+    const [totalPaginas, setTotalPaginas] = useState(1)
+    const [limite, setLimite] = useState(40)
+    const [offset, setOffset] = useState(0)
+
     
 
     useEffect(()=> {
-        fetchManager('http://localhost:3000/api/v1/facturas/compras', setFacturas, "GET")
-        //toastFetchPromise('http://localhost:3000/api/v1/facturas/compras', setFacturas)
-    }, [])
+        function cbCompras(respuesta){
+            setTotalPaginas(Math.ceil(respuesta.count / limite))
+            setFacturas(respuesta.rows)
+        }
+
+        fetchManager(`http://localhost:3000/api/v1/facturas/compras?limit=${limite}&offset=${offset}`, cbCompras, "GET")
+    }, [limite, offset])
 
     useEffect(()=>{
         if (idSeleleccionado){
@@ -66,23 +86,29 @@ export default function Compras(){
                 </div>
                 
                 <InputText label={"Cliente"} setValor={setNombre} valor={nombre}/>
-                <div className="w-40">
-                    <InputLista label={"Estado"} lista={[{id: 1, nombre: "Recibidos"}, {id: 2, nombre: "No recibido"}]} valor={estado} setValor={setEstado} setIdSeleccionado={setIdEstado}/>
+                <Select label={"Estado"} objeto={estadoObjeto} setValor={setIdEstado} valor={idEstado}/>
 
-                </div>
                 <BotonIcono texto={<FaSearch/>} onClick={()=>{}}/>
                 
                 <Link className="" to={'/comprar'}><BotonIcono texto={<FaShoppingCart/>}/></Link>
 
             </div>
             
-            <div className="overflow-auto">
+            <div className="overflow-auto h-full">
             <Tabla
                 datos={facturasFiltradas}
                 setIdItemSeleccionado = {setIdSeleccionado}
                 rename = {renombrar}
                 />
             </div>
+            <CambiarPagina 
+                pagina={pagina}
+                setPagina={setPagina}
+                setOffset={setOffset}
+                limite={limite} 
+                totalPaginas={totalPaginas}
+                setTotalPaginas={setTotalPaginas}
+                />
         </div>
     )
 }

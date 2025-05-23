@@ -76,10 +76,6 @@ export default function ModalModificarProducto(props){
             fetchFilesManager(`http://localhost:3000/api/v1/productos/${productoSeleccionado.id}`, cbModificar, "PATCH", formData)
 
 
-            // fetchFilesManager('http://localhost:3000/api/v1/productos', cbModificar')
-
-            //fetchFilesManager(`http://localhost:3000/api/v1/productos/${productoSeleccionado.id}`, cbModificar, "PATCH", modificaciones)
-
         }
         
     }
@@ -91,7 +87,7 @@ export default function ModalModificarProducto(props){
                 </div>
                 
                 <div className="flex flex-col flex-1 gap-7">
-                    <h2 className="w-full text-2xl font-semibold">MODIFICAR PRODUCTO. ID:<span className="px-2 py-1 border rounded-md text-orange-600">{productoSeleccionado.id} </span></h2>
+                    <h2 className="titulo">Modificar producto <span className="px-2 py-1 border rounded-md texto-label">{productoSeleccionado.id} </span></h2>
                     <div className="flex flex-col gap-6">
                         <InputText label="Nombre" valor={productoSeleccionado.nombre}/>
                         

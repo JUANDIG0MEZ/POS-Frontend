@@ -3,12 +3,21 @@ import Tabla from "../../componentes/Tabla";
 import FechaInput from "../../componentes/FechaInput";
 import InputText from "../../componentes/InputText";
 import InputLista from "../../componentes/InputLista";
-import Boton from "../../componentes/Boton";
+import CambiarPagina from "../../componentes/CambiarPagina";
 import {FaSearch, FaShoppingCart} from "react-icons/fa"
 import BotonIcono from "../../componentes/BotonIcono";
 import {Link, useNavigate } from "react-router-dom";
 import { FiltradoDatos } from "../../serviciosYFunciones/filtradoDatos";
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones";
+
+import Select from "../../componentes/Select";
+
+const estadoObjeto = {
+    1: 'Recibido',
+    2: 'No recibido'
+}
+
+
 export default function Ventas(){
 
     const navigate = useNavigate()
@@ -28,15 +37,26 @@ export default function Ventas(){
 
     const [idSeleleccionado, setIdSeleccionado] = useState(null)
     const [id, setId] = useState(null)
-    const [nombre, setNombre] = useState(null)
+    const [nombre, setNombre] = useState(null)             
     const [estado, setEstado] = useState(null)
     const [fechaInicio, setFechaInicio] = useState("")
     const [fechaFinal, setFechaFinal] = useState("")
     const [idEstado, setIdEstado] = useState(null)
 
+
+    const [pagina, setPagina] = useState(1)
+    const [totalPaginas, setTotalPaginas] = useState(1)
+    const [limite, setLimite] = useState(10)
+    const [offset, setOffset] = useState(0)
+
     useEffect(()=> {
-        fetchManager('http://localhost:3000/api/v1/facturas/ventas', setFacturas, "GET")
-    }, [])
+
+        function cbVentas(respuesta){
+            setTotalPaginas(Math.ceil(respuesta.count / limite))
+            setFacturas(respuesta.rows)
+        }
+        fetchManager(`http://localhost:3000/api/v1/facturas/ventas?limit=${limite}&offset=${offset}`, cbVentas, "GET")
+    }, [limite, offset])
 
     useEffect(()=>{
         if (idSeleleccionado){
@@ -72,25 +92,29 @@ export default function Ventas(){
                 valor = {nombre}
                 setValor = {setNombre}
                 />
-                <div className="w-40">
-                    <InputLista
-                    label={"Estado"}
-                    lista={[{id: 1, nombre: "Entregado"}, {id: 2, nombre: "No entregado"}]}
-                    valor={estado} setValor={setEstado} setIdSeleccionado={setIdEstado}/>
-
-                </div>
+                
+                <Select label={"Estado"} objeto={estadoObjeto} setValor={setIdEstado} valor={idEstado}/>
+                
                 <BotonIcono texto={<FaSearch/>} onClick={()=>{}}/>
                 <Link className="" to={'/vender'}><BotonIcono texto={<FaShoppingCart/>}/></Link>
 
             </div>
             
-            <div className="overflow-auto">
-            <Tabla
-                datos={facturasFiltradas}
-                setIdItemSeleccionado={setIdSeleccionado}
-                rename = {renombrar}
-                />
+            <div className="overflow-auto h-full">
+                <Tabla
+                    datos={facturasFiltradas}
+                    setIdItemSeleccionado={setIdSeleccionado}
+                    rename = {renombrar}
+                    />
             </div>
+            <CambiarPagina 
+                pagina={pagina}
+                setPagina={setPagina}
+                setOffset={setOffset}
+                limite={10} 
+                totalPaginas={totalPaginas}
+                setTotalPaginas={setTotalPaginas}
+                />
         </div>
     )
 }

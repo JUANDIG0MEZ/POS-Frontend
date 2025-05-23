@@ -1,20 +1,103 @@
+/* Aqui van todos los colores */
 
-
-
-.texto-color {
+.text-color-1 {
     @apply text-gray-600
 }
 
-.bg-color {
-    @apply bg-gray-50
+.text-color-2 {
+    @apply text-blue-400
 }
 
 
 
-.texto-hover {
-    @apply hover:text-blue-500
+/* bg */
+
+.bg-color-1 {
+    @apply bg-gray-50/50
 }
 
-.bg-hover {
-    @apply hover:bg-blue-500
+.bg-color-2 {
+    @apply bg-black
 }
+
+
+
+
+/* bordes */
+
+.borde-1 {
+    @apply border rounded-lg
+}
+
+
+/* shadow  */
+
+.sombra-1 {
+    @apply shadow-sm
+}
+
+
+/* hovers */ 
+
+.hover-1 {
+    @apply hover:bg-black hover:text-white
+}
+
+.hover-2 {
+    @apply hover:bg-blue-300
+}
+
+
+
+.hover-sombra-1 {
+    @apply hover:shadow-lg
+}
+
+
+/* Elementos */ 
+
+.titulo {
+    @apply text-3xl font-bold
+}
+
+.subtitulo {
+    @apply text-2xl font-bold
+}
+
+.etiqueta {
+    @apply text-color-2
+}
+
+.titulo-tabla {
+    @apply font-bold bg-gray-50
+}
+
+.borde {
+    @apply border sombra-1
+}
+
+.borde-input {
+    @apply border focus:outline-none focus:ring-2  ring-black rounded-lg
+}
+
+
+/* */
+
+.boton-normal {
+    @apply font-bold borde-1 sombra-1 hover-sombra-1 text-gray-700 hover:text-black bg-white
+}
+
+.boton-negro  {
+    @apply text-white font-bold borde-1 bg-color-2 hover-sombra-1 hover:bg-gray-800
+}
+
+
+/* 
+
+.boton-normal {
+    @apply texto-color font-bold rounded-lg bg-color shadow-lg borde
+}
+
+.boton-negro {
+    @apply font-bold bg-black shadow-lg borde
+} */

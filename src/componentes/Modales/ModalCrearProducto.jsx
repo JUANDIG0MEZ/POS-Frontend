@@ -88,7 +88,7 @@ export default function ModalCrearProducto(props){
 
                 
                 <div className="flex flex-col flex-1 gap-7">
-                    <h2 className="w-full text-2xl font-semibold mb-2">CREAR PRODUCTO</h2>
+                    <h2 className="titulo">Crear producto</h2>
                     <div className="flex gap-3">
                         <InputText
                         label="Nombre"

@@ -1,7 +1,0 @@
-.borde {
-    @apply border 
-}
-
-.borde-input {
-    @apply border focus:outline-none focus:ring-2  ring-blue-500
-}

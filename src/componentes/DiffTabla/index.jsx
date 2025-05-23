@@ -45,7 +45,7 @@ export default memo(function DiffTabla(props) {
         <table onClick={seleccionFila} className="w-full">
             <thead>
 
-                <tr className="bg-gray-50">
+                <tr className="titulo-tabla">
                 {
                     props.tabla1.length > 0 && Object.keys(props.tabla1[0]).map((key, indice)=>{
                         if (props.rename && props.rename[key]){
@@ -62,7 +62,7 @@ export default memo(function DiffTabla(props) {
                         return (<tr
                             key={indice} 
                             data-id = {fila1.id}
-                            className={`hover:bg-red-300 cursor-pointer text-center`}>
+                            className={`hover-1 cursor-pointer text-center`}>
                             {   
                                 Object.keys(fila1).map((key, indice2)=>{
                                     return <td key={indice2} className="p-2 border justify-center">

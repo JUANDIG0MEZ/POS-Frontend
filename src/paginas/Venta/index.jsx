@@ -101,8 +101,8 @@ export default function Venta(){
         <div className="w-[1400px] flex flex-col mx-auto gap-3">
             
             
-            <div className="flex justify-between my-2">
-                <h1 className="text-2xl font-bold flex items-center">FACTURA DE VENTA ID:<p className="text-red-500 border rounded-md p-1">{id}</p></h1>
+            <div className="flex justify-between my-2 ">
+                <h1 className="titulo items-center flex ">Factura de venta: <p className="subtitulo etiqueta border rounded-md p-1 ml-4">{id}</p></h1>
                 <h1 className="text-xl font-bold flex items-center"> Fecha: {fecha}</h1>
             </div>
 
@@ -134,7 +134,7 @@ export default function Venta(){
                 </div>
             </div>
             <div>
-                <h1 className="text-xl font-bold">FACTURA DE COMPRA</h1>
+                <h1 className="subtitulo">Producto comprados</h1>
                 <DiffTabla tabla1={facturaOriginal} tabla2={facturaModificada} total={totalTabla} total2= {totalModificado} setIdItemSeleccionado={setIdProductoSeleccionado}/>
             </div>
             
