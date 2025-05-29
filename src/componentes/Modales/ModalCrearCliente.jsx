@@ -1,11 +1,17 @@
 import InputText from "../InputText"
 import InputLista from "../InputLista"
 import Boton from "../Boton"
-import { useState, useEffect} from "react"
+import { useState, useEffect, useContext} from "react"
+import { ContextInventario } from "../../contextInventario"
 import InputNumber from "../InputNumber"
 import { FaTrash } from "react-icons/fa"
 import Botonicono from "../BotonIcono"
+import Select from "../Select"
 export default function ModalCrearCliente(props){
+
+    const {
+        tiposClientes
+    } = useContext(ContextInventario)
 
     const [nombre, setNombre] = useState("")
     const [direccion, setDireccion] = useState("")
@@ -40,13 +46,11 @@ export default function ModalCrearCliente(props){
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="flex bg-white p-5 rounded-lg w-[1000px] items-center gap-4">
                 <div className="flex flex-col flex-1 gap-7">
-                    <h2 className="titulo">Crear cliente</h2>
+                    <h2 className="subtitulo">Crear cliente</h2>
                     <div className="flex gap-3">
                         <InputText label="Nombre" valor={nombre} setValor={setNombre}/>
                         <InputText label = "Direccion" valor = {direccion} setValor = {setDireccion}/> 
-                        <InputLista 
-                        estilo="w-48"
-                        label="Tipo" valor = {tipo} setValor={setTipo} lista = {listaTipo}/>                        
+                        <Select opciones={tiposClientes} setValor={setTipo} label={"Tipo cliente"}/>                    
                         
                     </div>
                     <div className="flex justify-between">

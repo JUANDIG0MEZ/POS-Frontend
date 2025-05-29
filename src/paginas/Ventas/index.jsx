@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Tabla from "../../componentes/Tabla";
 import FechaInput from "../../componentes/FechaInput";
-import InputText from "../../componentes/InputText";
+import InputNumber from "../../componentes/InputText";
 import InputLista from "../../componentes/InputLista";
 import CambiarPagina from "../../componentes/CambiarPagina";
 import {FaSearch, FaShoppingCart} from "react-icons/fa"
@@ -12,17 +12,19 @@ import { fetchManager } from "../../serviciosYFunciones/fetchFunciones";
 
 import Select from "../../componentes/Select";
 
-const estadoObjeto = {
-    1: 'Recibido',
-    2: 'No recibido'
-}
+import { ContextInventario } from "../../contextInventario";
+
 
 
 export default function Ventas(){
 
+    const{
+        estadosVentas,
+        clientes
+    } = useContext(ContextInventario)
+
     const navigate = useNavigate()
     const [facturas, setFacturas] = useState([])
-    const [facturasFiltradas, setFacturasFiltradas] = useState(facturas)
 
     const renombrar = {
         id: 'ID',
@@ -37,41 +39,62 @@ export default function Ventas(){
 
     const [idSeleleccionado, setIdSeleccionado] = useState(null)
     const [id, setId] = useState(null)
-    const [nombre, setNombre] = useState(null)             
+    const [nombreCliente, setNombreCliente] = useState(null)             
     const [estado, setEstado] = useState(null)
+
+    // Paginacion
+    const [pagina, setPagina] = useState(1)
+    const [totalPaginas, setTotalPaginas] = useState(1)
+    const [limite, setLimite] = useState(20)
+    const [offset, setOffset] = useState(0)
+
+    // Filtros
+    const [idCliente, setIdCliente] = useState(null)
+    const [estadoPago, setEstadoPago] = useState(null)
     const [fechaInicio, setFechaInicio] = useState("")
     const [fechaFinal, setFechaFinal] = useState("")
     const [idEstado, setIdEstado] = useState(null)
 
-
-    const [pagina, setPagina] = useState(1)
-    const [totalPaginas, setTotalPaginas] = useState(1)
-    const [limite, setLimite] = useState(10)
-    const [offset, setOffset] = useState(0)
-
     useEffect(()=> {
-
-        function cbVentas(respuesta){
-            setTotalPaginas(Math.ceil(respuesta.count / limite))
-            setFacturas(respuesta.rows)
-        }
-        fetchManager(`http://localhost:3000/api/v1/facturas/ventas?limit=${limite}&offset=${offset}`, cbVentas, "GET")
+        realizarPeticion()
     }, [limite, offset])
+
+    useEffect(() => {
+        realizarPeticion()
+    }, [])
+
+
 
     useEffect(()=>{
         if (idSeleleccionado){
             navigate(`/venta/${idSeleleccionado}`)
         }
-    }, [idSeleleccionado])
+    }, [idSeleleccionado, navigate])
 
 
-    useEffect(()=> { 
-            let filtradas = FiltradoDatos.filtroNumero(facturas, 'estado_id', idEstado)
-            filtradas = FiltradoDatos.filtroNumero(filtradas, 'id', id)
-            filtradas = FiltradoDatos.filtroCadena(filtradas, 'cliente', nombre)
-            setFacturasFiltradas(FiltradoDatos.filtroFecha(filtradas, 'fecha', fechaInicio, fechaFinal))
-    
-        }, [facturas, id, idEstado, nombre, fechaInicio, fechaFinal])
+    function realizarPeticion(){
+        const paginacion = `limit=${limite}&offset=${offset}`
+
+        const filtro = {
+            ...(idCliente && {cliente_id: idCliente}),
+            ...(idEstado && {estado_id: idEstado}),
+            ...(id && {id: id}),
+            ...(fechaInicio && {fecha_desde: fechaInicio}),
+            ...(fechaFinal && {fecha_hasta: fechaFinal}),
+            ...(estadoPago && {estado_pago: estadoPago}),
+        }
+
+        const filtroTexto = Object.entries(filtro).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+
+        const params = `${paginacion}&${filtroTexto}`
+
+        console.log("params", params)
+        function cbVentas(respuesta){
+            setTotalPaginas(Math.ceil(respuesta.count / limite))
+            setFacturas(respuesta.rows)
+        }
+        fetchManager(`http://localhost:3000/api/v1/facturas/ventas?${params}`, cbVentas, "GET")
+    }
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-2 overflow-auto">
@@ -79,7 +102,7 @@ export default function Ventas(){
 
             <div className="flex items-center gap-3">
                 <div className="w-24">
-                    <InputText label={"Id"} valor = {id} setValor = {setId} />
+                    <InputNumber label={"Id"} valor = {id} setValor = {setId} />
                 </div>
 
                 <div className="flex gap-3">
@@ -87,22 +110,27 @@ export default function Ventas(){
                     <FechaInput label={"Hasta"} valor= {fechaFinal} setValor= {setFechaFinal}/>
                 </div>
 
-                <InputText 
-                label={"Cliente"}
-                valor = {nombre}
-                setValor = {setNombre}
-                />
+                <InputLista lista={clientes} label={"Nombre cliente"} setValor={setNombreCliente} valor={nombreCliente} setIdSeleccionado={setIdCliente}/>
+
+                <Select 
+                    label={"Estado"}
+                    opciones={estadosVentas}
+                    setValor={setIdEstado}
+                    valor={idEstado}
+                    valorDefault={0}/>
                 
-                <Select label={"Estado"} objeto={estadoObjeto} setValor={setIdEstado} valor={idEstado}/>
-                
-                <BotonIcono texto={<FaSearch/>} onClick={()=>{}}/>
+                <BotonIcono texto={<FaSearch/>} onClick={()=>{
+                    setPagina(1)
+                    setOffset(0)
+                    realizarPeticion()
+                }}/>
                 <Link className="" to={'/vender'}><BotonIcono texto={<FaShoppingCart/>}/></Link>
 
             </div>
             
             <div className="overflow-auto h-full">
                 <Tabla
-                    datos={facturasFiltradas}
+                    datos={facturas}
                     setIdItemSeleccionado={setIdSeleccionado}
                     rename = {renombrar}
                     />

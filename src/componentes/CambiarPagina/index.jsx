@@ -6,7 +6,7 @@ export default function CambiarPagina(props){
 
     function paginaSiguiente() {
         if (props.totalPaginas > props.pagina) {
-            props.setOffset(props.pagina * props.limite)            
+            props.setOffset(props.pagina * parseInt(props.limite))            
             props.setPagina(props.pagina + 1)
         }
 
@@ -14,7 +14,7 @@ export default function CambiarPagina(props){
 
     function paginaAnterior() {
         if (props.pagina > 1) {
-            props.setOffset((props.pagina -2)  * props.limite)
+            props.setOffset((props.pagina -2)  * parseInt(props.limite))
             props.setPagina(props.pagina - 1)
             
         }

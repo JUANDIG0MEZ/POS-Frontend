@@ -70,7 +70,7 @@ export default function Venta(){
         const detalles = facturaModificada.map(item => {
             return {
                 producto_id: item.id,
-                cantidad: item.cantidad,
+                cantidad: parseInt(item.cantidad) || 0,
                 precio: item.precio ,
                 subtotal: item.subtotal
             }

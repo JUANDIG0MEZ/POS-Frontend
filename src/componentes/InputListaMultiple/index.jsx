@@ -69,6 +69,14 @@ export default function InputListaMultiple(props) {
         )
     }
 
+
+    function onFocus(){
+        props.setValor("")
+        setShowLista(true)
+        if (props.setIdSeleccionado){
+            props.setIdSeleccionado(null)
+        }
+    }
     
 
 
@@ -77,10 +85,11 @@ export default function InputListaMultiple(props) {
             <label className="absolute -top-6 font-semibold text-md">{labelSeleccionado()}</label>
             <div className="items-center flex aling-center">
                 <input 
-                onFocus={()=>{setShowLista(true)}} 
+                onFocus={onFocus} 
                 onBlur={()=>{setShowLista(false)}}
                 onChange={establecerValor}
                 value = {props.valor || ""}
+                
                 className={`${props.isNumber ? "tracking-wider" : "tracking-wide"} w-full border p-2 pr-6  focus:outline-none  ${showLista ? "rounded-t-lg border-b-white": "rounded-lg" }   `}/>
 
                 <FaChevronDown

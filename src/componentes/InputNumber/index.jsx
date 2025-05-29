@@ -1,5 +1,6 @@
 
 export default function InputText(props){
+
     function labelSeleccionado (labelSolo) {
 
         if (props.labelSeleccionado){
@@ -9,7 +10,7 @@ export default function InputText(props){
                     {
                     <span className="etiqueta">
                         {props.isPrice ? "$ ": ""}
-                        {formattedValue(props.labelSeleccionado, true)}
+                        {`${Number(props.labelSeleccionado).toLocaleString()}`}
                     </span>
                     }
                 </>               
@@ -17,15 +18,14 @@ export default function InputText(props){
         }
         return labelSolo
     }
-    
+
 
     const establecerValor = (e) => {
         const regex = /[^0-9]/g
         
         const nuevoValor = e.target.value.replace(regex, "")
-
         if (props.setValor){
-            props.setValor(parseInt(nuevoValor || 0))            
+            props.setValor(nuevoValor)            
         }
     }
 
@@ -34,25 +34,12 @@ export default function InputText(props){
         <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
             <label className="font-semibold absolute -top-6 text-nowrap">{labelSeleccionado(props.label)}</label>
             <input 
+            onFocus={()=> props.setValor("")}
             onChange={establecerValor}
             type="text" 
-            value={ props.format ? formattedValue(props.valor, props.format) : props.valor || "0"}
-            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} w-full border rounded-md p-2  borde-input `}/>
+            value={ props.valor ? Number(props.valor).toLocaleString() : ""}
+            className={`tracking-widest w-full border rounded-md p-2  borde-input `}/>
         </div>
     )
 }
 
-
-function formattedValue(value, format){
-    if (value){
-        if (format) {
-            return `${Number(value).toLocaleString()}`
-        }
-        return value 
-        
-    }
-    else{
-        return "0"
-    }
-    
-}

@@ -10,12 +10,12 @@ import InputNumber from "../../componentes/InputNumber"
 import { toast } from "sonner"
 import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactura"
 import MostrarImagen from "../../componentes/MostrarImagen"
-
+import Select from "../../componentes/Select"
 
 //import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
 import { fetchFilesManager, fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 
-import { FaTrash } from "react-icons/fa"
+import { FaPlus, FaTrash, FaBalanceScale } from "react-icons/fa"
 
 const renombrar = {
     id: "ID",
@@ -34,7 +34,8 @@ export default function Comprar() {
 
     const {
         clientes,
-        productos
+        productos,
+        estadosVentas
     } = useContext(ContextInventario)
     const [carritoDeVentas, setCarritoDeVentas] = useState([])
     
@@ -206,7 +207,7 @@ export default function Comprar() {
             const detalles = carritoDeVentas.map(item => {
                 return {
                     producto_id: item.id,
-                    cantidad: item.cantidad,
+                    cantidad: parseInt(item.cantidad) || 0,
                     precio: item.precio,
                     subtotal: item.subtotal
                 }
@@ -226,19 +227,27 @@ export default function Comprar() {
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
-            <div className="flex gap-3 items-center">
-                <MostrarImagen imagenes={imagenes}/>
-                <div className="flex flex-col gap-4">
-                    <h1 className="titulo mb-3">Crear venta</h1>
+            <div className="flex gap-3 items-between">
+                <div>
+                    <MostrarImagen imagenes={imagenes}/>
+                </div>
+                
+                <div className="flex flex-col gap-4 w-full">
+                    <h1 className="titulo mb-8">Crear venta</h1>
                     <div className="flex flex-col gap-8">
-                        <InputLista
+                        <div className="flex gap-3">
+                            <InputLista
                             valor={nombreCliente}
                             setValor={setNombreCliente}
                             label="Cliente*"
                             lista={clientes}
                             setIdSeleccionado = {setIdCliente}
                             />
-                        <InputListaMultiple
+                            <Select opciones= {estadosVentas} label={"Estado venta"}/>
+                        </div>
+                        
+                        <div className="flex gap-3">
+                            <InputListaMultiple
 
                             valor={nombreProducto}
                             setValor={setNombreProducto}
@@ -247,8 +256,19 @@ export default function Comprar() {
                             setIdSeleccionado = {setIdProducto}
                             labelSeleccionado = {nombreProductoSeleccionado}
                             />
-                        <div className="flex w-full items-center justify-between gap-3">
-                            <InputNumber
+
+                            <div className="flex py-2 px-3 borde-1 rounded-lg w-44 text-center items-center justify-end gap-4">
+                                                            
+                                <p className="font-bold" >{medida || " Medida"}</p> 
+                                <FaBalanceScale className="text-gray-700 text-xl"/>
+                            </div>
+
+
+                        </div>
+                        
+                        <div className="flex w-full items-center justify-between">
+                            <div className="flex gap-3">
+                                <InputNumber
                                 estilo = {"w-28"}
                                 valor={cantidadProducto}
                                 setValor={setCantidadProducto}
@@ -257,7 +277,7 @@ export default function Comprar() {
                                 format={true}
                                 />
                             <InputNumber
-                                estilo = {"w-52"}
+                                estilo = {"w-40"}
                                 valor={precioProducto}
                                 setValor={setPrecioProducto}
                                 labelSeleccionado = {precioParcial}
@@ -266,13 +286,9 @@ export default function Comprar() {
                                 isPrice={true}
                                 format={true}
                                 />
-                                <div>
-                                    <p></p>
-                                    <p className="p-2 border borde-1 w-52 text-center font-bold">{medida || " Medida"}</p> 
-                                </div>
                                 
                             <InputNumber
-                                estilo = {"w-62"}
+                                estilo = {"w-40"}
                                 label="Total"
                                 valor={totalProducto}
                                 setValor={setTotalProducto}
@@ -284,9 +300,11 @@ export default function Comprar() {
                             <BotonIcono
                                 onClick={limpiarCampos}
                                 texto={<FaTrash/>}/>
-                            <Boton
+                            </div>
+                            
+                            <BotonIcono
                                 onClick={agregarProducto}
-                                texto="Agregar"/>
+                                texto={<FaPlus/>}/>
                         </div>
 
                     </div>

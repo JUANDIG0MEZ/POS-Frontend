@@ -2,7 +2,6 @@ import Tabla from "../../componentes/Tabla"
 import {FiltradoDatos} from "../../serviciosYFunciones/filtradoDatos"
 import {useState, useContext, useEffect} from 'react'
 import { ContextInventario } from "../../contextInventario"
-import InputLista from "../../componentes/InputLista"
 import InputText from "../../componentes/InputText"
 
 import Select from "../../componentes/Select"
@@ -17,6 +16,7 @@ import BotonIcono from "../../componentes/BotonIcono";
 
 import ModalCrearCliente from "../../componentes/Modales/ModalCrearCliente"
 import { useNavigate } from "react-router-dom"
+import InputLista from "../../componentes/InputLista"
 
 
 const renombrar = {
@@ -33,12 +33,6 @@ const renombrar = {
     }
 
 
-const tipoObjeto = {
-    1: 'Proveedor',
-    2: 'Cliente',
-    3: 'Ambos'
-}
-
 
 
 export default  function Clientes() {
@@ -46,7 +40,8 @@ export default  function Clientes() {
     const navigate = useNavigate()
 
     const {
-        clientes
+        clientes,
+        tiposClientes
     } = useContext(ContextInventario)
 
     
@@ -65,6 +60,7 @@ export default  function Clientes() {
     const [offset, setOffset] = useState(0)
 
     const [showModalCrear, setShowModalCrear] = useState(false)
+
 
     useEffect(()=> {
         let datosFiltrados = FiltradoDatos.filtroCadena(clientes, "nombre", nombre)
@@ -94,13 +90,12 @@ export default  function Clientes() {
                     isNumber= {true}
                     />
 
-                    <InputText
-                    label="Nombre"
-                    valor={nombre}
-                    setValor = {setNombre}
-                    />
+
+                    <InputLista lista={clientes} valor={nombre} setValor={setNombre} label={"Nombre cliente"}/>
+
+
                     
-                    <Select objeto={tipoObjeto} label={"Tipo cliente"}/>
+                    <Select opciones={tiposClientes} label={"Tipo cliente"} setValor={setTipo}/>
 
                     <BotonIcono texto ={<FaSearch/>} onClick={()=>{}}/>
                     <BotonIcono onClick={()=>setShowModalCrear(true)} texto={<FaUser/>}/>      

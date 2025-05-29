@@ -8,6 +8,10 @@ const InventarioProvider = ({children}) => {
     const [marcas, setMarcas] = useState([])
     const [categorias, setCategorias] = useState([])
     const [medidas, setMedidas] = useState([])
+    const [estadosCompras, setEstadosCompras] = useState([])
+    const [estadosVentas, setEstadosVentas] = useState([])
+    const [tiposClientes, setTiposClientes] = useState([])
+
 
     useEffect(() => {
         fetchManager('http://localhost:3000/api/v1/productos', setProductos, "GET")
@@ -15,6 +19,9 @@ const InventarioProvider = ({children}) => {
         fetchManager('http://localhost:3000/api/v1/productos/marcas', setMarcas, "GET")
         fetchManager('http://localhost:3000/api/v1/productos/categorias', setCategorias, "GET")
         fetchManager('http://localhost:3000/api/v1/productos/medidas', setMedidas, "GET")
+        fetchManager('http://localhost:3000/api/v1/facturas/compras/estados', setEstadosCompras, "GET")
+        fetchManager('http://localhost:3000/api/v1/facturas/ventas/estados', setEstadosVentas, "GET")
+        fetchManager('http://localhost:3000/api/v1/clientes/tipos', setTiposClientes, "GET")
     }, [])
 
     return (
@@ -29,7 +36,10 @@ const InventarioProvider = ({children}) => {
             categorias,
             setCategorias,
             medidas,
-            setMedidas
+            setMedidas,
+            estadosCompras,
+            estadosVentas,
+            tiposClientes
             
             }
         }>

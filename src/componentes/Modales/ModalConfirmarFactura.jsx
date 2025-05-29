@@ -5,7 +5,7 @@ import InputLista from "../InputLista"
 import InputText from "../InputText"
 export default function ModalConfirmarFactura(props){
     const [estado, setEstado] = useState("Recibido")
-    const [pagado , setPagado] = useState(null)
+    const [pagado , setPagado] = useState("")
     const [idEstado, setIdEstado] = useState(1)
 
     function cerrarModal(){
@@ -19,7 +19,7 @@ export default function ModalConfirmarFactura(props){
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="flex bg-white py-5 px-7 rounded-3xl w-[800px] items-center gap-4">    
                 <div className="flex flex-col flex-1 gap-4">
-                    <h2 className="titulo mb-4">Confirmar factura</h2>
+                    <h2 className="subtitulo mb-4">Confirmar factura</h2>
                     <div className="flex flex-col gap-8">
                         <InputText label={"Cliente"} valor={props.clienteNombre}></InputText>
                         <div className="flex gap-3">

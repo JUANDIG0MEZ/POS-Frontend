@@ -78,11 +78,12 @@ export default function Compra(){
             }
         })  
 
-        function cb(resData){
+        function cb(res){
+            //console.log("res de la modificacion", res)
             setFacturaOriginal(facturaModificada)
-            setTotalTabla(resData.total)
-            setTotal(resData.total)
-            setPagado(resData.pagado)
+            setTotalTabla(res.info.total)
+            setTotal(res.info.total)
+            setPagado(res.info.pagado)
         }
         
         fetchManager(`http://localhost:3000/api/v1/facturas/compras/${id}`, cb, "PATCH", detalles)

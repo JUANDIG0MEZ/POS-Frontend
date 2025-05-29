@@ -27,7 +27,7 @@ const navItems = {
 export default function HeaderNav() {
     return (
         <nav className='flex bg-black justify-between p-3 text-xl px-6'>
-            <h1 className='flex font-bold text-white items-center gap-2'><FaReact className='animate-spin rain'/>Inventario</h1>
+            <h1 className='flex font-bold text-white items-center gap-2'><FaReact className='animate-spin rain'/>PersonalPos</h1>
             <ul className='flex gap-6'>
                 {
                     Object.keys(navItems).map((item, index)=>{

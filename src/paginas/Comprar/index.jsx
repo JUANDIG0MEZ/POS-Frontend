@@ -9,10 +9,11 @@ import InputNumber from "../../componentes/InputNumber"
 import { toast } from "sonner"
 import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactura"
 import MostrarImagen from "../../componentes/MostrarImagen"
-import { FaTrash, FaBalanceScale } from "react-icons/fa"
-import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
+import { FaTrash, FaBalanceScale, FaPlus } from "react-icons/fa"
 import { fetchFilesManager, fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 import BotonIcono from "../../componentes/BotonIcono"
+
+import Select from "../../componentes/Select"
 
 const renombrar = {
     id: "ID",
@@ -31,7 +32,8 @@ export default function Comprar() {
 
     const {
         clientes,
-        productos
+        productos,
+        estadosCompras
     } = useContext(ContextInventario)
     const [carritoDeCompras, setCarritoDeCompras] = useState([])
     
@@ -169,7 +171,7 @@ export default function Comprar() {
             nombre: producto.nombre,
             marca: producto.marca,
             medida: producto.medida,
-            cantidad: cantidadProducto,
+            cantidad: parseInt(cantidadProducto),
             precio: precio,
             subtotal: total,
             
@@ -198,7 +200,7 @@ export default function Comprar() {
             const info = {
                 cliente_id: idCliente,
                 estado_id: estado_id,
-                pagado: pagado,
+                pagado: pagado || 0,
             }
 
             const detalles = carritoDeCompras.map(item => {
@@ -228,27 +230,38 @@ export default function Comprar() {
                 <div>
                     <MostrarImagen imagenes={imagenes}/>
                 </div>
-                <div className="flex flex-col gap-4">
-                    <h1 className="text-3xl font-bold mb-8">Crear compra</h1>
+                <div className="flex flex-col gap-4 w-full">
+                    <h1 className="titulo mb-8">Crear compra</h1>
                     <div className="flex flex-col gap-8">
-                        <InputLista
+                        <div className="flex gap-3">
+                            <InputLista
                             valor={nombreCliente}
                             setValor={setNombreCliente}
                             label="Cliente"
                             lista={clientes}
                             setIdSeleccionado = {setIdCliente}
                             />
-                        <InputListaMultiple
+                            <Select opciones={estadosCompras} label="Estado compra"/>
+                        </div>
+                        
+                        <div className="flex gap-3">
+                            <InputListaMultiple
+                                valor={nombreProducto}
+                                setValor={setNombreProducto}
+                                label="Producto"
+                                lista={productos}
+                                setIdSeleccionado = {setIdProducto}/>
 
-                            valor={nombreProducto}
-                            setValor={setNombreProducto}
-                            label="Producto"
-                            lista={productos}
-                            setIdSeleccionado = {setIdProducto}
-                            labelSeleccionado = {nombreProductoSeleccionado}
-                            />
+                            <div className="flex py-2 px-3 borde-1 rounded-lg w-44 text-center items-center justify-end gap-4">
+                                
+                                <p className="font-bold" >{medida || " Medida"}</p> 
+                                <FaBalanceScale className="text-gray-700 text-xl"/>
+                            </div>
+                        </div>
+                        
                         <div className="flex w-full items-center justify-between gap-3">
-                            <InputNumber
+                            <div className="flex gap-3">
+                                <InputNumber
                                 estilo = {"w-28"}
                                 valor={cantidadProducto}
                                 setValor={setCantidadProducto}
@@ -257,7 +270,7 @@ export default function Comprar() {
                                 format={true}
                                 />
                             <InputNumber
-                                estilo = {"w-52"}
+                                estilo = {"w-40"}
                                 valor={precioProducto}
                                 setValor={setPrecioProducto}
                                 labelSeleccionado = {precioParcial}
@@ -266,14 +279,10 @@ export default function Comprar() {
                                 isPrice={true}
                                 format={true}
                                 />
-                            <div className="flex py-2 px-3 borde-1 rounded-lg w-48 text-center items-center justify-end gap-4">
-                                
-                                <p className="font-bold" >{medida || " Medida"}</p> 
-                                <FaBalanceScale className="text-gray-700 text-xl"/>
-                            </div>
+                            
                             
                             <InputNumber
-                                estilo = {"w-62"}
+                                estilo = {"w-40"}
                                 label="Total"
                                 valor={totalProducto}
                                 setValor={setTotalProducto}
@@ -281,14 +290,18 @@ export default function Comprar() {
                                 format={true}
                                 isPrice= {true}
                                 />
-                        
+                            
                             <BotonIcono
                                 onClick={limpiarCampos}
                                 texto={<FaTrash />}
                                 isNormal={true}/>
-                            <Boton
+                            </div>
+                            
+                        
+                            
+                            <BotonIcono
                                 onClick={agregarProducto}
-                                texto="Agregar"/>
+                                texto={<FaPlus/>}/>
                         </div>
 
                     </div>
@@ -296,7 +309,7 @@ export default function Comprar() {
                 </div>
             </div>
 
-            <h2 className="text-3xl font-semibold">Factura de compra</h2>
+            <h2 className="subtitulo font-semibold">Factura de compra</h2>
             
             <div>
                 <Tabla 
