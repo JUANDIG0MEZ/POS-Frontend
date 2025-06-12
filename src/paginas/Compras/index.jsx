@@ -1,7 +1,7 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import Tabla from "../../componentes/Tabla";
 import FechaInput from "../../componentes/FechaInput";
-import InputText from "../../componentes/InputText";
+import InputNumber from "../../componentes/InputText";
 import InputLista from "../../componentes/InputLista";
 import BotonIcono from "../../componentes/BotonIcono";
 import {Link, useNavigate } from "react-router-dom";
@@ -22,20 +22,25 @@ const renombrar = {
     cliente: 'Cliente',
     pagado: 'Pagado',
     total: 'Total',
-    estado: 'Estado',
+    estado_entrega: 'Estado entrega',
+    estado_pago: 'Estado pago',
     por_pagar: 'Por Pagar',
 }
 
+
+const estadosPagoObjeto = {
+    0: "Por Pagar",
+    1: "Pagado",
+}
 
 const columnasObjeto = [
     {id: "id", nombre: "ID"},
     {id: "fecha", nombre: "Fecha"},
     {id: "hora", nombre: "Hora"},
-    {id: "cliente", nombre: "Cliente"},
-    {id: "estado_id", nombre: "Estado"},
-    {id: "estado_pago", nombre: "Estado Pago"},
-    {id: "precio_venta", nombre: "Precio Venta"},
-    {id: "cantidad", nombre: "Cantidad"},
+    {id: "cliente_id", nombre: "Cliente"},
+    {id: "estado_entrega_id", nombre: "Estado entrega"},
+    {id: "estado_pago_id", nombre: "Estado pago"},
+    {id: "por_pagar", nombre: "Por Pagar"},
     {id: "total", nombre: "Total"}
 ]
 
@@ -47,14 +52,20 @@ const limiteObjeto = [
     {id: "100", nombre: 100}]
 
 
-
-
+const defaultColumn = "id"
+const defaultOrden = "DESC"
+const defaultlimite = "20"
+const defaultOffset = "0"
+const defaultEstadoEntrega = "0"
+const defaultEstadoPago = "0"
 
 export default function Compras(){
 
     const{
-        estadosCompras,
-        clientes
+        estadosComprasEntrega,
+        estadosComprasPago,
+        clientesNombres,
+        ordenOpciones
     } = useContext(ContextInventario)
     const navigate = useNavigate()
 
@@ -70,32 +81,25 @@ export default function Compras(){
     
     // Paginacion
 
-    const [pagina, setPagina] = useState(1)
-    const [totalPaginas, setTotalPaginas] = useState(1)
-    const [limite, setLimite] = useState(20)
-    const [offset, setOffset] = useState(0)
-    const [columna, setColumna] = useState("id")
+    const [pagina, setPagina] = useState(0)
+    const [totalPaginas, setTotalPaginas] = useState(0)
+
+    
+    const [limite, setLimite] = useState(defaultlimite)
+    const [offset, setOffset] = useState(defaultOffset)
+    const [columna, setColumna] = useState(defaultColumn)
+    const [orden, setOrden] = useState(defaultOrden)
 
     // Filtros
     const [idCliente, setIdCliente] = useState(null)
-    const [estadoPago, setEstadoPago] = useState(null)
+    const [idEstadoPago, setIdEstadoPago] = useState(defaultEstadoPago)
+    const [idEstadoEntrega, setIdEstadoEntrega] = useState(defaultEstadoEntrega)
     const [fechaInicio, setFechaInicio] = useState("")
     const [fechaFinal, setFechaFinal] = useState("")
-    const [idEstado, setIdEstado] = useState(null)
-
-
+    
     useEffect(() => {
         realizarPeticion()
-    }, [])
-
-    
-
-    useEffect(()=> {
-        realizarPeticion()
-    }, [limite, offset])
-
-
-
+    }, [offset])
 
     useEffect(()=>{
         if (idSeleleccionado){
@@ -108,18 +112,20 @@ export default function Compras(){
 
         const filtro = {
             ...(idCliente && {cliente_id: idCliente}),
-            ...(idEstado && {estado_id: idEstado}),
+            ...(idEstadoEntrega && {estado_entrega_id: idEstadoEntrega}),
+            ...(idEstadoPago && {estado_pago_id: idEstadoPago}),
             ...(id && {id: id}),
             ...(fechaInicio && {fecha_desde: fechaInicio}),
             ...(fechaFinal && {fecha_hasta: fechaFinal}),
-            ...(estadoPago && {estado_pago: estadoPago}),
+            ...(columna && {columna: columna}),
+            ...(orden && {orden: orden}),
         }
 
         const filtroTexto = Object.entries(filtro).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
 
         const params = `${paginacion}&${filtroTexto}`
 
-        console.log("params", params)
+
         function cbCompras(respuesta){
             setTotalPaginas(Math.ceil(respuesta.count / limite))
             setFacturas(respuesta.rows)
@@ -127,43 +133,48 @@ export default function Compras(){
         fetchManager(`http://localhost:3000/api/v1/facturas/compras?${params}`, cbCompras, "GET")
     }
 
+
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-2 overflow-auto">
             <h1 className="titulo mb-5">Facturas de compra</h1>
 
             <div className="flex items-center gap-3">
                 <div className="w-24">
-                    <InputText label={"Id"} valor={id} setValor = {setId}/>
+                    <InputNumber label={"Id"} valor={id} setValor = {setId}/>
                 </div>
                 <div className="flex gap-3">
                     <FechaInput label={"Desde"} valor = {fechaInicio} setValor= {setFechaInicio}/>
                     <FechaInput label={"Hasta"} valor= {fechaFinal} setValor= {setFechaFinal}/>
                 </div>
                 <InputLista 
-                    lista={clientes}
-                    label={"Cliente"}
+                    lista={clientesNombres}
+                    label={"Nombre proveedor"}
                     setValor={setNombreCliente}
                     valor={nombreCliente}
                     setIdSeleccionado={setIdCliente}/>
                 
                 <Select 
                     label={"Estado entrega"}
-                    opciones={estadosCompras}
-                    setValor={setIdEstado}
-                    valor={idEstado}
-                    valorDefault={0}/>
+                    opciones={estadosComprasEntrega}
+                    setValor={setIdEstadoEntrega}
+                    valor={idEstadoEntrega}
+                    valorDefault={defaultEstadoEntrega}/>
 
                 <Select 
                     label={"Estado pago"}
-                    opciones={columnasObjeto}
-                    setValor={setColumna}
-                    valor={idEstado}
-                    valorDefault={0}/>
+                    opciones={estadosComprasPago}
+                    setValor={setIdEstadoPago}
+                    valor={idEstadoPago}
+                    valorDefault={defaultEstadoPago}/>
 
-                <BotonIcono texto={<FaSearch/>} onClick={()=> {
-                    setOffset(0)
-                    setPagina(1)
-                    realizarPeticion()}}/>
+                <BotonIcono texto={<FaSearch/>}
+                    onClick={()=> {
+                        if (offset == 0){
+                            realizarPeticion()
+                        }
+                        setOffset(0)
+                        setPagina(0)
+                    }}/>
                 
                 <Link className="" to={'/comprar'}><BotonIcono texto={<FaShoppingCart/>}/></Link>
 
@@ -171,21 +182,14 @@ export default function Compras(){
 
             <div className="flex justify-between">
                 <div className="flex gap-3">
-                    <CambiarPagina 
-                    pagina={pagina}
-                    setPagina={setPagina}
-                    setOffset={setOffset}
-                    limite={limite} 
-                    totalPaginas={totalPaginas}
-                    setTotalPaginas={setTotalPaginas}
-                    />
+                    
 
                     <Select
                         label={"Columna"}
                         opciones={columnasObjeto}
                         setValor={setColumna}
                         valor={columna}
-                        valorDefault={"id"}
+                        valorDefault={defaultColumn}
                     />
 
                     <Select 
@@ -193,7 +197,25 @@ export default function Compras(){
                         opciones={limiteObjeto}
                         setValor={setLimite}
                         valor={limite}
-                        valorDefault={20}
+                        valorDefault={defaultlimite}
+                    />
+                    <Select 
+                        label={"Orden"}
+                        opciones={ordenOpciones}
+                        setValor={setOrden}
+                        valor={orden}
+                        valorDefault={defaultOrden}
+                    />
+
+                </div>
+                <div>
+                    <CambiarPagina 
+                    pagina={pagina}
+                    setPagina={setPagina}
+                    setOffset={setOffset}
+                    limite={limite} 
+                    totalPaginas={totalPaginas}
+                    setTotalPaginas={setTotalPaginas}
                     />
                 </div>
                 

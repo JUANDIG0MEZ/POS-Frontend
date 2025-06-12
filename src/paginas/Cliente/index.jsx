@@ -8,8 +8,29 @@ import InputNumber from '../../componentes/InputNumber';
 import ModalPagarCliente from '../../componentes/Modales/ModalPagarCliente';
 import ModalAbonarCliente from '../../componentes/Modales/ModalAbonarCliente';
 import CambiarPagina from '../../componentes/CambiarPagina';
+import Select from '../../componentes/Select';
+
+
+import {useRef} from 'react';
+
+const limiteObjeto = [
+    {id: "10", nombre: 10},
+    {id: "20", nombre: 20},
+    {id: "30", nombre: 30},
+    {id: "50", nombre: 50},
+]
+
+
+const defaultLimite = "15"
+
+
+let renombrarTabla = {}
+
 
 export default function Cliente() {
+
+    const ifFirstRender = useRef(true)
+
     const {id} = useParams();
     const [nombre, setNombre]= useState("")
     const [direccion, setDireccion] = useState("")
@@ -19,23 +40,26 @@ export default function Cliente() {
     const [porPagarle, setPorPagarle] = useState("")
     const [debe, setDebe] = useState("")
 
+    const [totalPaginas, setTotalPaginas] = useState(1)
+
     const [datos, setDatos] = useState([])
 
     const [showModalPago, setShowModalPago] = useState(false)
     const [showModalAbono, setShowModalAbono] = useState(false)
 
 
-    const [pagina, setPagina] = useState(1)
-    const [limite, setLimite] = useState(30)
+    const [pagina, setPagina] = useState(0)
+    const [limite, setLimite] = useState(defaultLimite)
     const [offset, setOffset] = useState(0)
-    const [numFilas, setNumFilas] = useState(0)
 
-    const [totalPaginas, setTotalPaginas] = useState(1)
 
-    useEffect(()=>{
+    const [nombreTabla, setNombreTabla] = useState("")
 
+
+
+
+    useEffect(()=> {
         function cbCliente(resData){
-
             setNombre(resData.nombre)
             setDireccion(resData.direccion)
             setTelefono(resData.telefono)
@@ -45,28 +69,20 @@ export default function Cliente() {
             setDebe(resData.debe)
         }
         fetchManager(`http://localhost:3000/api/v1/clientes/${id}`, cbCliente, "GET")
-    }, [id])
+    }, [])
 
+    useEffect(()=> {
+        function cbTablas(res) {
+            setDatos(res.rows)
+            setTotalPaginas(Math.ceil(res.count / limite))
+        }
 
-    function cbTablas(res) {
-        setDatos(res.rows)
-        setTotalPaginas(Math.ceil(res.count / limite))
-        setNumFilas(res.count)
-    }
+        if (nombreTabla){
+            fetchManager(`http://localhost:3000/api/v1/clientes/${id}/${nombreTabla}?limit=${limite}&offset=${offset}`, cbTablas, "GET")
+        }
+        
+    }, [offset, limite, nombreTabla, id])
 
-    async function cargarVentas(){
-        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/ventas?limit=${limite}&offset=${offset}`, cbTablas, "GET")
-    }
-    async function cargarcompras(){
-        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/compras?limit=${limite}&offset=${offset}`, cbTablas, "GET")
-    }
-    async function cargarAbonos(){
-        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/abonos?limit=${limite}&offset=${offset}`, cbTablas, "GET")
-
-    }
-    async function cargarPagos(){
-        fetchManager(`http://localhost:3000/api/v1/clientes/${id}/pagos?limit=${limite}&offset=${offset}`, cbTablas, "GET")
-    }
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
             <h1 className="text-3xl font-bold mb-3">Cliente ID <span className='text-color-2 p-1 border rounded-md'>{id}</span></h1>
@@ -101,39 +117,66 @@ export default function Cliente() {
                     <div className='flex gap-3'>
                         <Boton
                         texto="Ventas"
-                        onClick={cargarVentas}
+                        onClick={()=> {
+                            setOffset(0)
+                            setPagina(0)
+                            setNombreTabla("ventas")
+                        }}
                         isNormal={true}/>
 
                         <Boton 
-                        onClick={cargarcompras}
-                        texto="Compras" isNormal={true}/>
+                        texto="Compras"
+                        onClick={()=> {
+                            setOffset(0)
+                            setPagina(0)
+                            setNombreTabla("compras")
+                        }}
+                        isNormal={true}/>
 
                         
 
-                        <Boton texto="Pagos" 
-                        onClick={cargarPagos}
-                        isNormal={true}/>
                         <Boton
-                        onClick={cargarAbonos}
-                        texto="Abonos"
-                        isNormal={true}/>
+                            texto="Pagos" 
+                            onClick={() => {
+                                setOffset(0)
+                                setPagina(0)
+                                setNombreTabla("pagos")}}
+                            isNormal={true}/>
+                        <Boton
+                            texto="Abonos"
+                            onClick={() => {
+                                setOffset(0)
+                                setPagina(0)
+                                setNombreTabla("abonos")
+                            }}
+                            isNormal={true}/>
                     </div>
+                    <div className='flex gap-3'>
+                            <Select 
+                                label={"No. Filas"}
+                                opciones={limiteObjeto}
+                                setValor={setLimite}
+                                valor={limite}
+                                valorDefault={defaultLimite}
+                            />
 
-                    <CambiarPagina 
-                        pagina={pagina}
-                        setPagina={setPagina}
-                        setOffset={setOffset}
-                        limite={limite} 
-                        totalPaginas={totalPaginas}
-                        setTotalPaginas={setTotalPaginas}
-                        />
+                            <CambiarPagina 
+                                pagina={pagina}
+                                setPagina={setPagina}
+                                setOffset={setOffset}
+                                limite={limite} 
+                                totalPaginas={totalPaginas}
+                                setTotalPaginas={setTotalPaginas}
+                                />
+                    </div>
+                    
 
                 </div>
                 
             </div>
             <div className='w-full overflow-auto p-1 text-md mb-10'>
 
-                <Tabla datos={datos}/>
+                <Tabla datos={datos} rename={renombrarTabla}/>
 
             </div>
             {showModalPago && <ModalPagarCliente clienteId={id} porPagar = {porPagarle} setShowModal = {setShowModalPago} setPorPagarle={setPorPagarle}/>}

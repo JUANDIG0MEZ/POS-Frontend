@@ -4,18 +4,17 @@ import {memo} from 'react'
 
 export default memo(function DiffTabla(props) {
 
+    console.log("total 1:", props.total)
+    console.log("total 2:", props.total2)
+    console.log("factura original", props.tabla1)
+    console.log("factura modificada", props.tabla2)
+
     function seleccionFila(e){
         const fila = e.target.closest('tr')
         if (fila && props.setIdItemSeleccionado){
             const id = fila.dataset.id
             props.setIdItemSeleccionado(id)
         }
-    }
-
-
-    let colspan = 0
-    if (props.tabla1.length > 0){
-        colspan = Object.keys(props.tabla1[0]).length
     }
 
     function comparar(indice, clave){
@@ -76,21 +75,26 @@ export default memo(function DiffTabla(props) {
 
 
 
-
+                
                 {   
-                     props.tabla1.length> 0 &&
-                <tr className=''>
-                    {
-                        colspan-3 >= 0 && <td colSpan={colspan-2} />
+                    props.tabla1.length ? 
+                    <tr>
+                        {
+                        Object.keys(props.tabla1[0]).map((item, idx)=>{
+                            const totalColumns = Object.keys(props.tabla1[0]).length
+
+                            if (idx == totalColumns -2) {
+                                return <td key={idx} className="p-2 border font-bold text-center">Total</td>
+                            }
+                            else if (idx == totalColumns -1) {
+                                return <td key={idx} className="p-2 border text-center">{compararTotales(props.total, props.total2)}</td>
+                            }
+                            return <td key={idx} className="p-2"></td>
+                        })
                     }
- 
-                    {
-                        colspan-1 > 0 && <td className="bg-gray-50 p-2 border text-center font-bold">Total</td>
-                    }
-                    {
-                        colspan > 0 && <td className='p-2 border text-center font-bold'>{compararTotales(props.total, props.total2)}</td>
-                    }
-                </tr>
+                    
+                    </tr>
+                    : null
                 }
                 
             </tbody>

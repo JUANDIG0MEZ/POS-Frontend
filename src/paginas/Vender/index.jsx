@@ -4,16 +4,11 @@ import { ContextInventario } from "../../contextInventario"
 import Boton from "../../componentes/Boton"
 import BotonIcono from "../../componentes/BotonIcono"
 import InputListaMultiple from "../../componentes/InputListaMultiple"
-import InputLista from "../../componentes/InputLista"
-import CrudDatosClientes from "../../serviciosYFunciones/crudDatosClientes"
 import InputNumber from "../../componentes/InputNumber"
 import { toast } from "sonner"
-import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactura"
+import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarVenta"
 import MostrarImagen from "../../componentes/MostrarImagen"
-import Select from "../../componentes/Select"
-
-//import { obtenerImagenes } from "../../serviciosYFunciones/servicioImagenes"
-import { fetchFilesManager, fetchManager } from "../../serviciosYFunciones/fetchFunciones"
+import { fetchFilesManager } from "../../serviciosYFunciones/fetchFunciones"
 
 import { FaPlus, FaTrash, FaBalanceScale } from "react-icons/fa"
 
@@ -33,15 +28,11 @@ export default function Comprar() {
     const [showModalConfirmacion, setShowModalConfirmacion] = useState(false)
 
     const {
-        clientes,
         productos,
-        estadosVentas
     } = useContext(ContextInventario)
     const [carritoDeVentas, setCarritoDeVentas] = useState([])
     
-    const [nombreCliente, setNombreCliente] = useState("")
     const [nombreProducto, setNombreProducto] = useState("")
-    const [nombreProductoSeleccionado, setNombreProductoSeleccionado] = useState("")
     const [cantidadProducto, setCantidadProducto] = useState("")
     const [precioProducto, setPrecioProducto] = useState("")
     const [totalProducto, setTotalProducto] = useState("")
@@ -58,25 +49,23 @@ export default function Comprar() {
     const [precioParcial, setPrecioParcial] = useState("")
 
 
-    const [idCliente, setIdCliente]= useState("")
-    
-
     function limpiarCampos(){
         setNombreProducto("")
         setCantidadProducto("")
         setPrecioProducto("")
         setTotalProducto("")
+        setMedida("")
+    
+        setIdProducto(null)
+        setIdProductoSeleccionadoTabla(null)
     }
 
     useEffect(()=>{
 
         const producto = productos.find(producto => producto.id == idProducto)
         if (producto){
-            setNombreProductoSeleccionado(producto.nombre)
             setMedida(producto.medida)
-
             fetchFilesManager(`http://localhost:3000/api/v1/productos/${idProducto}/imagenes`, setImagenes)
-            //obtenerImagenes(idProducto, setImagenes)
         }
     
     }, [idProducto])
@@ -84,16 +73,6 @@ export default function Comprar() {
     useEffect(()=> {
         setTotal(carritoDeVentas.reduce((acc, item) => acc + item.subtotal, 0))
     }, [carritoDeVentas])
-
-    useEffect(()=>{
-        const cliente = CrudDatosClientes.encontrarPorNombre(nombreCliente, clientes)
-        if (cliente){
-            setIdCliente(cliente.id)
-        }
-        else {
-            setIdCliente("")
-        }
-    }, [nombreCliente, clientes])
 
 
 
@@ -132,7 +111,7 @@ export default function Comprar() {
 
         }
         
-    }, [idProductoSeleccionadoTabla])
+    }, [idProductoSeleccionadoTabla, carritoDeVentas])
 
 
     function agregarProducto(){
@@ -184,47 +163,6 @@ export default function Comprar() {
     }
 
 
-    function finalizarCompra(pagado, estado_id){
-        if (carritoDeVentas.length === 0){
-            toast.info("Agrega productos al carrito")
-            return
-        }
-        else if (!idCliente){
-            toast.info("Selecciona un cliente")
-            return
-        }
-        else if( pagado > total){
-            toast.error("El monto pagado es mayor al total")
-            return
-        }
-        else {
-            const info = {
-                cliente_id: idCliente,
-                estado_id: estado_id,
-                pagado: pagado,
-            }
-
-            const detalles = carritoDeVentas.map(item => {
-                return {
-                    producto_id: item.id,
-                    cantidad: parseInt(item.cantidad) || 0,
-                    precio: item.precio,
-                    subtotal: item.subtotal
-                }
-            })
-
-            const ventaEnviar = {info: info, datos: detalles}
-
-            function cbVenta(resData) {
-                setCarritoDeVentas([])
-                setTotal(0)
-            }
-            fetchManager(`http://localhost:3000/api/v1/facturas/ventas`, cbVenta, "POST", ventaEnviar)
-
-        }
-
-    }
-
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
             <div className="flex gap-3 items-between">
@@ -235,16 +173,6 @@ export default function Comprar() {
                 <div className="flex flex-col gap-4 w-full">
                     <h1 className="titulo mb-8">Crear venta</h1>
                     <div className="flex flex-col gap-8">
-                        <div className="flex gap-3">
-                            <InputLista
-                            valor={nombreCliente}
-                            setValor={setNombreCliente}
-                            label="Cliente*"
-                            lista={clientes}
-                            setIdSeleccionado = {setIdCliente}
-                            />
-                            <Select opciones= {estadosVentas} label={"Estado venta"}/>
-                        </div>
                         
                         <div className="flex gap-3">
                             <InputListaMultiple
@@ -254,7 +182,6 @@ export default function Comprar() {
                             label="Producto*"
                             lista={productos}
                             setIdSeleccionado = {setIdProducto}
-                            labelSeleccionado = {nombreProductoSeleccionado}
                             />
 
                             <div className="flex py-2 px-3 borde-1 rounded-lg w-44 text-center items-center justify-end gap-4">
@@ -326,7 +253,15 @@ export default function Comprar() {
                 <Boton texto="Finalizar venta" onClick={()=>setShowModalConfirmacion(true)}/>       
             </div>
             {
-                showModalConfirmacion && <ModalConfirmarFactura setShowModal={setShowModalConfirmacion} total = {total} clienteNombre={nombreCliente} onConfirm = {finalizarCompra}
+                showModalConfirmacion && 
+                <ModalConfirmarFactura 
+                    setShowModal={setShowModalConfirmacion} 
+                    total = {total}
+                    carritoDeVentas={carritoDeVentas} 
+                    reset = {() => {
+                        limpiarCampos()
+                        setCarritoDeVentas([])
+                    }}
                 />
             }
         </div>

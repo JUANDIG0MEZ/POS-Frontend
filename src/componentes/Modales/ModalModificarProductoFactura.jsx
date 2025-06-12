@@ -18,12 +18,6 @@ export default function ModalModificarProductoFactura(props){
         return props.datos.findIndex(fila => fila.id == id)
     }
 
-    function cerrarModal(){
-        if (props.setShowModal){
-            props.setShowModal(false)
-        }
-        
-    }
 
     useEffect(()=>{
         setTotal(cantidad * precio) 
@@ -40,7 +34,8 @@ export default function ModalModificarProductoFactura(props){
         const nuevosDatos = [...props.datos]
         nuevosDatos[indiceFila] = productoModificado
         props.setDatos(nuevosDatos)
-        cerrarModal()
+        props.setShowModal(false)
+        props.setIdProductoSeleccionado(null)
     }
 
 
@@ -60,7 +55,10 @@ export default function ModalModificarProductoFactura(props){
                     </div>
                     <div className="flex w-full justify-between gap-3">
                         <div className="flex gap-3">
-                            <Boton onClick={cerrarModal} texto = "Cancelar"  isNormal = {true}/>
+                            <Boton onClick={()=> {
+                                props.setShowModal(false)
+                                props.setIdProductoSeleccionado(null)
+                            }} texto = "Cancelar"  isNormal = {true}/>
                             <Boton texto = "Eliminar Producto" isNormal={true}/>
                         </div>
                         

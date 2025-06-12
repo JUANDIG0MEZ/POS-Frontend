@@ -15,7 +15,6 @@ export default function Venta(){
     const {id} = useParams()
 
     const [showModal, setShowModal] = useState(false)
-    //const [showModalConfirmar, setShowModalConfirmar] = useState(false)
     const [showModalAbonar, setShowModalAbonar] = useState(false)
 
     const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(null)
@@ -53,7 +52,7 @@ export default function Venta(){
             setFacturaOriginal(resData.datos)
             setFacturaModificada(resData.datos)
             setFecha(resData.info.fecha)
-            setNombre(resData.info.cliente)
+            setNombre(resData.info.nombre_cliente)
             setTelefono(resData.info.telefono)
             setEmail(resData.info.email)
             setDireccion(resData.info.direccion)
@@ -110,6 +109,7 @@ export default function Venta(){
                 <div className="w-full flex gap-3">
                     <InputText estilo={"w-[500px]"} label="Nombre cliente" valor = {nombre}/>
                     <InputText estilo={"w-[500px]"} label="Direccion entrega" valor={direccion}/>
+                    <InputText estilo={"w-[500px]"} label="Email" valor={email}/>
                 </div>
                 <div className="w-full flex justify-between">
                     
@@ -151,7 +151,7 @@ export default function Venta(){
             <div>
                 
             </div>
-                {showModal && <ModalModificarProductoFactura setShowModal={setShowModal} idProductoSeleccionado={idProductoSeleccionado} datos={facturaModificada} setDatos={setFacturaModificada} />}
+                {showModal && <ModalModificarProductoFactura setShowModal={setShowModal} idProductoSeleccionado={idProductoSeleccionado} setIdProductoSeleccionado={setIdProductoSeleccionado} datos={facturaModificada} setDatos={setFacturaModificada} />}
                 {showModalAbonar && <ModalAbonarFactura setShowModal={setShowModalAbonar} numeroFactura={id} total={total} pagado={pagado} setPagado={setPagado}/>}
             <div>
             </div>

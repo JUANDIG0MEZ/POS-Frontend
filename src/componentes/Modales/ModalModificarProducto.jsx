@@ -69,7 +69,7 @@ export default function ModalModificarProducto(props){
 
 
             function cbModificar(data){
-                //console.log(data)
+
             }
 
 

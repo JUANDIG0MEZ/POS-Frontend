@@ -1,8 +1,8 @@
 import Tabla from "../../componentes/Tabla"
-import {FiltradoDatos} from "../../serviciosYFunciones/filtradoDatos"
+import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 import {useState, useContext, useEffect} from 'react'
 import { ContextInventario } from "../../contextInventario"
-import InputText from "../../componentes/InputText"
+import InputNumber from "../../componentes/InputNumber"
 
 import Select from "../../componentes/Select"
 
@@ -27,11 +27,36 @@ const renombrar = {
         email: 'Email',
         tipo: 'Tipo',
         total: 'Total',
-        por_pagarle: 'Por Pagarle',
+        por_pagarle: 'Por pagarle',
         debe: 'Debe'
-
     }
 
+const columnasObjeto = [
+    {id: "id", nombre: "ID"},
+    {id: "nombre", nombre: "Nombre"},
+    {id: "por_pagarle", nombre: "Por pagarle"},
+    {id: "debe", nombre: "Debe"},
+]
+
+const limiteObjeto = [
+    {id: "10", nombre: 10},
+    {id: "20", nombre: 20},
+    {id: "30", nombre: 30},
+    {id: "50", nombre: 50},
+    {id: "100", nombre: 100}
+]
+
+
+const ordenOpciones = [
+    {id: "ASC", nombre: "Ascendente"},
+    {id: "DESC", nombre: "Descendente"}
+]
+
+const defaultLimite = 25
+const defaultColumna = "id"
+const defaultOrden = "DESC"
+const defaultOffset = 0
+const defaultTipo = "0"
 
 
 
@@ -40,35 +65,61 @@ export default  function Clientes() {
     const navigate = useNavigate()
 
     const {
-        clientes,
+        clientesNombres,
         tiposClientes
     } = useContext(ContextInventario)
 
     
 
     const [idSeleleccionado, setIdSeleccionado] = useState("")
-    const [clientesFiltrados, setClientesFiltrados] = useState([])
-    const [nombre, setNombre] = useState("")
-    const [tipo, setTipo] = useState("")
-    const [id, setId] = useState("")
+    const [clientes, setClientes] = useState([])
+    const [nombreCliente, setNombreCliente] = useState("")
+    const [tipoId, setTipoId] = useState(defaultTipo)
+
+    // Paginacion
+
+    const [pagina, setPagina] = useState(0)
+    const [totalPaginas, setTotalPaginas] = useState(0)
 
 
+    // Orden
 
-    const [pagina, setPagina] = useState(1)
-    const [totalPaginas, setTotalPaginas] = useState(1)
-    const [limite, setLimite] = useState(50)
-    const [offset, setOffset] = useState(0)
+    const [limite, setLimite] = useState(defaultLimite)
+    const [offset, setOffset] = useState(defaultOffset)
+    const [columna, setColumna] = useState(defaultColumna)
+    const [orden, setOrden] = useState(defaultOrden)
 
+    // Filtros
+    const [idCliente, setIdCliente] = useState(null)
+    
     const [showModalCrear, setShowModalCrear] = useState(false)
 
 
+
     useEffect(()=> {
-        let datosFiltrados = FiltradoDatos.filtroCadena(clientes, "nombre", nombre)
-        datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "tipo", (tipo.nombre || ""))
-        datosFiltrados = FiltradoDatos.filtroNumero(datosFiltrados, "id", id)
-        setClientesFiltrados(datosFiltrados)
-        setTotalPaginas(Math.ceil(datosFiltrados.length / limite))
-    }, [clientes, nombre, tipo, id])
+        realizarPeticion()
+    }, [offset])
+
+    function realizarPeticion(){
+        const paginacion = `limit=${limite}&offset=${offset}`
+
+        const filtro = {
+            ...(idCliente && {id: idCliente}),
+            ...(columna && {columna: columna}),
+            ...(orden && {orden: orden}),
+            ...(tipoId  && {tipo_id: tipoId}),
+        }
+
+        const filtroTexto = Object.entries(filtro).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+
+        const params = `${paginacion}&${filtroTexto}`
+
+        function cbClientes(respuesta){
+            setTotalPaginas(Math.ceil(respuesta.count / limite))
+            setClientes(respuesta.rows)
+        }
+        fetchManager(`http://localhost:3000/api/v1/clientes?${params}`, cbClientes, "GET")
+    }
 
     useEffect(()=>{
         if (idSeleleccionado){
@@ -82,37 +133,77 @@ export default  function Clientes() {
             <div className="flex flex-col gap-2">
                 <h2 className="titulo mb-5">Lista de clientes</h2>
                 <div className="flex gap-3 items-center">
-                    <InputText
-                    estilo={"w-20"}
-                    label="Id"
-                    valor={id}
-                    setValor={setId}
-                    isNumber= {true}
-                    />
+                    <InputNumber
+                        estilo={"w-20"}
+                        label="Id"
+                        valor={idCliente}
+                        setValor={setIdCliente}
+                        isNumber= {true}
+                        />
 
 
-                    <InputLista lista={clientes} valor={nombre} setValor={setNombre} label={"Nombre cliente"}/>
+                    <InputLista 
+                        lista={clientesNombres}    
+                        valor={nombreCliente}
+                        setValor={setNombreCliente}
+                        label={"Nombre cliente"} 
+                        setIdSeleccionado={setIdCliente}/>
 
 
                     
-                    <Select opciones={tiposClientes} label={"Tipo cliente"} setValor={setTipo}/>
+                    <Select opciones={tiposClientes} label={"Tipo cliente"} setValor={setTipoId} valorDefault={defaultTipo}/>
 
-                    <BotonIcono texto ={<FaSearch/>} onClick={()=>{}}/>
+                    <BotonIcono texto ={<FaSearch/>} onClick={()=>{
+                        if (offset == 0) {
+                            realizarPeticion()
+                        }
+                        setOffset(0)
+                        setPagina(0)
+                    }}/>
                     <BotonIcono onClick={()=>setShowModalCrear(true)} texto={<FaUser/>}/>      
+                </div>
+                <div className="flex justify-between">
+
+                    <div className="flex gap-3">
+                        <Select
+                            label={"Columna"}
+                            opciones={columnasObjeto}
+                            setValor={setColumna}
+                            valor={columna}
+                            valorDefault={defaultColumna}
+                        />
+    
+                        <Select 
+                            label={"No. Filas"}
+                            opciones={limiteObjeto}
+                            setValor={setLimite}
+                            valor={limite}
+                            valorDefault={defaultLimite}
+                        />
+                        <Select 
+                            label={"Orden"}
+                            opciones={ordenOpciones}
+                            setValor={setOrden}
+                            valor={orden}
+                            valorDefault={defaultOrden}
+                        />
+                    </div>
+
+                    <CambiarPagina 
+                        pagina={pagina}
+                        setPagina={setPagina}
+                        setOffset={setOffset}
+                        limite={limite} 
+                        totalPaginas={totalPaginas}
+                        setTotalPaginas={setTotalPaginas}
+                        />
                 </div>
             </div>
             
             <div className="overflow-auto h-full">
-                <Tabla datos = {clientesFiltrados.slice(offset, offset + limite)} setIdItemSeleccionado={setIdSeleccionado} rename = {renombrar}/>
+                <Tabla datos = {clientes} setIdItemSeleccionado={setIdSeleccionado} rename = {renombrar}/>
             </div>    
-            <CambiarPagina 
-                pagina={pagina}
-                setPagina={setPagina}
-                setOffset={setOffset}
-                limite={limite} 
-                totalPaginas={totalPaginas}
-                setTotalPaginas={setTotalPaginas}
-                />
+            
             
             {
                 showModalCrear && <ModalCrearCliente setShowModal={setShowModalCrear}/>

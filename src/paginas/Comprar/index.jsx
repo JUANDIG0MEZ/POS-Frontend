@@ -3,17 +3,15 @@ import {useState, useContext, useEffect} from 'react'
 import { ContextInventario } from "../../contextInventario"
 import Boton from "../../componentes/Boton"
 import InputListaMultiple from "../../componentes/InputListaMultiple"
-import InputLista from "../../componentes/InputLista"
-import CrudDatosClientes from "../../serviciosYFunciones/crudDatosClientes"
 import InputNumber from "../../componentes/InputNumber"
 import { toast } from "sonner"
-import ModalConfirmarFactura from "../../componentes/Modales/ModalConfirmarFactura"
+import ModalConfirmarCompra from "../../componentes/Modales/ModalConfirmarCompra"
 import MostrarImagen from "../../componentes/MostrarImagen"
 import { FaTrash, FaBalanceScale, FaPlus } from "react-icons/fa"
-import { fetchFilesManager, fetchManager } from "../../serviciosYFunciones/fetchFunciones"
+import { fetchFilesManager } from "../../serviciosYFunciones/fetchFunciones"
 import BotonIcono from "../../componentes/BotonIcono"
 
-import Select from "../../componentes/Select"
+
 
 const renombrar = {
     id: "ID",
@@ -31,47 +29,53 @@ export default function Comprar() {
     const [showModalConfirmacion, setShowModalConfirmacion] = useState(false)
 
     const {
-        clientes,
-        productos,
-        estadosCompras
+        productos
     } = useContext(ContextInventario)
     const [carritoDeCompras, setCarritoDeCompras] = useState([])
     
-    const [nombreCliente, setNombreCliente] = useState("")
+
+
+    // Informacion de la compra
+    //const [nombreCliente, setNombreCliente] = useState("")
     const [nombreProducto, setNombreProducto] = useState("")
-    const [nombreProductoSeleccionado, setNombreProductoSeleccionado] = useState("")
-    const [cantidadProducto, setCantidadProducto] = useState("")
-    const [precioProducto, setPrecioProducto] = useState("")
-    const [totalProducto, setTotalProducto] = useState("")
-    const [idProducto, setIdProducto]= useState("")
-    
-    const [total , setTotal] = useState(0)
     const [medida, setMedida] = useState("")
     const [imagenes, setImagenes] = useState([])
 
+
+
+
+    // Manipulacion tabla
     const [idProductoSeleccionadoTabla, setIdProductoSeleccionadoTabla] = useState(null)
 
+
+    
+
+    
 
     const [totalParcial, setTotalParcial] = useState("")
     const [precioParcial, setPrecioParcial] = useState("")
 
-
-    const [idCliente, setIdCliente]= useState("")
-    
+    // Casillas
+    const [idProducto, setIdProducto]= useState("")
+    const [cantidadProducto, setCantidadProducto] = useState("")
+    const [precioProducto, setPrecioProducto] = useState("")
+    const [totalProducto, setTotalProducto] = useState("")
+    const [total , setTotal] = useState(0)
 
     function limpiarCampos(){
         setNombreProducto("")
         setCantidadProducto("")
         setPrecioProducto("")
         setTotalProducto("")
-        setNombreProductoSeleccionado("")
+
+        setIdProductoSeleccionadoTabla(null)
+        setIdProducto(null)
     }
 
     useEffect(()=>{
 
         const producto = productos.find(producto => producto.id == idProducto)
         if (producto){
-            setNombreProductoSeleccionado(producto.nombre)
             setMedida(producto.medida)
 
             fetchFilesManager(`http://localhost:3000/api/v1/productos/${idProducto}/imagenes`, setImagenes)
@@ -79,19 +83,11 @@ export default function Comprar() {
     
     }, [productos, idProducto])
 
+
+    
     useEffect(()=> {
         setTotal(carritoDeCompras.reduce((acc, item) => acc + item.subtotal, 0))
     }, [carritoDeCompras])
-
-    useEffect(()=>{
-        const cliente = CrudDatosClientes.encontrarPorNombre(nombreCliente, clientes)
-        if (cliente){
-            setIdCliente(cliente.id)
-        }
-        else {
-            setIdCliente("")
-        }
-    }, [nombreCliente, clientes])
 
 
 
@@ -183,46 +179,6 @@ export default function Comprar() {
     }
 
 
-    function finalizarCompra(pagado, estado_id){
-        if (carritoDeCompras.length === 0){
-            toast.info("Agrega productos al carrito")
-            return
-        }
-        else if (!idCliente){
-            toast.info("Selecciona un cliente")
-            return
-        }
-        else if( pagado > total){
-            toast.error("El monto pagado es mayor al total")
-            return
-        }
-        else {
-            const info = {
-                cliente_id: idCliente,
-                estado_id: estado_id,
-                pagado: pagado || 0,
-            }
-
-            const detalles = carritoDeCompras.map(item => {
-                return {
-                    producto_id: item.id,
-                    cantidad: item.cantidad,
-                    precio: item.precio,
-                    subtotal: item.subtotal
-                }
-            })
-
-            const compraEnviar = {info: info, datos: detalles}
-
-            function cbCompra(resData) {
-                setCarritoDeCompras([])
-                setTotal(0)
-            }
-            fetchManager(`http://localhost:3000/api/v1/facturas/compras`, cbCompra, "POST", compraEnviar)
-
-        }
-
-    }
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
@@ -233,16 +189,7 @@ export default function Comprar() {
                 <div className="flex flex-col gap-4 w-full">
                     <h1 className="titulo mb-8">Crear compra</h1>
                     <div className="flex flex-col gap-8">
-                        <div className="flex gap-3">
-                            <InputLista
-                            valor={nombreCliente}
-                            setValor={setNombreCliente}
-                            label="Cliente"
-                            lista={clientes}
-                            setIdSeleccionado = {setIdCliente}
-                            />
-                            <Select opciones={estadosCompras} label="Estado compra"/>
-                        </div>
+
                         
                         <div className="flex gap-3">
                             <InputListaMultiple
@@ -323,7 +270,16 @@ export default function Comprar() {
                 <Boton texto="Finalizar Compra" onClick={()=>setShowModalConfirmacion(true)}/>       
             </div>
             {
-                showModalConfirmacion && <ModalConfirmarFactura setShowModal={setShowModalConfirmacion} total = {total} clienteNombre={nombreCliente} onConfirm = {finalizarCompra}
+                showModalConfirmacion &&
+                <ModalConfirmarCompra
+                    setShowModal={setShowModalConfirmacion}
+                    total = {total}
+                    carritoDeCompras={carritoDeCompras}
+                    reset={() => {
+                        limpiarCampos()
+                        setCarritoDeCompras([])
+                    }}
+
                 />
             }
         </div>

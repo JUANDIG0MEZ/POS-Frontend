@@ -4,24 +4,52 @@ const ContextInventario = createContext()
 
 const InventarioProvider = ({children}) => {
     const [productos, setProductos] = useState([])
-    const [clientes, setClientes] = useState([]) 
+    const [clientesNombres, setClientesNombres] = useState([]) 
     const [marcas, setMarcas] = useState([])
     const [categorias, setCategorias] = useState([])
     const [medidas, setMedidas] = useState([])
-    const [estadosCompras, setEstadosCompras] = useState([])
-    const [estadosVentas, setEstadosVentas] = useState([])
+    const [estadosComprasEntrega, setEstadosComprasEntrega] = useState([])
+    const [estadosComprasPago, setEstadosComprasPago] = useState([])
+    const [estadosVentasPago, setEstadosVentasPago] = useState([])
+    const [estadosVentasEntrega, setEstadosVentasEntrega] = useState([])
     const [tiposClientes, setTiposClientes] = useState([])
+    const [metodosPago, setMetodosPago] = useState([])
+
+
+    const ordenOpciones = [
+        {id: "ASC", nombre: "ASC"},
+        {id: "DESC", nombre: "DESC"}
+    ]
 
 
     useEffect(() => {
-        fetchManager('http://localhost:3000/api/v1/productos', setProductos, "GET")
-        fetchManager('http://localhost:3000/api/v1/clientes', setClientes, "GET")
-        fetchManager('http://localhost:3000/api/v1/productos/marcas', setMarcas, "GET")
-        fetchManager('http://localhost:3000/api/v1/productos/categorias', setCategorias, "GET")
-        fetchManager('http://localhost:3000/api/v1/productos/medidas', setMedidas, "GET")
-        fetchManager('http://localhost:3000/api/v1/facturas/compras/estados', setEstadosCompras, "GET")
-        fetchManager('http://localhost:3000/api/v1/facturas/ventas/estados', setEstadosVentas, "GET")
-        fetchManager('http://localhost:3000/api/v1/clientes/tipos', setTiposClientes, "GET")
+        function cbInit(res){
+            setProductos(res.producto)
+            setClientesNombres(res.clientes)
+            setMarcas(res.productoMarca)
+            setCategorias(res.productoCategoria)
+            setMedidas(res.productoMedida)
+            setEstadosComprasEntrega(res.compraEstadoEntrega)
+            setEstadosComprasPago(res.compraEstadoPago)
+            setEstadosVentasEntrega(res.ventaEstadoEntrega)
+            setEstadosVentasPago(res.ventaEstadoPago)
+            setTiposClientes(res.clienteTipo)
+            setMetodosPago(res.metodoPago)
+        }
+        fetchManager('http://localhost:3000/api/v1/init', cbInit, "GET")
+        
+        // fetchManager('http://localhost:3000/api/v1/clientes/nombres', setClientesNombres, "GET")
+        // fetchManager('http://localhost:3000/api/v1/productos/marcas', setMarcas, "GET")
+        // fetchManager('http://localhost:3000/api/v1/productos/categorias', setCategorias, "GET")
+        // fetchManager('http://localhost:3000/api/v1/productos/medidas', setMedidas, "GET")
+        // fetchManager('http://localhost:3000/api/v1/facturas/compras/estados/entrega', setEstadosComprasEntrega, "GET")
+        // fetchManager('http://localhost:3000/api/v1/facturas/compras/estados/pago', setEstadosComprasPago, "GET")
+
+        // fetchManager('http://localhost:3000/api/v1/facturas/ventas/estados/entrega', setEstadosVentasEntrega, "GET")
+        // fetchManager('http://localhost:3000/api/v1/facturas/ventas/estados/pago', setEstadosVentasPago, "GET")
+        // fetchManager('http://localhost:3000/api/v1/clientes/tipos', setTiposClientes, "GET")
+
+        // fetchManager('http://localhost:3000/api/v1/pagos/metodos', setMetodosPago,"GET")
     }, [])
 
     return (
@@ -29,17 +57,27 @@ const InventarioProvider = ({children}) => {
             {
             productos,
             setProductos,
-            clientes,
-            setClientes,
+            clientesNombres,
+            setClientesNombres,
             marcas,
             setMarcas,
             categorias,
             setCategorias,
             medidas,
             setMedidas,
-            estadosCompras,
-            estadosVentas,
-            tiposClientes
+            estadosComprasEntrega,
+            estadosComprasPago,
+            estadosVentasEntrega,
+            estadosVentasPago,
+
+
+            tiposClientes,
+            metodosPago,
+
+
+            //
+
+            ordenOpciones
             
             }
         }>

@@ -47,12 +47,6 @@ const columnasObjeto2 = [
     {id: "total", nombre: "Total"}
 ]
 
-const ordenObjeto = [
-    {id: "ASC", nombre: "Ascendente"},
-    {id: "DESC", nombre: "Descendente"}
-]
-
-
 const limiteObjeto = [
     {id: "10", nombre: 10},
     {id: "20", nombre: 20},
@@ -61,9 +55,13 @@ const limiteObjeto = [
     {id: "100", nombre: 100}]
 
 
+const defaultLimite = "20"
+const defaultOffset = "0"
+
 export default function Inventario() {
     const {
         productos,
+        ordenOpciones
     } = useContext(ContextInventario)
 
 
@@ -84,10 +82,10 @@ export default function Inventario() {
     const [idProductoSeleccionado, setIdProductoSeleccionado] = useState("")
     const [imagenes, setImagenes] = useState([])
 
-    const [pagina, setPagina] = useState(1)
+    const [pagina, setPagina] = useState(0)
     const [totalPaginas, setTotalPaginas] = useState(0)
-    const [limite, setLimite] = useState("30")
-    const [offset, setOffset] = useState(0)
+    const [limite, setLimite] = useState(defaultLimite)
+    const [offset, setOffset] = useState(defaultOffset)
 
     const [showModalCrear, setShowModalCrear] = useState(false)
     const [showModalModificar, setShowModalModificar] = useState(false)
@@ -112,7 +110,7 @@ export default function Inventario() {
     useEffect(()=> {
         const numeroPaginas = Math.ceil(productosFiltrados.length / parseInt(limite))
         setTotalPaginas(numeroPaginas)
-        setPagina(1)
+        setPagina(0)
         setOffset(0)
     }, [productosFiltrados, limite])
 
@@ -154,10 +152,6 @@ export default function Inventario() {
         setBusquedaId(null)
         setBusquedaMedida(null)
     }
-
-
-    console.log("limite", limite, "offset", offset, "pagina", pagina, "totalPaginas", totalPaginas)
-
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-1 overflow-auto">
@@ -240,9 +234,9 @@ export default function Inventario() {
                                 opciones={limiteObjeto}
                                 label={"No. Filas"}
                                 setValor={setLimite}
-                                valorDefault={20}/>
+                                valorDefault={defaultLimite}/>
                             <Select 
-                                opciones={ordenObjeto}
+                                opciones={ordenOpciones}
                                 label={"Ordenar"}
                                 setValor={setOrden}
                                 valorDefault={"DESC"}/>

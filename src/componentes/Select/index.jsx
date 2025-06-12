@@ -8,7 +8,7 @@ export default function Select(props) {
     }
     
     return (
-        <form className="max-w-sm mx-auto">
+        <form className="">
             <select
             className="py-2.5 px-4 boton-normal"
             onClick={handleChange}>
