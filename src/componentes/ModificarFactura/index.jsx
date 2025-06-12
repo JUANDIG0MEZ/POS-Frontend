@@ -7,7 +7,7 @@ export default function ModificarFactura(props){
     const [facturaModificada, setFacturaModificada] = useState(props.facturaOriginal)
     const [totalModificado, setTotalModificado] = useState(props.total)
 
-    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(null)
+    const [isItemSeleccionado, setIdItemSeleccionado] = useState(null)
 
     useEffect(() => {
         setTotalModificado(facturaModificada.reduce((acc, item)=> acc + Number(item.subtotal), 0))
@@ -51,9 +51,9 @@ export default function ModificarFactura(props){
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="flex bg-white py-5 px-7 rounded-xl border w-[1200px] items-center gap-4 flex-col">    
-                <p className="subtitulo">Modificar productos</p>
+                <p className="subtitulo">Modificar productos y servicios</p>
                 <div>
-                   <DiffTabla tabla1={props.facturaOriginal} tabla2={facturaModificada} total={90} total2= {90} setIdItemSeleccionado={setIdProductoSeleccionado}/>
+                   <DiffTabla tabla1={props.facturaOriginal} tabla2={facturaModificada} total={90} total2= {90} setIdItemSeleccionado={setIdItemSeleccionado}/>
                 </div>
                 <div className="flex justify-end w-full gap-3">
                     <Boton texto="Cancelar cambios" onClick={()=> props.setShowModal(false)} isNormal={true}/>

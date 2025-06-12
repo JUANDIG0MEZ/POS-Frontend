@@ -107,7 +107,7 @@ export default function Compra(){
                 
             </div>
             <div>
-                <h1 className="subtitulo mb-3">Producto comprados</h1>
+                <h1 className="subtitulo mb-3">Productos y servicios adquiridos</h1>
                 <Tabla datos = {facturaOriginal} total={total}/>
                 
             </div>
