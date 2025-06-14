@@ -88,7 +88,7 @@ export default function Venta(){
 
 
     useEffect(()=> {
-        setTotalModificado(facturaModificada.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
+        setTotalModificado(facturaModificada.reduce((acc, item) => acc + Number(item.subtotal), 0))
     }, [facturaModificada])
 
 
@@ -151,7 +151,13 @@ export default function Venta(){
             <div>
                 
             </div>
-                {showModal && <ModalModificarProductoFactura setShowModal={setShowModal} idProductoSeleccionado={idProductoSeleccionado} setIdProductoSeleccionado={setIdProductoSeleccionado} datos={facturaModificada} setDatos={setFacturaModificada} />}
+                {showModal && 
+                <ModalModificarProductoFactura
+                    setShowModal={setShowModal}
+                    idProductoSeleccionado={idProductoSeleccionado}
+                    setIdProductoSeleccionado={setIdProductoSeleccionado}
+                    datos={facturaModificada}
+                    setDatos={setFacturaModificada} />}
                 {showModalAbonar && <ModalAbonarFactura setShowModal={setShowModalAbonar} numeroFactura={id} total={total} pagado={pagado} setPagado={setPagado}/>}
             <div>
             </div>

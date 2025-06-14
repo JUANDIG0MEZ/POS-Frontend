@@ -1,6 +1,6 @@
 
 import { useEffect } from "react"
-import Tabla from "../../componentes/Tabla"
+import DiffTabla from "../../componentes/DiffTabla"
 import InputText from "../../componentes/InputText"
 import InputNumber from "../../componentes/InputNumber"
 import Boton from "../../componentes/Boton"
@@ -8,18 +8,31 @@ import { useState } from "react"
 import { useParams } from "react-router-dom"
 import ModalPagarCompra from "../../componentes/Modales/ModalPagarCompra"
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
-import ModificarFactura from "../../componentes/ModificarFactura"
-export default function Compra(){
+import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
 
+
+const renombrar = {
+    id: "Id",
+    descripcion: "Descripcion",
+    medida: "Medida",
+    cantidad: "Cantidad",
+    precio: "Precio",
+    subtotal: "Subtotal"
+}
+
+export default function Compra(){
+    const [pagado, setPagado] = useState(null)
+    const [total, setTotal] = useState(null)
     const {id} = useParams()
 
     const [showModalAbonar, setShowModalAbonar] = useState(false)
     const [showModalModificar, setShowModalModificar] = useState(false)
 
 
-    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(null)
+    const [idItemSeleccionado, setIdItemSeleccionado] = useState(null)
 
     const [facturaOriginal, setFacturaOriginal] = useState([])
+    const [facturaModificada, setFacturaModificada] = useState([])
 
     const [fecha, setFecha] = useState("")
     const [nombre, setNombre] = useState("")
@@ -27,23 +40,33 @@ export default function Compra(){
     const [email, setEmail] = useState("")
     const [estado, setEstado] = useState("")
 
-    const [total, setTotal] = useState(null)
-    const [totalTabla, setTotalTabla] = useState(null)
-    const [pagado, setPagado] = useState(null)
-
     
+    
+    const [totalOriginal, setTotalOriginal] = useState(null)
+    const [totalModificado, setTotalModificado] = useState(null)
+
+
+    useEffect(()=>{
+        setFacturaModificada(facturaOriginal)
+    }, [facturaOriginal])
+
+    useEffect(()=> { 
+        if (facturaModificada.length){
+            setTotalModificado(facturaModificada.reduce((acc, item)=> acc + Number(item.subtotal), 0) )
+        }
+    }, [facturaModificada])
 
     useEffect(()=>{
 
-        if (idProductoSeleccionado){
-            setShowModal(true)      
+        if (idItemSeleccionado){
+            setShowModalModificar(true)      
         }
 
-    }, [idProductoSeleccionado])
+    }, [idItemSeleccionado])
 
-    // function cancelarCambios(){
-    //     setFacturaModificada(facturaOriginal)
-    // }
+    function cancelarCambios(){
+        setFacturaModificada(facturaOriginal)
+    }
 
     useEffect(()=>{
         function cbFactura(resData){
@@ -55,12 +78,37 @@ export default function Compra(){
             setEstado(resData.info.estado)
             setPagado(resData.info.pagado)
             setTotal(resData.info.total)
-            setTotalTabla(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
+            setTotalOriginal(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
         }
         fetchManager(`http://localhost:3000/api/v1/facturas/compras/${id}`, cbFactura, "GET")
     }, [])
 
+    function guardarCambios(){
+        const detalles = facturaModificada.map(item => {
+            return {
+                producto_id: item.id,
+                cantidad: item.cantidad,
+                precio: item.precio ,
+                subtotal: item.subtotal
+            }
+        })  
 
+        function cb(res){
+            setFacturaOriginal(facturaModificada)
+            setTotalOriginal(res.info.total)
+            setTotal(res.info.total)
+            setPagado(res.info.pagado)
+        }
+        
+        fetchManager(`http://localhost:3000/api/v1/facturas/compras/${id}`, cb, "PATCH", detalles)
+    }
+
+    function cambiarEstado(nuevoValor){
+        if (nuevoValor === "Entregado"){
+            setEstado(nuevoValor)
+        }
+        
+    }
     
 
 
@@ -79,50 +127,60 @@ export default function Compra(){
                 </div>
                 <div className="w-full flex gap-6 justify-between items-center">                 
                     <div className="flex gap-3 items-center">
-                        <InputNumber estilo={"w-48"} label="Total" valor={total} isPrice={true} format={true}/>
+                        <InputNumber estilo={"w-44"} label="Total" valor={total} isPrice={true} format={true}/>
                         <button className='font-bold'>-</button>
-                        <InputNumber estilo={"w-48"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
+                        <InputNumber estilo={"w-44"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
                         <button className='font-bold'>=</button>
-                        <InputNumber estilo={"w-48"} label="Por pagar" valor={total - pagado} isPrice={true} format={true}/>
+                        <InputNumber estilo={"w-44"} label="Por pagar" valor={total - pagado} isPrice={true} format={true}/>
                         <Boton texto="Abonar" onClick={() => setShowModalAbonar(true)}></Boton>
                     </div>   
                     <div className="flex gap-4 items-center">
                         {/* <RadioBoton onChange={cambiarEstado} name="estado" valor="Por entregar" label="Por entregar" checked={estado === "Por entregar"}/> */}
-                        {/* <RadioBoton onChange={cambiarEstado} name="estado" valor="Entregado" label="Entregado" checked={estado === "Entregado"}/> */}
+                        {/* <RadioBoton onChange={ca{
+                (totalModificado < pagado) && <p className="text-lg font-semibold animate-bounce">Nota: En caso de realizar la modficacion debes pagarle al cliente <span className="font-semibold text-red-500">{pagado - totalModificado}</span></p>
+            }mbiarEstado} name="estado" valor="Entregado" label="Entregado" checked={estado === "Entregado"}/> */}
                     </div>
                     
                     
                 </div>
-            </div>
-            <div className="flex justify-between items-center">
-                {/* {
-                    (totalModificado < pagado) && <p className="text-lg font-semibold animate-bounce">Nota: En caso de realizar la modficacion debes pagarle al cliente <span className="font-semibold text-red-500">{pagado - totalModificado}</span></p>
-                } */}
-                <div className="flex gap-3">
-                    <Boton texto={"Modificar factura"} onClick={()=>setShowModalModificar(true)} isNormal={true}/>
-                    <Boton texto={"Anular factura"} isNormal={true}/>
-                    <Boton texto={"Agregar costos adicionales"} isNormal={true}/>
-                    {/* <Boton texto="Guardar Cambios" onClick = {() => guardarCambios()}/> */}
+            </div>         
+                
+                
+            <h1 className="subtitulo mb-3">Productos y servicios adquiridos</h1>
+            {
+                facturaModificada.length ? <DiffTabla
+                tabla1 = {facturaOriginal}
+                tabla2={facturaModificada}
+                total={totalOriginal}
+                total2={totalModificado}
+                setIdItemSeleccionado={setIdItemSeleccionado}
+                rename = {renombrar}
+                /> : null
+            }
+
+            {
+                (totalModificado < pagado) && <p className="animate-bounce w-full justify-center text-lg"><strong className="text-xl">Nota</strong>: En caso de realizar la modficacion debes pagarle al cliente <span className=" text-red-500 text-xl"> <strong> ${pagado - totalModificado}</strong> </span></p>
+            }
+            
+            <div className="flex gap-3">
+                    <Boton texto={"Devolver productos"} onClick={()=>setShowModalModificar(true)} isNormal={true}/>
+                    <Boton texto={"Cancelar cambios"} onClick={()=>setShowModalModificar(true)} isNormal={true}/>
+                    <Boton texto={"GuardarCambios"} onClick={()=>guardarCambios()} isNormal={true}/>
                 </div>
-                
-            </div>
-            <div>
-                <h1 className="subtitulo mb-3">Productos y servicios adquiridos</h1>
-                <Tabla datos = {facturaOriginal} total={total}/>
-                
-            </div>
-            
-            
-            <div>
-                <p className="subtitulo">Notas credito</p>
-            </div>
-            <div>
-                <p className="subtitulo">Notas de debito</p>
-            </div>
+        
             <div>
                 {/* {showModalConfirmar &&  <ModalConfirmar titulo="Estado del pedido" mensaje="¿Estás seguro de que deseas establecer como entregado este pedido? No podras revertir esta accion." setConfirmacion={setConfirmacionEntrega}/>} */}
                 {showModalAbonar && <ModalPagarCompra setShowModal={setShowModalAbonar} numeroFactura={id} pagado = {pagado} setPagado = {setPagado} total = {total}/>}
-                {showModalModificar && <ModificarFactura idFactura={id} total={total} setShowModal={setShowModalModificar} facturaOriginal={facturaOriginal}/>}
+                {showModalModificar ? 
+                        <ModalModificarProductoFactura
+                            setShowModal={setShowModalModificar}
+                            idProductoSeleccionado={idItemSeleccionado}
+                            setIdProductoSeleccionado={setIdItemSeleccionado}
+                            datos={facturaModificada}
+                            setDatos={setFacturaModificada} />
+                        :null
+                        }
+
             </div>
         </div>
     )

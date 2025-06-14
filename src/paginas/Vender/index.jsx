@@ -53,7 +53,6 @@ export default function Comprar() {
         setNombreProducto("")
         setCantidadProducto("")
         setPrecioProducto("")
-        setTotalProducto("")
         setMedida("")
     
         setIdProducto(null)
@@ -73,16 +72,6 @@ export default function Comprar() {
     useEffect(()=> {
         setTotal(carritoDeVentas.reduce((acc, item) => acc + item.subtotal, 0))
     }, [carritoDeVentas])
-
-
-
-    useEffect(()=>{
-        if (totalProducto){
-            setPrecioProducto("")
-        }
-        
-        setPrecioParcial(Math.ceil(totalProducto / cantidadProducto))
-    }, [totalProducto, cantidadProducto])
 
     useEffect(()=> {
         if (precioProducto){
@@ -233,9 +222,7 @@ export default function Comprar() {
                                 onClick={agregarProducto}
                                 texto={<FaPlus/>}/>
                         </div>
-
                     </div>
-                
                 </div>
             </div>
 

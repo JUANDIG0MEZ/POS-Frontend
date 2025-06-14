@@ -18,18 +18,20 @@ export default memo(function DiffTabla(props) {
     }
 
     function comparar(indice, clave){
-        if (typeof props.tabla1[indice][clave] === 'number'){
-            if (props.tabla1[indice][clave] === props.tabla2[indice][clave]){
-                return props.tabla1[indice][clave]
+        if (['cantidad', 'precio', 'subtotal'].includes(clave)){
+            const valor1 = Number(props.tabla1[indice][clave])
+            const valor2 = Number(props.tabla2[indice][clave])
+            if (valor1 === valor2){
+                return valor1
             }
-            else if (props.tabla1[indice][clave] > props.tabla2[indice][clave]){
+            else if (valor1 > valor2){
                 return (
-                    <span className="flex gap-2 justify-center items-center">{props.tabla1[indice][clave]}<FaLongArrowAltRight size={20}/>{<span className='text-red-500'>{props.tabla2[indice][clave]}</span>}</span>
+                    <span className="flex gap-2 justify-center items-center">{valor1}<FaLongArrowAltRight size={20}/>{<strong className='text-red-500'>$ {valor2}</strong>}</span>
                 )
             }
             else {
                 return (
-                    <span className="flex gap-2 justify-center">{props.tabla1[indice][clave]}<FaLongArrowAltRight size={20}/>{<span className='text-green-700'>{props.tabla2[indice][clave]}</span>}</span>
+                    <span className="flex gap-2 justify-center">{valor1}<FaLongArrowAltRight size={20}/>{<strong className='text-green-700'>$ {valor2}</strong>}</span>
                 )
             }
         }
@@ -38,7 +40,6 @@ export default memo(function DiffTabla(props) {
         }
     }
 
-    
 
     return (
         <table onClick={seleccionFila} className="w-full">
@@ -113,12 +114,12 @@ function compararTotales(total1, total2){
     }
     else if (total1 > total2){
         return (
-            <span className="flex gap-2 justify-center items-center">{total1}<FaLongArrowAltRight size={20}/>{<span className='text-red-500'>{total2}</span>}</span>
+            <span className="flex gap-2 justify-center items-center">{total1}<FaLongArrowAltRight size={20}/> {<strong className='text-red-500'>$ {total2}</strong>}</span>
         )
     }
     else {
         return (
-            <span className="flex gap-2 justify-center">{total1}<FaLongArrowAltRight size={20}/>{<span className='text-green-700'>{total2}</span>}</span>
+            <span className="flex gap-2 justify-center">{total1}<FaLongArrowAltRight size={20}/> {<strong className='text-green-700'>$ {total2}</strong>}</span>
         )
     }
 }

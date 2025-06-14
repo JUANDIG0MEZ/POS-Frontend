@@ -89,16 +89,6 @@ export default function Comprar() {
         setTotal(carritoDeCompras.reduce((acc, item) => acc + item.subtotal, 0))
     }, [carritoDeCompras])
 
-
-
-    useEffect(()=>{
-        if (totalProducto){
-            setPrecioProducto("")
-        }
-        
-        setPrecioParcial(Math.ceil(totalProducto / cantidadProducto))
-    }, [totalProducto, cantidadProducto])
-
     useEffect(()=> {
         if (precioProducto){
             setTotalProducto("")
