@@ -7,7 +7,7 @@ import { ContextInventario } from '../../contextInventario'
 import Select from '../Select'
 import InputText from '../InputText'
 import { FaLongArrowAltRight } from "react-icons/fa"
-export default function ModalPagarCompra(props){
+export default function ModalPagarVenta(props){
 
     const {
         metodosPago
@@ -27,7 +27,6 @@ export default function ModalPagarCompra(props){
 
 
     function realizarAbono(){
-        console.log("realizando abono")
         if (valorAbono > porPagar){
             toast.warning("El abono no puede ser mayor al total a pagar")
         }
@@ -62,16 +61,12 @@ export default function ModalPagarCompra(props){
                 props.setPagado(resData.pagado)
                 cerrarModal()
             }
-            fetchManager(`http://localhost:3000/api/v1/facturas/compras/${numeroFactura}/pagar`, cbAbono, "PATCH", body)
+            fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${numeroFactura}/pagar`, cbAbono, "PATCH", body)
             
             // cerrarModal()
             
         }
     }
-
-        console.log('metodo pago', metodoPago)
-
-
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="flex bg-white py-5 px-7 rounded-3xl w-[900px] items-center gap-4">    

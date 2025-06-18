@@ -30,12 +30,12 @@ export default function ModalAbonarCompra(props){
             }
             fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${numeroFactura}/abonar`, cbAbono, "PATCH", body)
             
-            cerrarModal()
+            // cerrarModal()
             
         }
     }
 
-
+    
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
@@ -48,7 +48,7 @@ export default function ModalAbonarCompra(props){
                         <InputNumber valor = {props.total} label ="Total" format={true}/>
                         <button className='font-bold'>-</button>
                         <InputNumber valor = {props.pagado} label="Pagado" format={true}/>
-                        <button className='font-bold'>=</button>
+                        <button className='font-bold'></button>
                         <InputNumber valor = {porPagar} label="Por pagar" format={true} />
                     </div>
 

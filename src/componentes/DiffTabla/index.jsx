@@ -4,11 +4,6 @@ import {memo} from 'react'
 
 export default memo(function DiffTabla(props) {
 
-    console.log("total 1:", props.total)
-    console.log("total 2:", props.total2)
-    console.log("factura original", props.tabla1)
-    console.log("factura modificada", props.tabla2)
-
     function seleccionFila(e){
         const fila = e.target.closest('tr')
         if (fila && props.setIdItemSeleccionado){

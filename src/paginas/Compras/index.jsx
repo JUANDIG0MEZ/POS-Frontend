@@ -25,6 +25,8 @@ const renombrar = {
     estado_entrega: 'Estado entrega',
     estado_pago: 'Estado pago',
     por_pagar: 'Por Pagar',
+    nombre_cliente: 'Nombre del proveedor',
+    metodo_entrega: 'Estado entrega'
 }
 
 
@@ -37,7 +39,6 @@ const columnasObjeto = [
     {id: "id", nombre: "ID"},
     {id: "fecha", nombre: "Fecha"},
     {id: "hora", nombre: "Hora"},
-    {id: "cliente_id", nombre: "Cliente"},
     {id: "estado_entrega_id", nombre: "Estado entrega"},
     {id: "estado_pago_id", nombre: "Estado pago"},
     {id: "por_pagar", nombre: "Por Pagar"},

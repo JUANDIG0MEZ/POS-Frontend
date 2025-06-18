@@ -11,7 +11,6 @@ import CambiarPagina from '../../componentes/CambiarPagina';
 import Select from '../../componentes/Select';
 
 
-import {useRef} from 'react';
 
 const limiteObjeto = [
     {id: "10", nombre: 10},
@@ -21,15 +20,49 @@ const limiteObjeto = [
 ]
 
 
+const renombrar = {
+    ventas : {
+        id: 'Id',
+        fecha: 'Fecha',
+        hora: 'Hora',
+        total: 'Total',
+        por_pagar: 'Por pagar',
+        estado_pago: 'Estado pago'
+    },
+    compras: {
+        id: "Id",
+        fecha: "Fecha",
+        hora: "Hora",
+        total: "Total",
+        por_pagar: 'Debe',
+        estado_pago: 'Estado pago'
+    },
+    abonos: {
+        id: "Id",
+        fecha: "Fecha",
+        hora: "Hora",
+        valor: "Valor",
+        descripcion: "Descripcion",
+        metodo_pago: "Metodo Pago"
+    }, 
+    
+    pagos: {
+        id: 'Id',
+        fecha: 'Fecha',
+        hota: 'Hora',
+        valor: 'Valor',
+        descripcion: 'Descripcion'
+    }
+    
+}
+
+
 const defaultLimite = "15"
 
 
-let renombrarTabla = {}
 
 
 export default function Cliente() {
-
-    const ifFirstRender = useRef(true)
 
     const {id} = useParams();
     const [nombre, setNombre]= useState("")
@@ -54,7 +87,7 @@ export default function Cliente() {
 
 
     const [nombreTabla, setNombreTabla] = useState("")
-
+    const [renombrarTabla, setRenombrarTabla] = useState({})
 
 
 
@@ -71,10 +104,16 @@ export default function Cliente() {
         fetchManager(`http://localhost:3000/api/v1/clientes/${id}`, cbCliente, "GET")
     }, [])
 
+
+    function funRenombrarTabla(tabla){
+        setRenombrarTabla(renombrar[tabla])
+    }
+
     useEffect(()=> {
         function cbTablas(res) {
             setDatos(res.rows)
             setTotalPaginas(Math.ceil(res.count / limite))
+            funRenombrarTabla(nombreTabla)
         }
 
         if (nombreTabla){
@@ -82,6 +121,8 @@ export default function Cliente() {
         }
         
     }, [offset, limite, nombreTabla, id])
+
+    
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
@@ -98,7 +139,7 @@ export default function Cliente() {
                     <InputText estilo="w-96" label="Email"  valor={email} />
                     <InputText estilo="w-40" label="Tipo"  valor={tipo} />
                     
-                    <InputNumber estilo = {"w-62"} label="Por pagarle" valor={porPagarle} format={true} isPrice= {true}/>
+                    <InputNumber estilo = {"w-62"} label="Saldo a favor" valor={porPagarle} format={true} isPrice= {true}/>
                     <Boton texto="Pagar"
                     onClick={() => setShowModalPago(true)}/>
                     <InputNumber

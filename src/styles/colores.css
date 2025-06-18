@@ -61,7 +61,7 @@
 }
 
 .subtitulo {
-    @apply text-2xl font-bold
+    @apply text-xl font-bold
 }
 
 .etiqueta {

@@ -1,15 +1,19 @@
-import { useEffect } from "react"
-import InputText from "../../componentes/InputText"
-import Boton from "../../componentes/Boton"
-import RadioBoton from "../../componentes/RadioBoton"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
-import DiffTabla from "../../componentes/DiffTabla"
-import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
-import InputNumber from "../../componentes/InputNumber"
+import RadioBoton from "../../componentes/RadioBoton"
 
-import ModalAbonarFactura from "../../componentes/Modales/ModalAbonarFactura"
+import DiffTabla from "../../componentes/DiffTabla"
+import InputText from "../../componentes/InputText"
+import InputNumber from "../../componentes/InputNumber"
+import Boton from "../../componentes/Boton"
+
+
+import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
+import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
+import ModalPagarVenta from "../../componentes/Modales/ModalPagarVenta"
+
+
+
 export default function Venta(){
 
     const {id} = useParams()
@@ -17,7 +21,7 @@ export default function Venta(){
     const [showModal, setShowModal] = useState(false)
     const [showModalAbonar, setShowModalAbonar] = useState(false)
 
-    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(null)
+    const [idItemSeleccionado, setIdItemSeleccionado] = useState(null)
 
     const [facturaOriginal, setFacturaOriginal] = useState([])
     const [facturaModificada, setFacturaModificada] = useState([])
@@ -34,13 +38,25 @@ export default function Venta(){
     const [totalTabla, setTotalTabla] = useState(null)
     const [pagado, setPagado] = useState(null)
 
+
+    console.log(total, pagado)
+
+    useEffect(()=>{
+        setFacturaModificada(facturaOriginal)
+        setTotalTabla(facturaOriginal.reduce((acc, item)=> acc + Number(item.subtotal), 0))
+    }, [facturaOriginal])
+
+    useEffect(()=> {
+        setTotalModificado(facturaModificada.reduce((acc, item) => acc + Number(item.subtotal), 0))
+    }, [facturaModificada])
+
     useEffect(()=>{
 
-        if (idProductoSeleccionado){
+        if (idItemSeleccionado){
             setShowModal(true)      
         }
 
-    }, [idProductoSeleccionado])
+    }, [idItemSeleccionado])
 
     function cancelarCambios(){
         setFacturaModificada(facturaOriginal)
@@ -62,7 +78,7 @@ export default function Venta(){
             setTotalTabla(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
         }
         fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${id}`, cb, "GET")
-    }, [])
+    }, [id])
 
 
     function guardarCambios(){
@@ -75,21 +91,16 @@ export default function Venta(){
             }
         })
         
-        function cb(resData){
+        function cb(res){
             setFacturaOriginal(facturaModificada)
-            setTotalTabla(totalModificado)
-            setTotal(resData.total)
-            if ("pagado" in resData){
-                setPagado(resData.pagado)
-            }
+            setTotal(res.info.total)
+            setPagado(res.info.pagado)
         }
         fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${id}`,cb, "PATCH", detalles)    
     }
 
 
-    useEffect(()=> {
-        setTotalModificado(facturaModificada.reduce((acc, item) => acc + Number(item.subtotal), 0))
-    }, [facturaModificada])
+    
 
 
     function cambiarEstado(nuevoValor){
@@ -135,7 +146,12 @@ export default function Venta(){
             </div>
             <div>
                 <h1 className="subtitulo">Producto comprados</h1>
-                <DiffTabla tabla1={facturaOriginal} tabla2={facturaModificada} total={totalTabla} total2= {totalModificado} setIdItemSeleccionado={setIdProductoSeleccionado}/>
+                <DiffTabla 
+                    tabla1={facturaOriginal} 
+                    tabla2={facturaModificada}
+                    total={totalTabla} 
+                    total2= {totalModificado} 
+                    setIdItemSeleccionado={setIdItemSeleccionado}/>
             </div>
             
             <div className="flex justify-between">
@@ -151,14 +167,22 @@ export default function Venta(){
             <div>
                 
             </div>
-                {showModal && 
-                <ModalModificarProductoFactura
-                    setShowModal={setShowModal}
-                    idProductoSeleccionado={idProductoSeleccionado}
-                    setIdProductoSeleccionado={setIdProductoSeleccionado}
-                    datos={facturaModificada}
-                    setDatos={setFacturaModificada} />}
-                {showModalAbonar && <ModalAbonarFactura setShowModal={setShowModalAbonar} numeroFactura={id} total={total} pagado={pagado} setPagado={setPagado}/>}
+                {showModal ?
+                    <ModalModificarProductoFactura
+                        setShowModal={setShowModal}
+                        idProductoSeleccionado={idItemSeleccionado}
+                        setIdProductoSeleccionado={setIdItemSeleccionado}
+                        datos={facturaModificada}
+                        setDatos={setFacturaModificada} />
+                    :null
+                }
+
+                {showModalAbonar && <ModalPagarVenta  
+                    setShowModal={setShowModalAbonar}
+                    numeroFactura={id}
+                    total={total}
+                    pagado={pagado}
+                    setPagado={setPagado}/>}
             <div>
             </div>
         </div>

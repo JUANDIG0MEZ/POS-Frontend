@@ -27,8 +27,8 @@ export default function ModalModificarProductoFactura(props){
     function guardarCambios(){
         const productoModificado = {
             ...productoSeleccionado,
-            cantidad: cantidad,
-            precio: precio,
+            cantidad: cantidad || 0,
+            precio: precio || 0,
             subtotal: total
         }
         const nuevosDatos = [...props.datos]
@@ -37,6 +37,7 @@ export default function ModalModificarProductoFactura(props){
         props.setShowModal(false)
         props.setIdProductoSeleccionado(null)
     }
+
 
 
 

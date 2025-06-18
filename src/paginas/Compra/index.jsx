@@ -164,7 +164,7 @@ export default function Compra(){
             
             <div className="flex gap-3">
                     <Boton texto={"Devolver productos"} onClick={()=>setShowModalModificar(true)} isNormal={true}/>
-                    <Boton texto={"Cancelar cambios"} onClick={()=>setShowModalModificar(true)} isNormal={true}/>
+                    <Boton texto={"Cancelar cambios"} onClick={cancelarCambios} isNormal={true}/>
                     <Boton texto={"GuardarCambios"} onClick={()=>guardarCambios()} isNormal={true}/>
                 </div>
         

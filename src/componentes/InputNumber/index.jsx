@@ -34,7 +34,7 @@ export default function InputText(props){
         <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
             <label className="font-semibold absolute -top-6 text-nowrap">{labelSeleccionado(props.label)}</label>
             <input 
-            onFocus={()=> props.setValor("")}
+            onFocus={()=> props.setValor ? props.setValor("") : null}
             onChange={establecerValor}
             type="text" 
             value={ props.valor ? Number(props.valor).toLocaleString() : ""}
