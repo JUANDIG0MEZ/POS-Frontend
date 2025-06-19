@@ -123,7 +123,7 @@ export default  function Clientes() {
 
     useEffect(()=>{
         if (idSeleleccionado){
-            navigate(`/cliente/${idSeleleccionado}`)
+            navigate(`/contactos/${idSeleleccionado}`)
         }
     }, [ idSeleleccionado ])
 
@@ -131,7 +131,7 @@ export default  function Clientes() {
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
             <div className="flex flex-col gap-2">
-                <h2 className="titulo mb-5">Lista de clientes</h2>
+                <h2 className="titulo mb-5">Contactos</h2>
                 <div className="flex gap-3 items-center">
                     <InputNumber
                         estilo={"w-20"}
@@ -146,7 +146,7 @@ export default  function Clientes() {
                         lista={clientesNombres}    
                         valor={nombreCliente}
                         setValor={setNombreCliente}
-                        label={"Nombre cliente"} 
+                        label={"Nombre"} 
                         setIdSeleccionado={setIdCliente}/>
 
 
@@ -160,7 +160,7 @@ export default  function Clientes() {
                         setOffset(0)
                         setPagina(0)
                     }}/>
-                    <BotonIcono onClick={()=>setShowModalCrear(true)} texto={<FaUser/>}/>      
+                    <BotonIcono onClick={()=>navigate('/crear/contacto')} texto={<FaUser/>}/>      
                 </div>
                 <div className="flex justify-between">
 
@@ -203,11 +203,6 @@ export default  function Clientes() {
             <div className="overflow-auto h-full">
                 <Tabla datos = {clientes} setIdItemSeleccionado={setIdSeleccionado} rename = {renombrar}/>
             </div>    
-            
-            
-            {
-                showModalCrear && <ModalCrearCliente setShowModal={setShowModalCrear}/>
-            }
         </div>
         
     )

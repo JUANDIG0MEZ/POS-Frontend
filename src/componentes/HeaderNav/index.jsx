@@ -1,6 +1,6 @@
-import {FaHome, FaBox, FaUser, FaShoppingCart, FaCashRegister, FaReact} from 'react-icons/fa'
+import {FaHome, FaBox, FaUser, FaShoppingCart, FaCashRegister, FaReact, FaCaretDown, FaCaretUp} from 'react-icons/fa'
 import {NavLink} from 'react-router-dom'
-
+import { useState } from 'react'
 const navItems = {
     'Inicio': {
         icon: <FaHome />,
@@ -8,46 +8,113 @@ const navItems = {
     },
     'Productos': {
         icon: <FaBox />,
-        to: '/inventario'
+        to: '/inventario',
+        children: [
+            { label: 'Inventario', to: '/inventario' },
+            { label: 'Crear producto', to: '/crearproductos' },
+            { label: 'Categorías', to: '/categorias' }
+        ]
     },
     'Compras': {
         icon: <FaShoppingCart />,
-        to: '/compras'
+        to: '/compras',
+        children: [
+            { label: 'Historial', to: '/compras/historial'}
+        ]
     },
     'Ventas': {
         icon: <FaCashRegister />,
-        to: '/ventas'
+        to: '/ventas' ,
+        children: [
+            { label: 'Historial', to: '/ventas/historial' }
+        ]
     },
-    'Clientes': {
+    'Contactos': {
         icon: <FaUser />,
-        to: '/clientes'
-    }
+        to: '/clientes',
+        children: [
+            { label: 'Crear contacto', to: '/crear/contactos' },
+            { label: 'Contactos', to: '/contactos' },
+        ]
+    },
+
 }
 
 export default function HeaderNav() {
-    return (
-        <nav className='flex bg-black justify-between p-3 text-xl px-6'>
-            <h1 className='flex font-bold text-white items-center gap-2'><FaReact className='animate-spin rain'/>PersonalPos</h1>
-            <ul className='flex gap-6'>
-                {
-                    Object.keys(navItems).map((item, index)=>{
-                        return (
-                            <li key={index}>
-                                <NavLink to={navItems[item].to} className={({isActive}) => `${isActive ? "font-bold": "font-normal"} text-white flex items-center gap-3`}>
-                                    {item}
-                                </NavLink>
-                            </li>
-                        )
-                    })
-                }
-            </ul>
-            
-            <NavLink to='/perfil' className=''>
-                <p className='grow-0 flex items-center text-white gap-4'>Juan Diego <FaUser/></p>
-            </NavLink> 
-            
 
-            
-        </nav>
+    const [openItem, setOpenItem] = useState(null)
+
+    function toggleItem (label) {
+        if (openItem === label){
+            setOpenItem(null)
+        }
+        else {
+            setOpenItem (label)
+        }
+    }
+
+    return (
+        <nav className='flex flex-col bg-black justify-between p-3 text-xl px-6 min-h-screen w-60'>
+      <h1 className='flex font-bold text-white items-center gap-2 mx-auto'>
+        <FaReact className='animate-spin rain' />
+        PersonalPos
+      </h1>
+
+      <ul className='flex flex-col gap-3
+      '>
+        {
+          Object.entries(navItems).map(([label, item], index) => (
+            <li key={index} className="text-white ">
+              {
+                item.children ? (
+                  <button
+                    onClick={() => toggleItem(label)}
+                    className="flex items-center gap-3 w-full text-left hover:text-gray-300 hover:bg-gray-800 hover:font-bold p-1 rounded"
+                  >
+                    {item.icon}
+                    {label}
+                    <span className="ml-auto">{openItem === label ? <FaCaretUp/> : <FaCaretDown/>}</span>
+                  </button>
+                ) : (
+                  <NavLink
+                    to={item.to}
+                    className={({ isActive }) =>
+                      `${isActive ? "font-bold" : "font-normal"} flex items-center gap-3 hover:text-gray-300 hover:bg-gray-800 p-1 rounded`
+                    }
+                  >
+                    {item.icon}
+                    {label}
+                  </NavLink>
+                )
+              }
+
+              {/* Subitems */}
+              {
+                openItem === label && item.children && (
+                  <ul className="ml-6 mt-2 flex flex-col gap-2">
+                    {
+                      item.children.map((subItem, subIndex) => (
+                        <li key={subIndex}>
+                          <NavLink
+                            to={subItem.to}
+                            className="block px-2 py-1 hover:bg-gray-800 rounded"
+                          >
+                            {subItem.label}
+                          </NavLink>
+                        </li>
+                      ))
+                    }
+                  </ul>
+                )
+              }
+            </li>
+          ))
+        }
+      </ul>
+
+      <NavLink to='/perfil' className='mx-auto'>
+        <p className='flex items-center text-white gap-4 mt-8'>Juan Diego <FaUser /></p>
+      </NavLink>
+    </nav>
     )
 }

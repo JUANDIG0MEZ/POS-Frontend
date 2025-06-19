@@ -62,7 +62,7 @@ const defaultLimite = "15"
 
 
 
-export default function Cliente() {
+export default function Contacto() {
 
     const {id} = useParams();
     const [nombre, setNombre]= useState("")
@@ -77,7 +77,7 @@ export default function Cliente() {
 
     const [datos, setDatos] = useState([])
 
-    const [showModalPago, setShowModalPago] = useState(false)
+    const [showModalPago, setShowModalPago] = useState(true)
     const [showModalAbono, setShowModalAbono] = useState(false)
 
 

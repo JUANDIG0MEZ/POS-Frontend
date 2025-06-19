@@ -49,7 +49,6 @@ export default function ModalPagarVenta(props){
                 return
             }
 
-            console.log(metodoPago)
 
             const body = {
                 valor: valorFetch,
@@ -61,7 +60,7 @@ export default function ModalPagarVenta(props){
                 props.setPagado(resData.pagado)
                 cerrarModal()
             }
-            fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${numeroFactura}/pagar`, cbAbono, "PATCH", body)
+            fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${numeroFactura}/abonar`, cbAbono, "PATCH", body)
             
             // cerrarModal()
             

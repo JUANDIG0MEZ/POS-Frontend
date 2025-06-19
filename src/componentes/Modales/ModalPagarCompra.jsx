@@ -27,7 +27,6 @@ export default function ModalPagarCompra(props){
 
 
     function realizarAbono(){
-        console.log("realizando abono")
         if (valorAbono > porPagar){
             toast.warning("El abono no puede ser mayor al total a pagar")
         }
@@ -50,7 +49,6 @@ export default function ModalPagarCompra(props){
                 return
             }
 
-            console.log(metodoPago)
 
             const body = {
                 valor: valorFetch,
@@ -69,7 +67,6 @@ export default function ModalPagarCompra(props){
         }
     }
 
-        console.log('metodo pago', metodoPago)
 
 
     return (

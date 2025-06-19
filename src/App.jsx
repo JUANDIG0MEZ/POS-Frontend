@@ -1,7 +1,9 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Home from './paginas/Home'
 import Inventario from './paginas/Inventario'
-import Clientes from './paginas/Clientes'
+import Contactos from './paginas/Contactos'
+import Contacto from './paginas/Contacto'
+import CrearContacto from './paginas/CrearContacto'
 import Compras from './paginas/Compras'
 import Comprar from './paginas/Comprar'
 import Compra from './paginas/Compra'
@@ -10,6 +12,8 @@ import Vender from './paginas/Vender'
 import Venta from './paginas/Venta'
 import Perfil from './paginas/Perfil'
 
+
+
 import './App.css'
 import './styles/estilos.css'
 import './styles/colores.css'
@@ -17,7 +21,6 @@ import './styles/size.css'
 import './styles/bordes.css'
 
 import Dashboard from './componentes/Dashboard'
-import Cliente from './paginas/Cliente'
 import {Toaster} from 'sonner'
 function App() {
   return (
@@ -28,15 +31,19 @@ function App() {
           <Route element={<Dashboard />}>
             <Route path= '/' element={<Home />} />
             <Route path= '/inventario' element={<Inventario />} />
-            <Route path= '/clientes' element={<Clientes />} />
-            <Route path= '/compras' element={<Compras />} />
+
+            <Route path= '/compras/historial' element={<Compras />} />
             <Route path= '/comprar' element={<Comprar />} />
-            <Route path= '/ventas' element={<Ventas />} />
+            <Route path= '/ventas/historial' element={<Ventas />} />
             <Route path= '/vender' element={<Vender />} />
             <Route path = '/venta/:id' element={<Venta />} />
             <Route path = '/compra/:id' element={<Compra/>} />
-            <Route path = '/cliente/:id' element={<Cliente />} />
+            <Route path= '/contactos' element={<Contactos />} />
+            
+            <Route path = '/contactos/:id' element={<Contacto />} />
             <Route path = '/perfil' element={<Perfil />} />
+
+            <Route path= '/crear/contacto' element = {<CrearContacto/>}/>
             <Route path = '*' element={<h1>404</h1>} />
           </Route>
         </Routes>

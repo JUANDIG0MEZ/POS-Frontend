@@ -39,8 +39,6 @@ export default function Venta(){
     const [pagado, setPagado] = useState(null)
 
 
-    console.log(total, pagado)
-
     useEffect(()=>{
         setFacturaModificada(facturaOriginal)
         setTotalTabla(facturaOriginal.reduce((acc, item)=> acc + Number(item.subtotal), 0))
