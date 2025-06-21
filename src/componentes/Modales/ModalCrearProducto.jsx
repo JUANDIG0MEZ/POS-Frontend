@@ -1,6 +1,7 @@
 import InputText from "../InputText"
 import InputNumber from "../InputNumber"
 import InputLista from "../InputLista"
+import Select from "../Select"
 import Boton from "../Boton"
 import { useEffect, useState} from "react"
 import CargarArchivos from "../CargarArchivos"
@@ -14,7 +15,10 @@ export default function ModalCrearProducto(props){
     // Se trae la lista de productos
     const {
         productos,
-        setProductos
+        setProductos,
+        marcas, 
+        categorias,
+        medidas
     } = useContext(ContextInventario)
 
     const [nombre, setNombre] = useState("")
@@ -24,11 +28,7 @@ export default function ModalCrearProducto(props){
     const [medida, setMedida] = useState(null)
     const [marca, setMarca] = useState(null)
     const [cantidad, setCantidad] = useState("")
-    const [categoria, setCategoria] = useState(null)
-    
-    const [listaMarca, setListaMarca] = useState([])
-    const [listaCategoria, setListaCategoria] = useState([])
-    const [listaMedida, setListaMedida] = useState([])
+    const [categoriaId, setCategoriaId] = useState(null)
     const [files, setFiles] = useState([])
 
     function cerrarModal(){
@@ -38,11 +38,15 @@ export default function ModalCrearProducto(props){
     }
 
     function crearProducto(){
+        if (Number(precioVenta) < Number(precioCompra)) {
+            toast.error('El valor de venta debe ser mayor que el de compra.')
+            return
+        }
         if (nombre){
             const nuevoProducto = {
             nombre: nombre,
             marca: marca,
-            categoria: categoria,
+            categoria_id: categoriaId,
             medida: medida,
             precio_compra: precioCompra,
             precio_venta: precioVenta,
@@ -55,58 +59,61 @@ export default function ModalCrearProducto(props){
                 }
             }
 
-            function cbCrearProducto(resData){
-                setProductos([...productos, resData])
+            function cbCrearProducto(res){
+                setProductos([...productos, res.producto])
                 return "Producto creado"
             }
 
-            const formData = new FormData()
-            formData.append("data", JSON.stringify(nuevoProducto))
+            
 
-            files.forEach((imagen) => {
-                formData.append("files", imagen)
-            })
-
-            fetchFilesManager('http://localhost:3000/api/v1/productos', cbCrearProducto, "POST", formData)
+            fetchManager('http://localhost:3000/api/v1/productos', cbCrearProducto, "POST", nuevoProducto)
         }
         else{
             toast.warning("El nombre del producto es obligatorio")
         }
     }
 
-    useEffect(()=>{
-        fetchManager('http://localhost:3000/api/v1/productos/marcas', setListaMarca, "GET")
-        fetchManager('http://localhost:3000/api/v1/productos/categorias', setListaCategoria, "GET")
-        fetchManager('http://localhost:3000/api/v1/productos/medidas', setListaMedida, "GET")
+    console.log('categoriaId', categoriaId)
+    console.log('medida', medida)
+    // function crearImagenes(){
+    //     // const formData = new FormData()
+    //         // formData.append("data", JSON.stringify(nuevoProducto))
 
-        }, [])
+    //         // files.forEach((imagen) => {
+    //         //     formData.append("files", imagen)
+    //         // })
+
+    //     // fetchFilesManager('http://localhost:3000/api/v1/productos', cbCrearProducto, "POST", formData)
+    // }
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <div className="w-[1400px] flex bg-white p-5 rounded-lg items-center gap-4">
-                <CargarArchivos setFiles = {setFiles} files={files}/>
-
-                
-                <div className="flex flex-col flex-1 gap-7">
+            <div className="w-[1000px] flex bg-white border rounded-lg  gap-3 p-4 ">
+                <CargarArchivos setFiles = {setFiles} files={files}/>                
+                <div className="flex flex-col gap-6 w-full">
                     <h2 className="titulo">Crear producto</h2>
-                    <div className="flex gap-3">
+                    <div>
                         <InputText
                         label="Nombre"
                         valor={nombre}
                         setValor={setNombre}/>
+                    </div>
+                    
+                    <div className="flex gap-3">
                         <InputLista
-                        estilo={"w-72"}
+                        estilo={"w-1/2"}
                         label="Marca"
                         valor = {marca}
                         setValor={setMarca}
-                        lista = {listaMarca}/>
+                        lista = {marcas}/>
+                        <InputLista estilo={"w-1/2"} label="Medida" valor= {medida} setValor={setMedida} lista = {medidas}/>
                     </div>
                     <div className="flex w-full gap-3">
-                       
-                        <InputLista label="Categoria" valor={categoria} setValor={setCategoria} lista = {listaCategoria} />
-                        <InputLista estilo={"w-72"} label="Medida" valor= {medida} setValor={setMedida} lista = {listaMedida}/>
+                        <Select opciones={categorias} label ="Categoria" valor={categoriaId} setValor={setCategoriaId}  />
+                        {/* <InputLista label="Categoria"  lista = {listaCategoria} /> */}
+                        
                         <InputNumber
-                            estilo="w-48"
+                            estilo="w-40"
                             label="Cantidad"
                             valor={cantidad}
                             setValor={setCantidad}
@@ -130,12 +137,18 @@ export default function ModalCrearProducto(props){
                                 setValor={setPrecioVenta}
                                 format={true}
                                 />
-                            <Boton
-                            onClick={cerrarModal}
-                            texto = "Limpiar"
-                            isNormal = {true}/>
+                            
                         </div>
                         
+                        
+                        
+                        
+                    </div>
+                    <div className="flex gap-3 w-full justify-between">
+                        <Boton
+                            texto = "Limpiar"
+                            isNormal = {true}/>
+
                         <div className="flex gap-3">
                             <Boton
                                 onClick={cerrarModal}
@@ -145,8 +158,6 @@ export default function ModalCrearProducto(props){
                                 onClick={crearProducto}
                                 texto = "Agregar" />
                         </div>
-                        
-                        
                     </div>
                 </div>
             </div>

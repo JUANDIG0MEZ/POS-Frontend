@@ -8,7 +8,6 @@ import { FaTrash } from "react-icons/fa"
 import Botonicono from "../BotonIcono"
 import Select from "../Select"
 export default function ModalCrearCliente(props){
-
     const {
         tiposClientes
     } = useContext(ContextInventario)
@@ -20,9 +19,6 @@ export default function ModalCrearCliente(props){
     const [telefono, setTelefono] = useState("")
     const [email, setEmail] = useState("")
     const [tipo, setTipo] = useState("")
-
-    const [listaTipo, setListaTipo] = useState([{id: 3, nombre: "Ambos"}, {id: 1, nombre: "Proveedor"}, {id: 2, nombre: "Cliente"}])
-
 
     function cerrarModal(){
         if (props.setShowModal){
@@ -46,7 +42,7 @@ export default function ModalCrearCliente(props){
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="flex bg-white p-5 rounded-lg w-[1000px] items-center gap-4">
                 <div className="flex flex-col flex-1 gap-7">
-                    <h2 className="subtitulo">Crear cliente</h2>
+                    <h2 className="titulo">Crear contacto</h2>
                     <div className="flex gap-3">
                         <InputText label="Nombre" valor={nombre} setValor={setNombre}/>
                         <InputText label = "Direccion" valor = {direccion} setValor = {setDireccion}/> 
@@ -56,7 +52,7 @@ export default function ModalCrearCliente(props){
                     <div className="flex justify-between">
                         <div className="flex gap-3">
                             <InputText estilo="w-80" label = "Email" valor = {email} setValor={setEmail}/>
-                            <InputText estilo="w-44" label="Telefono" valor={telefono} setValor={setTelefono} isNumber={true}/>
+                            <InputText estilo="w-44" label = "Telefono" valor={telefono} setValor={setTelefono} isNumber={true}/>
                         </div>
                         
                         <div className="flex gap-3">  
@@ -84,9 +80,9 @@ export default function ModalCrearCliente(props){
 
                 </div>
             </div>
-            
-            
-            
+            {
+                ModalCrearCliente ? <ModalCrearCliente /> : null
+            }
         </div>
     )
 }

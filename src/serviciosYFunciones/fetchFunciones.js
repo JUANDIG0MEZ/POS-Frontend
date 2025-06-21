@@ -2,15 +2,10 @@ import { toast } from 'sonner'
 
 
 async function checkResponse(response) {
-    if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-    
     const res = await response.json();
     if (res.success === true) {
         return res;
     }
-    
     else {
         throw new Error(res.message);
     }
@@ -32,19 +27,16 @@ export async function otherFetch(url, method, body) {
     return await checkResponse(res)
 }
 
+
+
+
 export async function fetchFiles(url){
     const res = await fetch(url)
     return await checkResponse(res)
 }
 
 
-export async function otherFetchFiles(url, method, formData) {
-    const res = await fetch(url, {
-        method: method,
-        body: formData
-    })
-    return await checkResponse(res)
-}
+
 
 export async function toastFetchPromise(promise, cb) {
     toast.promise(promise,
@@ -79,6 +71,15 @@ export function fetchManager(url, cb, method="GET", body = null) {
 
 
 // Ahora se deben agregar funciones para enviar imagenes y archivos.
+
+export async function otherFetchFiles(url, method, formData) {
+    const res = await fetch(url, {
+        method: method,
+        body: formData
+    })
+    return await checkResponse(res)
+}
+
 
 export function fetchFilesManager(url, cb, method="GET", formData = null) {
     if (method === "GET"){

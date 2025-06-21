@@ -11,7 +11,6 @@ const navItems = {
         to: '/inventario',
         children: [
             { label: 'Inventario', to: '/inventario' },
-            { label: 'Crear producto', to: '/crearproductos' },
             { label: 'Categorías', to: '/categorias' }
         ]
     },
@@ -19,6 +18,7 @@ const navItems = {
         icon: <FaShoppingCart />,
         to: '/compras',
         children: [
+            { label: 'Nueva compra', to: '/comprar'},
             { label: 'Historial', to: '/compras/historial'}
         ]
     },
@@ -26,6 +26,7 @@ const navItems = {
         icon: <FaCashRegister />,
         to: '/ventas' ,
         children: [
+            { label: 'Nueva venta', to: '/vender'},
             { label: 'Historial', to: '/ventas/historial' }
         ]
     },

@@ -5,7 +5,6 @@ import { ContextInventario } from "../../contextInventario"
 import InputNumber from "../../componentes/InputNumber"
 
 import Select from "../../componentes/Select"
-
 import CambiarPagina from "../../componentes/CambiarPagina"
 
 
@@ -125,7 +124,7 @@ export default  function Clientes() {
         if (idSeleleccionado){
             navigate(`/contactos/${idSeleleccionado}`)
         }
-    }, [ idSeleleccionado ])
+    }, [ idSeleleccionado, navigate ])
 
 
     return (
@@ -160,7 +159,7 @@ export default  function Clientes() {
                         setOffset(0)
                         setPagina(0)
                     }}/>
-                    <BotonIcono onClick={()=>navigate('/crear/contacto')} texto={<FaUser/>}/>      
+                    <BotonIcono onClick={()=>setShowModalCrear(true)} texto={<FaUser/>}/>      
                 </div>
                 <div className="flex justify-between">
 
@@ -202,8 +201,10 @@ export default  function Clientes() {
             
             <div className="overflow-auto h-full">
                 <Tabla datos = {clientes} setIdItemSeleccionado={setIdSeleccionado} rename = {renombrar}/>
-            </div>    
-        </div>
-        
+            </div>   
+            {
+                showModalCrear ? <ModalCrearCliente /> : null
+            } 
+        </div> 
     )
 }
