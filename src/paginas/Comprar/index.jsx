@@ -155,7 +155,6 @@ export default function Comprar() {
         const productoFormateado = {
             id: idProducto,
             nombre: producto.nombre,
-            marca: producto.marca,
             medida: producto.medida,
             cantidad: parseInt(cantidadProducto),
             precio: precio,

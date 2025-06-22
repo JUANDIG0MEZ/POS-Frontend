@@ -203,7 +203,7 @@ export default  function Clientes() {
                 <Tabla datos = {clientes} setIdItemSeleccionado={setIdSeleccionado} rename = {renombrar}/>
             </div>   
             {
-                showModalCrear ? <ModalCrearCliente /> : null
+                showModalCrear ? <ModalCrearCliente setShowModal={setShowModalCrear}/> : null
             } 
         </div> 
     )

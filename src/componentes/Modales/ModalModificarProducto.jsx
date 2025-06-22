@@ -81,7 +81,7 @@ export default function ModalModificarProducto(props){
     }
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <div className="flex bg-white p-5 rounded-lg w-[1200px] items-center gap-4">
+            <div className="flex bg-white p-5 rounded-lg w-[1000px] items-center gap-4">
                 <div className="">
                     <ModificarImagenes imagenes={imagenes} files={files} setFiles = {setFiles} borradas={borradas} setBorradas= {setBorradas} />
                 </div>

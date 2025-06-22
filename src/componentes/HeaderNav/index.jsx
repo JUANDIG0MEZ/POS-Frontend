@@ -34,7 +34,6 @@ const navItems = {
         icon: <FaUser />,
         to: '/clientes',
         children: [
-            { label: 'Crear contacto', to: '/crear/contactos' },
             { label: 'Contactos', to: '/contactos' },
         ]
     },

@@ -43,7 +43,7 @@ export default function ModalModificarProductoFactura(props){
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <div className="flex bg-white p-5 rounded-lg w-[800px] items-center gap-4">    
+            <div className="flex bg-white p-5 rounded-lg w-[600px] items-center gap-4">    
                 <div className="flex flex-col flex-1 gap-5">
                     <h2 className="titulo mb-5">Modificar producto: <span className="font-bold text-lg text-red-400">{productoSeleccionado.nombre}</span></h2>
                     <div className="flex gap-3">

@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { useParams } from "react-router-dom"
-import RadioBoton from "../../componentes/RadioBoton"
 
 import DiffTabla from "../../componentes/DiffTabla"
 import InputText from "../../componentes/InputText"
 import InputNumber from "../../componentes/InputNumber"
 import Boton from "../../componentes/Boton"
-
+import Opciones from "../../componentes/Opciones"
 
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
 import ModalPagarVenta from "../../componentes/Modales/ModalPagarVenta"
+import { ContextInventario } from "../../contextInventario"
 
 
 
 export default function Venta(){
+
+    const {
+        estadosVentasEntrega
+    } = useContext(ContextInventario)
 
     const {id} = useParams()
 
@@ -31,7 +35,7 @@ export default function Venta(){
     const [direccion, setDireccion] = useState("")
     const [telefono, setTelefono] = useState("")
     const [email, setEmail] = useState("")
-    const [estado, setEstado] = useState("")
+    const [estadoEntrega, setEstadoEntrega] = useState("")
 
     const [total, setTotal] = useState("")
     const [totalModificado, setTotalModificado] = useState(null)
@@ -70,7 +74,7 @@ export default function Venta(){
             setTelefono(resData.info.telefono)
             setEmail(resData.info.email)
             setDireccion(resData.info.direccion)
-            setEstado(resData.info.estado)
+            setEstadoEntrega(resData.info.estado_entrega_id)
             setPagado(resData.info.pagado)
             setTotal(resData.info.total)
             setTotalTabla(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
@@ -101,10 +105,6 @@ export default function Venta(){
     
 
 
-    function cambiarEstado(nuevoValor){
-        setEstado(nuevoValor)
-    }
-
     return (
         <div className="w-[1400px] flex flex-col mx-auto gap-3">
             
@@ -115,31 +115,26 @@ export default function Venta(){
             </div>
 
             <div className="flex flex-col gap-6 w-full">
-                <div className="w-full flex gap-3">
+                <div className="w-full flex gap-3 ">
                     <InputText estilo={"w-[500px]"} label="Nombre cliente" valor = {nombre}/>
                     <InputText estilo={"w-[500px]"} label="Direccion entrega" valor={direccion}/>
                     <InputText estilo={"w-[500px]"} label="Email" valor={email}/>
                 </div>
                 <div className="w-full flex justify-between">
-                    
                     <div className="flex gap-3">
                         <InputNumber estilo={"w-48"} label="Total" valor={total} isPrice={true} format={true}/>
                         <button className='font-bold'>-</button>
                         <InputNumber estilo={"w-48"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
                         <button className='font-bold'>=</button>
                         <InputNumber estilo={"w-48"} label="Por pagar" valor={total - pagado} isPrice={true} format={true}/>
-                        <Boton texto="Abonar" onClick={() => setShowModalAbonar(true)}></Boton>
+                        <Boton texto="Abonar" isNormal={true} onClick={() => setShowModalAbonar(true)}/>
                     </div>
-                    
-                    
-
-                    
-                    <div className="flex gap-4">
-                        <RadioBoton onChange={cambiarEstado} name="estado" valor="Por entregar" label="No entregado" checked={estado === "Por entregar"}/>
-                        <RadioBoton onChange={cambiarEstado} name="estado" valor="Entregado" label="Entregado" checked={estado === "Entregado"}/>
+                        
+                    <div className="flex gap-3">
+                        
+                        
+                        <Opciones opciones= {estadosVentasEntrega} seleccionado={estadoEntrega} setSeleccionado ={setEstadoEntrega}  />
                     </div>
-                    
-                    
                 </div>
             </div>
             <div>

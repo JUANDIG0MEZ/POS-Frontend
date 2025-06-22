@@ -4,8 +4,7 @@ const ContextInventario = createContext()
 
 const InventarioProvider = ({children}) => {
     const [productos, setProductos] = useState([])
-    const [clientesNombres, setClientesNombres] = useState([]) 
-    const [marcas, setMarcas] = useState([])
+    const [clientesNombres, setClientesNombres] = useState([])
     const [categorias, setCategorias] = useState([])
     const [medidas, setMedidas] = useState([])
     const [estadosComprasEntrega, setEstadosComprasEntrega] = useState([])
@@ -26,7 +25,6 @@ const InventarioProvider = ({children}) => {
         function cbInit(res){
             setProductos(res.producto)
             setClientesNombres(res.clientes)
-            setMarcas(res.productoMarca)
             setCategorias(res.productoCategoria)
             setMedidas(res.productoMedida)
             setEstadosComprasEntrega(res.compraEstadoEntrega)
@@ -59,8 +57,6 @@ const InventarioProvider = ({children}) => {
             setProductos,
             clientesNombres,
             setClientesNombres,
-            marcas,
-            setMarcas,
             categorias,
             setCategorias,
             medidas,

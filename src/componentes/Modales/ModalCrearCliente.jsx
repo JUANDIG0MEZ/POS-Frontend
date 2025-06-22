@@ -1,12 +1,13 @@
 import InputText from "../InputText"
-import InputLista from "../InputLista"
+import InputNumber from "../InputNumber"
 import Boton from "../Boton"
 import { useState, useEffect, useContext} from "react"
 import { ContextInventario } from "../../contextInventario"
-import InputNumber from "../InputNumber"
 import { FaTrash } from "react-icons/fa"
 import Botonicono from "../BotonIcono"
 import Select from "../Select"
+import {toast} from 'sonner'
+import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 export default function ModalCrearCliente(props){
     const {
         tiposClientes
@@ -14,8 +15,6 @@ export default function ModalCrearCliente(props){
 
     const [nombre, setNombre] = useState("")
     const [direccion, setDireccion] = useState("")
-    const [porPagarle, setPorPagarle] = useState("")
-    const [debe, setDebe] = useState("")
     const [telefono, setTelefono] = useState("")
     const [email, setEmail] = useState("")
     const [tipo, setTipo] = useState("")
@@ -27,26 +26,50 @@ export default function ModalCrearCliente(props){
         
     }
 
-    // function crearCliente(){
-    //     const cliente = {
-    //         nombre: nombre,
-    //         direccion: direccion,
-    //         telefono: telefono,
-    //         email: email,
-    //         tip
-    //     }
-    // }
+    function crearCliente(){
+        const tipo_id = Number(tipo)
+        const telefonoFetch = Number(telefono)
+        if (!tipo_id){
+            toast.error('Selecciona el tipo de cliente')
+            return 
+        }
+        if (!nombre){
+            toast.error('Escribe el nombre del nuevo cliente')
+            return 
+        }
+
+
+        const nuevoCliente = {
+            nombre: nombre,
+            direccion: direccion,
+            telefono: telefonoFetch? telefonoFetch : null,
+            email: email,
+            tipo_id: tipo_id
+        }
+
+        function cbCrearCliente(res){
+            console.log(res)
+        }
+
+
+        fetchManager('http://localhost:3000/api/v1/clientes', cbCrearCliente, "POST", nuevoCliente)
+
+        console.log(nuevoCliente)
+    }
 
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <div className="flex bg-white p-5 rounded-lg w-[1000px] items-center gap-4">
+            <div className="flex bg-white p-5 rounded-lg w-[600px] items-center gap-4">
                 <div className="flex flex-col flex-1 gap-7">
                     <h2 className="titulo">Crear contacto</h2>
                     <div className="flex gap-3">
-                        <InputText label="Nombre" valor={nombre} setValor={setNombre}/>
-                        <InputText label = "Direccion" valor = {direccion} setValor = {setDireccion}/> 
-                        <Select opciones={tiposClientes} setValor={setTipo} label={"Tipo cliente"}/>                    
+                        <InputText label="Razon social o nombre completo" valor={nombre} setValor={setNombre}/>
+                        <Select opciones={tiposClientes} setValor={setTipo} label={"Tipo cliente"} valorDefault={0}/> 
+                    </div>
+                             
+                    <div className="flex gap-3">
+                        <InputText label = "Direccion" valor = {direccion} setValor = {setDireccion}/>               
                         
                     </div>
                     <div className="flex justify-between">
@@ -56,11 +79,7 @@ export default function ModalCrearCliente(props){
                         </div>
                         
                         <div className="flex gap-3">  
-                            <InputNumber
-                            estilo="w-32" label="Debe" valor={debe} setValor={setDebe} format={true}/>
-                            <InputNumber
-                            estilo="w-32"
-                            label="Por pagarle" valor={porPagarle} setValor={setPorPagarle} format={true}/>
+
                             <Botonicono
                             texto={<FaTrash/>}/>
                         </div>
@@ -72,17 +91,15 @@ export default function ModalCrearCliente(props){
                         </div>
                         
                         <div className="flex w-full justify-end gap-3">  
-                            <Boton onClick={cerrarModal} texto = "Cancelar"  isNormal = {true}/>
-                            <Boton texto = "Crear" />  
+                            <Boton onClick={cerrarModal}  texto = "Cancelar"  isNormal = {true}/>
+                            <Boton onClick={crearCliente} texto = "Crear" />  
                         </div>
                     </div>
                     
 
                 </div>
             </div>
-            {
-                ModalCrearCliente ? <ModalCrearCliente /> : null
-            }
+
         </div>
     )
 }

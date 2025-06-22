@@ -4,12 +4,13 @@ import DiffTabla from "../../componentes/DiffTabla"
 import InputText from "../../componentes/InputText"
 import InputNumber from "../../componentes/InputNumber"
 import Boton from "../../componentes/Boton"
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { useParams } from "react-router-dom"
 import ModalPagarCompra from "../../componentes/Modales/ModalPagarCompra"
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
-
+import Opciones from "../../componentes/Opciones"
+import { ContextInventario } from "../../contextInventario"
 
 const renombrar = {
     id: "Id",
@@ -21,6 +22,11 @@ const renombrar = {
 }
 
 export default function Compra(){
+
+    const {
+        estadosComprasEntrega
+    } = useContext(ContextInventario)
+
     const [pagado, setPagado] = useState(null)
     const [total, setTotal] = useState(null)
     const {id} = useParams()
@@ -38,7 +44,7 @@ export default function Compra(){
     const [nombre, setNombre] = useState("")
     const [telefono, setTelefono] = useState("")
     const [email, setEmail] = useState("")
-    const [estado, setEstado] = useState("")
+    const [estadoEntrega, setEstadoEntrega] = useState("")
 
     
     
@@ -75,7 +81,7 @@ export default function Compra(){
             setNombre(resData.info.nombre_cliente)
             setTelefono(resData.info.telefono)
             setEmail(resData.info.email)
-            setEstado(resData.info.estado)
+            setEstadoEntrega(resData.info.estado_entrega_id)
             setPagado(resData.info.pagado)
             setTotal(resData.info.total)
             setTotalOriginal(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
@@ -103,12 +109,12 @@ export default function Compra(){
         fetchManager(`http://localhost:3000/api/v1/facturas/compras/${id}`, cb, "PATCH", detalles)
     }
 
-    function cambiarEstado(nuevoValor){
-        if (nuevoValor === "Entregado"){
-            setEstado(nuevoValor)
-        }
+    // function cambiarEstado(nuevoValor){
+    //     if (nuevoValor === "Entregado"){
+    //         setEstado(nuevoValor)
+    //     }
         
-    }
+    // }
     
 
 
@@ -132,13 +138,10 @@ export default function Compra(){
                         <InputNumber estilo={"w-44"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
                         <button className='font-bold'>=</button>
                         <InputNumber estilo={"w-44"} label="Por pagar" valor={total - pagado} isPrice={true} format={true}/>
-                        <Boton texto="Abonar" onClick={() => setShowModalAbonar(true)}></Boton>
+                        <Boton texto="Abonar" isNormal={true} onClick={() => setShowModalAbonar(true)}></Boton>
                     </div>   
                     <div className="flex gap-4 items-center">
-                        {/* <RadioBoton onChange={cambiarEstado} name="estado" valor="Por entregar" label="Por entregar" checked={estado === "Por entregar"}/> */}
-                        {/* <RadioBoton onChange={ca{
-                (totalModificado < pagado) && <p className="text-lg font-semibold animate-bounce">Nota: En caso de realizar la modficacion debes pagarle al cliente <span className="font-semibold text-red-500">{pagado - totalModificado}</span></p>
-            }mbiarEstado} name="estado" valor="Entregado" label="Entregado" checked={estado === "Entregado"}/> */}
+                        <Opciones opciones={estadosComprasEntrega} setSeleccionado = {setEstadoEntrega} seleccionado = {estadoEntrega}  /> 
                     </div>
                     
                     

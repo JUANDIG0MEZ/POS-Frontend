@@ -38,7 +38,6 @@ const columnasObjeto = {
 const columnasObjeto2 = [
     {id: "id", nombre: "ID"},
     {id: "nombre", nombre: "Nombre"},
-    {id: "marca", nombre: "Marca"},
     {id: "categoria", nombre: "Categoria"},
     {id: "medida", nombre: "Medida"},
     {id: "precio_compra", nombre: "Precio Compra"},
@@ -69,7 +68,6 @@ export default function Inventario() {
 
     // const [isColumnasVisible, setIsColumnasVisible] = useState(columnas)
     const [busquedaNombre, setBusquedaNombre] = useState(null)
-    const [busquedaMarca, setBusquedaMarca] = useState(null)
     const [busquedaCategoria, setBusquedaCategoria] = useState(null)
     const [busquedaId, setBusquedaId] = useState(null)
     const [busquedaMedida, setBusquedaMedida] = useState(null)
@@ -96,7 +94,6 @@ export default function Inventario() {
 
     function filtrarDatos() {
         let datosFiltrados = FiltradoDatos.filtroCadena(productos, "nombre", busquedaNombre)
-        datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "marca", busquedaMarca)
         datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "categoria", busquedaCategoria)
         datosFiltrados = FiltradoDatos.filtroCadena(datosFiltrados, "medida", busquedaMedida)
         datosFiltrados = FiltradoDatos.filtroNumero(datosFiltrados, "id", busquedaId)
@@ -147,7 +144,6 @@ export default function Inventario() {
 
     function limipiarBusquedas(){
         setBusquedaNombre(null)
-        setBusquedaMarca(null)
         setBusquedaCategoria(null)
         setBusquedaId(null)
         setBusquedaMedida(null)
@@ -181,23 +177,17 @@ export default function Inventario() {
                             setIdSeleccionado={setIdProductoSeleccionado}
                             label={"Nombre producto"}
                         />
-
-                        <InputText
-                        label="Marca"
-                        estilo= "w-80"
-                        valor={busquedaMarca}
-                        setValor={setBusquedaMarca}
-                        labelSeleccionado={productoSeleccionado.marca}/>
-
-                    </div>
-                    <div className="flex w-full items-center justify-between gap-3">
-                        <div className="flex gap-3">
-                            <InputText 
+                        <InputText 
                             estilo="w-72"
                             label="Categoria" 
                             valor={busquedaCategoria} 
                             setValor={setBusquedaCategoria} 
                             labelSeleccionado={productoSeleccionado.categoria}/>
+
+                    </div>
+                    <div className="flex w-full items-center justify-between gap-3">
+                        <div className="flex gap-3">
+                            
                             <InputText
                             label="Medida"
                             estilo="w-72"

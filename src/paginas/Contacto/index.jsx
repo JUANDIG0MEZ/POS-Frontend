@@ -77,7 +77,7 @@ export default function Contacto() {
 
     const [datos, setDatos] = useState([])
 
-    const [showModalPago, setShowModalPago] = useState(true)
+    const [showModalPago, setShowModalPago] = useState(false)
     const [showModalAbono, setShowModalAbono] = useState(false)
 
 
@@ -126,7 +126,7 @@ export default function Contacto() {
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-3 overflow-auto">
-            <h1 className="text-3xl font-bold mb-3">Cliente ID <span className='text-color-2 p-1 border rounded-md'>{id}</span></h1>
+            <h1 className="text-3xl font-bold mb-3">Contacto ID <span className='text-color-2 p-1 border rounded-md'>{id}</span></h1>
             <div className='flex flex-col gap-4'>
                 <div className='flex gap-3 mb-2'>
                     <InputText label="Nombre"  valor={nombre}/>

@@ -16,7 +16,6 @@ export default function ModalCrearProducto(props){
     const {
         productos,
         setProductos,
-        marcas, 
         categorias,
         medidas
     } = useContext(ContextInventario)
@@ -26,7 +25,6 @@ export default function ModalCrearProducto(props){
     const [precioVenta, setPrecioVenta] = useState(null)
 
     const [medida, setMedida] = useState(null)
-    const [marca, setMarca] = useState(null)
     const [cantidad, setCantidad] = useState("")
     const [categoriaId, setCategoriaId] = useState(null)
     const [files, setFiles] = useState([])
@@ -45,7 +43,6 @@ export default function ModalCrearProducto(props){
         if (nombre){
             const nuevoProducto = {
             nombre: nombre,
-            marca: marca,
             categoria_id: categoriaId,
             medida: medida,
             precio_compra: precioCompra,
@@ -100,30 +97,26 @@ export default function ModalCrearProducto(props){
                     </div>
                     
                     <div className="flex gap-3">
-                        <InputLista
-                        estilo={"w-1/2"}
-                        label="Marca"
-                        valor = {marca}
-                        setValor={setMarca}
-                        lista = {marcas}/>
+                        <Select opciones={categorias} label ="Categoria" valor={categoriaId} setValor={setCategoriaId}  />
                         <InputLista estilo={"w-1/2"} label="Medida" valor= {medida} setValor={setMedida} lista = {medidas}/>
                     </div>
                     <div className="flex w-full gap-3">
-                        <Select opciones={categorias} label ="Categoria" valor={categoriaId} setValor={setCategoriaId}  />
+                        
                         {/* <InputLista label="Categoria"  lista = {listaCategoria} /> */}
                         
-                        <InputNumber
-                            estilo="w-40"
+                        
+                    </div>
+                    <div className="flex gap-3 items-center justify-between">
+                        <div className="flex gap-3 items-center">
+                            <InputNumber
+                            estilo="w-32"
                             label="Cantidad"
                             valor={cantidad}
                             setValor={setCantidad}
                             format={true}
                             />
-                    </div>
-                    <div className="flex gap-3 items-center justify-between">
-                        <div className="flex gap-3 items-center">
                             <InputNumber
-                                estilo="w-52"
+                                estilo="flex-1"
                                 label="Valor Compra" 
                                 valor={precioCompra}
                                 setValor={setPrecioCompra}
@@ -131,7 +124,7 @@ export default function ModalCrearProducto(props){
                                 />
                                 
                             <InputNumber
-                                estilo="w-52"
+                                estilo="flex-1"
                                 label="Valor Venta"
                                 valor={precioVenta}
                                 setValor={setPrecioVenta}
