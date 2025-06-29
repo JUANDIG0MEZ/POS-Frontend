@@ -32,13 +32,13 @@ export default function InputText(props){
 
     return (
         <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
-            <label className="font-semibold absolute -top-6 text-nowrap">{labelSeleccionado(props.label)}</label>
+            <label className="text-sm/6 font-medium absolute -top-7 text-nowrap">{labelSeleccionado(props.label)}</label>
             <input 
             onFocus={()=> props.setValor ? props.setValor("") : null}
             onChange={establecerValor}
             type="text" 
             value={ props.valor ? Number(props.valor).toLocaleString() : ""}
-            className={`tracking-widest w-full border rounded-md p-2  borde-input `}/>
+            className={`px-3 py-1.5 text-base tracking-widest w-full border rounded-md  borde-input `}/>
         </div>
     )
 }

@@ -81,7 +81,7 @@ export default function InputListaMultiple(props) {
 
     return (
         <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
-            <label className="absolute -top-6 font-semibold text-md">{labelSeleccionado()}</label>
+            <label className="text-sm/6 font-medium absolute -top-6 text-md">{labelSeleccionado()}</label>
             <div className="items-center flex aling-center">
                 <input 
                 onFocus={onFocus} 

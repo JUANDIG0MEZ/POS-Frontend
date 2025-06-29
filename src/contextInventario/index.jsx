@@ -22,23 +22,24 @@ const InventarioProvider = ({children}) => {
 
 
     useEffect(() => {
-        function cbInit(res){
-            setProductos(res.producto)
-            setClientesNombres(res.clientes)
-            setCategorias(res.productoCategoria)
-            setMedidas(res.productoMedida)
-            setEstadosComprasEntrega(res.compraEstadoEntrega)
-            setEstadosComprasPago(res.compraEstadoPago)
-            setEstadosVentasEntrega(res.ventaEstadoEntrega)
-            setEstadosVentasPago(res.ventaEstadoPago)
-            setTiposClientes(res.clienteTipo)
-            setMetodosPago(res.metodoPago)
-        }
-        fetchManager('http://localhost:3000/api/v1/init', cbInit, "GET")
+        // function cbInit(res){
+        //     setProductos(res.producto)
+        //     setClientesNombres(res.clientes)
+        //     setCategorias(res.productoCategoria)
+        //     setMedidas(res.productoMedida)
+        //     setEstadosComprasEntrega(res.compraEstadoEntrega)
+        //     setEstadosComprasPago(res.compraEstadoPago)
+        //     setEstadosVentasEntrega(res.ventaEstadoEntrega)
+        //     setEstadosVentasPago(res.ventaEstadoPago)
+        //     setTiposClientes(res.clienteTipo)
+        //     setMetodosPago(res.metodoPago)
+        // }
+        // fetchManager('http://localhost:3000/api/v1/init', cbInit, "GET")
         
         // fetchManager('http://localhost:3000/api/v1/clientes/nombres', setClientesNombres, "GET")
         // fetchManager('http://localhost:3000/api/v1/productos/marcas', setMarcas, "GET")
-        // fetchManager('http://localhost:3000/api/v1/productos/categorias', setCategorias, "GET")
+        fetchManager('http://localhost:3000/api/v1/producto/categoria', setCategorias, "GET")
+        fetchManager('http://localhost:3000/api/v1/producto', setProductos, "GET")
         // fetchManager('http://localhost:3000/api/v1/productos/medidas', setMedidas, "GET")
         // fetchManager('http://localhost:3000/api/v1/facturas/compras/estados/entrega', setEstadosComprasEntrega, "GET")
         // fetchManager('http://localhost:3000/api/v1/facturas/compras/estados/pago', setEstadosComprasPago, "GET")

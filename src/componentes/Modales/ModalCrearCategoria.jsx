@@ -26,12 +26,14 @@ export default function CrearCategoria(props) {
         }
 
         function cbCrear(res){
+
             setCategorias([...categorias, res.categoria])
+    
             toast.success("Categoria creada")
             props.setShowModal(false)
         }
 
-        fetchManager("http://localhost:3000/api/v1/productos/categoria", cbCrear, "POST", categoria)
+        fetchManager("http://localhost:3000/api/v1/producto/categoria", cbCrear, "POST", categoria)
     }
 
     return (

@@ -27,12 +27,13 @@ export default function InputText(props){
 
     return (
         <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
-            <label className="font-semibold absolute -top-6 text-nowrap">{labelSeleccionado(props.label)}</label>
+            <label className="text-sm/6 font-medium text-gray-900 absolute -top-7 text-nowrap">{labelSeleccionado(props.label)}</label>
             <input 
             onChange={establecerValor}
             type="text" 
             value={props.valor || ""}
-            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"} w-full rounded-lg p-2 borde-input`}/>
+            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"}  px-3 py-1.5 text-base w-full rounded-lg borde-input`}
+            />
         </div>
     )
 }

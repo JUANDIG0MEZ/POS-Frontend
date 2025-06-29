@@ -11,9 +11,10 @@ async function checkResponse(response) {
     }
 }
 
-
 async function basicFetch(url) {
-    const res = await fetch(url)
+    const res = await fetch(url, {
+        credentials: 'include'
+    })
     return await checkResponse(res)
 }
 
@@ -22,7 +23,8 @@ export async function otherFetch(url, method, body) {
     const res = await fetch(url, {
         method: method,
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        credentials: 'include'
     })
     return await checkResponse(res)
 }
@@ -31,7 +33,9 @@ export async function otherFetch(url, method, body) {
 
 
 export async function fetchFiles(url){
-    const res = await fetch(url)
+    const res = await fetch(url, {
+        credentials: 'include'
+    })
     return await checkResponse(res)
 }
 
@@ -70,16 +74,14 @@ export function fetchManager(url, cb, method="GET", body = null) {
 
 
 
-// Ahora se deben agregar funciones para enviar imagenes y archivos.
-
 export async function otherFetchFiles(url, method, formData) {
     const res = await fetch(url, {
         method: method,
-        body: formData
+        body: formData,
+        credentials: 'include'
     })
     return await checkResponse(res)
 }
-
 
 export function fetchFilesManager(url, cb, method="GET", formData = null) {
     if (method === "GET"){

@@ -1,4 +1,5 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import Login from './paginas/Autenticacion/login'
 import Home from './paginas/Home'
 import Inventario from './paginas/Inventario'
 import Categorias from './paginas/Categorias'
@@ -11,7 +12,6 @@ import Ventas from './paginas/Ventas'
 import Vender from './paginas/Vender'
 import Venta from './paginas/Venta'
 import Perfil from './paginas/Perfil'
-
 
 
 import './App.css'
@@ -30,6 +30,8 @@ function App() {
         <Routes>
           <Route element={<Dashboard />}>
             <Route path= '/' element={<Home />} />
+            <Route path= '/login' element={<Login />} />
+
             <Route path= '/inventario' element={<Inventario />} />
             <Route path= '/categorias' element ={<Categorias/>} />
 
