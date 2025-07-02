@@ -4,7 +4,7 @@ import { FaChevronDown } from "react-icons/fa"
 export default function InputListaMultiple(props) {
     const [showLista, setShowLista] = useState(false)
 
-
+    console.log(props.lista)
 
     function labelSeleccionado () {
         if (props.labelSeleccionado){
@@ -50,11 +50,7 @@ export default function InputListaMultiple(props) {
     // Esta 
     function listaFiltrada(valor) {
         if (!valor) return props.lista;
-        return props.lista.filter(obj => 
-            Object.values(obj).some(val => 
-                val.toString().toLowerCase().includes(valor.toLowerCase())
-            )
-        );
+        return props.lista.filter(obj => obj.nombre.toLowerCase().includes(valor.toLowerCase()));
     }
 
     function mostrarObjeto(item) {
@@ -99,9 +95,9 @@ export default function InputListaMultiple(props) {
                 onMouseDown={seleccionarItem}
                 className={`bg-white absolute w-full z-10  border overflow-y-auto rounded-b-lg shadow-lg max-h-72 ${showLista ? "block" : "hidden"}`}>
                     {
-                        listaFiltrada(props.valor) && listaFiltrada(props.valor).slice(0, 20).map((item, indice)=>{
+                        props.lista.length ? listaFiltrada(props.valor) && listaFiltrada(props.valor).slice(0, 20).map((item, indice)=>{
                             return <li key={indice} data-id={item.id} className=" hover-1 p-2 rounded-lg font-semibold">{mostrarObjeto(item)}</li>
-                        })
+                        }) : null
                     }
             </ul>
         </div>

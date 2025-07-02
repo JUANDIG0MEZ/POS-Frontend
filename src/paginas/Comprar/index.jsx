@@ -50,10 +50,7 @@ export default function Comprar() {
 
     
 
-    
 
-    const [totalParcial, setTotalParcial] = useState("")
-    const [precioParcial, setPrecioParcial] = useState("")
 
     // Casillas
     const [idProducto, setIdProducto]= useState("")
@@ -73,27 +70,17 @@ export default function Comprar() {
     }
 
     useEffect(()=>{
-
         const producto = productos.find(producto => producto.id == idProducto)
         if (producto){
             setMedida(producto.medida)
-
             fetchFilesManager(`http://localhost:3000/api/v1/productos/${idProducto}/imagenes`, setImagenes)
-        }
-    
+        } 
     }, [productos, idProducto])
-
-
-    
     useEffect(()=> {
         setTotal(carritoDeCompras.reduce((acc, item) => acc + item.subtotal, 0))
     }, [carritoDeCompras])
-
     useEffect(()=> {
-        if (precioProducto){
-            setTotalProducto("")
-        }
-        setTotalParcial(cantidadProducto * precioProducto)
+        setTotalProducto(cantidadProducto * precioProducto)
     }, [precioProducto, cantidadProducto])
 
 
@@ -121,44 +108,21 @@ export default function Comprar() {
 
     function agregarProducto(){
         
-        if (!idProducto ){
-            toast.error("El producto no fue encontrado")
-            return 
-        }
-        else if (cantidadProducto === ""){
-            toast.error("Agrega cantidad")
-            return 
-        } 
-        else if (precioProducto === "" && totalProducto === ""){
-            toast.error("Agrega el precio o el total")
-            return
-        }
+        if (!idProducto ) return toast.error("El producto no fue encontrado")
+        if (!cantidadProducto) return toast.error("Agrega la cantidad")
+        if (!precioProducto) return toast.error("Agrega el precio del prducto")
+        if (carritoDeCompras.some(producto => producto.id === idProducto)) return toast.warning("El producto ya fue agregado")
 
-        else if (carritoDeCompras.some(producto => producto.id === idProducto)){
-            toast.warning("El producto ya fue agregado")
-            return
-        }
-
-        let total
-        let precio
-
-        if (cantidadProducto !== "" && precioProducto !== ""){
-            precio = precioProducto
-            total = cantidadProducto * precioProducto
-        }
-        else if (cantidadProducto !== "" && totalProducto !== ""){
-            total = totalProducto
-            precio = totalProducto / cantidadProducto
-        }
-
+    
         const producto = productos.find(producto => producto.id == idProducto)
+        
         const productoFormateado = {
             id: idProducto,
             nombre: producto.nombre,
             medida: producto.medida,
-            cantidad: parseInt(cantidadProducto),
-            precio: precio,
-            subtotal: total,
+            cantidad: Number(cantidadProducto),
+            precio: Number(precioProducto),
+            subtotal: totalProducto,
             
         }
         setIdProductoSeleccionadoTabla(null)
@@ -209,7 +173,7 @@ export default function Comprar() {
                                 estilo = {"w-40"}
                                 valor={precioProducto}
                                 setValor={setPrecioProducto}
-                                labelSeleccionado = {precioParcial}
+                                // labelSeleccionado = {precioParcial}
                                 label="Precio"
                                 isNumber={true}
                                 isPrice={true}
@@ -221,8 +185,7 @@ export default function Comprar() {
                                 estilo = {"w-40"}
                                 label="Total"
                                 valor={totalProducto}
-                                setValor={setTotalProducto}
-                                labelSeleccionado = {totalParcial}
+                                // labelSeleccionado = {totalParcial}
                                 format={true}
                                 isPrice= {true}
                                 />
@@ -245,7 +208,7 @@ export default function Comprar() {
                 </div>
             </div>
 
-            <h2 className="subtitulo font-semibold">Factura de compra</h2>
+            <h2 className="text-2xl font-semibold">Productos comprados</h2>
             
             <div>
                 <Tabla 

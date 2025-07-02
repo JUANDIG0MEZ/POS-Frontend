@@ -226,7 +226,7 @@ export default function Comprar() {
                 </div>
             </div>
 
-            <h2 className="text-2xl font-semibold">Producto vendidos</h2>
+            <h2 className="text-2xl font-semibold">Productos vendidos</h2>
             
             <div>
                 <Tabla 

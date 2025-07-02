@@ -36,19 +36,18 @@ const InventarioProvider = ({children}) => {
         // }
         // fetchManager('http://localhost:3000/api/v1/init', cbInit, "GET")
         
-        // fetchManager('http://localhost:3000/api/v1/clientes/nombres', setClientesNombres, "GET")
-        // fetchManager('http://localhost:3000/api/v1/productos/marcas', setMarcas, "GET")
+        fetchManager('http://localhost:3000/api/v1/cliente/nombre', setClientesNombres, "GET")
         fetchManager('http://localhost:3000/api/v1/producto/categoria', setCategorias, "GET")
         fetchManager('http://localhost:3000/api/v1/producto', setProductos, "GET")
-        // fetchManager('http://localhost:3000/api/v1/productos/medidas', setMedidas, "GET")
-        // fetchManager('http://localhost:3000/api/v1/facturas/compras/estados/entrega', setEstadosComprasEntrega, "GET")
-        // fetchManager('http://localhost:3000/api/v1/facturas/compras/estados/pago', setEstadosComprasPago, "GET")
+        fetchManager('http://localhost:3000/api/v1/producto/medida', setMedidas, "GET")
+        fetchManager('http://localhost:3000/api/v1/compra/estadoentrega', setEstadosComprasEntrega, "GET")
+        fetchManager('http://localhost:3000/api/v1/compra/estadopago', setEstadosComprasPago, "GET")
 
-        // fetchManager('http://localhost:3000/api/v1/facturas/ventas/estados/entrega', setEstadosVentasEntrega, "GET")
-        // fetchManager('http://localhost:3000/api/v1/facturas/ventas/estados/pago', setEstadosVentasPago, "GET")
-        // fetchManager('http://localhost:3000/api/v1/clientes/tipos', setTiposClientes, "GET")
+        fetchManager('http://localhost:3000/api/v1/venta/estadoentrega', setEstadosVentasEntrega, "GET")
+        fetchManager('http://localhost:3000/api/v1/venta/estadopago', setEstadosVentasPago, "GET")
+        fetchManager('http://localhost:3000/api/v1/cliente/tipo', setTiposClientes, "GET")
 
-        // fetchManager('http://localhost:3000/api/v1/pagos/metodos', setMetodosPago,"GET")
+        fetchManager('http://localhost:3000/api/v1/init/metodopago', setMetodosPago,"GET")
     }, [])
 
     return (

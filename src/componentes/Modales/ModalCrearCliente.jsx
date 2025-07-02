@@ -27,34 +27,24 @@ export default function ModalCrearCliente(props){
     }
 
     function crearCliente(){
+        const nuevoCliente = {}
         const tipo_id = Number(tipo)
-        const telefonoFetch = Number(telefono)
-        if (!tipo_id){
-            toast.error('Selecciona el tipo de cliente')
-            return 
-        }
-        if (!nombre){
-            toast.error('Escribe el nombre del nuevo cliente')
-            return 
-        }
+        if (!tipo_id)return toast.error('Selecciona el tipo de cliente')
+        if (!nombre) return toast.error('Escribe el nombre del nuevo cliente')
 
-
-        const nuevoCliente = {
-            nombre: nombre,
-            direccion: direccion,
-            telefono: telefonoFetch? telefonoFetch : null,
-            email: email,
-            tipo_id: tipo_id
-        }
+        nuevoCliente.nombre = nombre
+        nuevoCliente.id_tipo = tipo_id
+        if (direccion) nuevoCliente.direccion = direccion
+        if (telefono) nuevoCliente.telefono = telefono
+        if (email) nuevoCliente.email = email
 
         function cbCrearCliente(res){
-            console.log(res)
+            if (props.setClientes && props.clientes) props.setClientes([...props.clientes, res])
         }
 
 
-        fetchManager('http://localhost:3000/api/v1/clientes', cbCrearCliente, "POST", nuevoCliente)
+        fetchManager('http://localhost:3000/api/v1/cliente', cbCrearCliente, "POST", nuevoCliente)
 
-        console.log(nuevoCliente)
     }
 
 

@@ -32,7 +32,6 @@ const renombrar = {
 
 const columnasObjeto = [
     {id: "id", nombre: "ID"},
-    {id: "nombre", nombre: "Nombre"},
     {id: "por_pagarle", nombre: "Por pagarle"},
     {id: "debe", nombre: "Debe"},
 ]
@@ -52,10 +51,10 @@ const ordenOpciones = [
 ]
 
 const defaultLimite = 25
-const defaultColumna = "id"
+const defaultColumna = null
 const defaultOrden = "DESC"
 const defaultOffset = 0
-const defaultTipo = "0"
+const defaultTipo = 0
 
 
 
@@ -103,11 +102,13 @@ export default  function Clientes() {
         const paginacion = `limit=${limite}&offset=${offset}`
 
         const filtro = {
-            ...(idCliente && {id: idCliente}),
+            ...(idCliente && {cliente_id: idCliente}),
             ...(columna && {columna: columna}),
             ...(orden && {orden: orden}),
-            ...(tipoId  && {tipo_id: tipoId}),
+            ...(tipoId  && {id_tipo: tipoId}),
         }
+
+
 
         const filtroTexto = Object.entries(filtro).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
 
@@ -117,7 +118,7 @@ export default  function Clientes() {
             setTotalPaginas(Math.ceil(respuesta.count / limite))
             setClientes(respuesta.rows)
         }
-        fetchManager(`http://localhost:3000/api/v1/clientes?${params}`, cbClientes, "GET")
+        fetchManager(`http://localhost:3000/api/v1/cliente?${params}`, cbClientes, "GET")
     }
 
     useEffect(()=>{
@@ -203,7 +204,7 @@ export default  function Clientes() {
                 <Tabla datos = {clientes} setIdItemSeleccionado={setIdSeleccionado} rename = {renombrar}/>
             </div>   
             {
-                showModalCrear ? <ModalCrearCliente setShowModal={setShowModalCrear}/> : null
+                showModalCrear ? <ModalCrearCliente setShowModal={setShowModalCrear} clientes={clientes} setClientes={setClientes}/> : null
             } 
         </div> 
     )

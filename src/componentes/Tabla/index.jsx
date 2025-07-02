@@ -10,8 +10,6 @@ export default memo(function Tabla(props) {
         }
     }
 
-    console.log("Datos, en este caso categorias: ", props.datos)
-
     return (
         <table className="w-full">
             <thead>

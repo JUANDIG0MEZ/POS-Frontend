@@ -25,6 +25,8 @@ export default function ModalCrearProducto(props){
     const [precioVenta, setPrecioVenta] = useState(null)
 
     const [medida, setMedida] = useState(null)
+    const [medidaId, setMedidaId] = useState(null)
+
     const [cantidad, setCantidad] = useState("")
     const [categoriaId, setCategoriaId] = useState(null)
     const [files, setFiles] = useState([])
@@ -36,6 +38,7 @@ export default function ModalCrearProducto(props){
     }
 
     function crearProducto(){
+
         if (Number(precioVenta) < Number(precioCompra)) {
             toast.error('El valor de venta debe ser mayor que el de compra.')
             return
@@ -43,11 +46,11 @@ export default function ModalCrearProducto(props){
         if (nombre){
             const nuevoProducto = {
             nombre: nombre,
-            categoria_id: categoriaId,
-            medida: medida,
-            precio_compra: precioCompra,
-            precio_venta: precioVenta,
-            cantidad: cantidad }
+            categoria_id: Number(categoriaId),
+            id_medida: Number(medidaId),
+            precio_compra: Number(precioCompra),
+            precio_venta: Number(precioVenta),
+            cantidad: Number(cantidad) }
             
             // se eliminan los valores nulos
             for (const key in nuevoProducto){
@@ -58,20 +61,15 @@ export default function ModalCrearProducto(props){
 
             function cbCrearProducto(res){
                 setProductos([...productos, res.producto])
-                return "Producto creado"
+                // return "Producto creado"
             }
-
-            
-
-            fetchManager('http://localhost:3000/api/v1/productos', cbCrearProducto, "POST", nuevoProducto)
+            fetchManager('http://localhost:3000/api/v1/producto', cbCrearProducto, "POST", nuevoProducto)
         }
         else{
             toast.warning("El nombre del producto es obligatorio")
         }
     }
 
-    console.log('categoriaId', categoriaId)
-    console.log('medida', medida)
     // function crearImagenes(){
     //     // const formData = new FormData()
     //         // formData.append("data", JSON.stringify(nuevoProducto))
@@ -98,7 +96,7 @@ export default function ModalCrearProducto(props){
                     
                     <div className="flex gap-3">
                         <Select opciones={categorias} label ="Categoria" valor={categoriaId} setValor={setCategoriaId}  />
-                        <InputLista estilo={"w-1/2"} label="Medida" valor= {medida} setValor={setMedida} lista = {medidas}/>
+                        <InputLista estilo={"w-1/2"} label="Medida" valor= {medida} setValor={setMedida} lista = {medidas} setIdSeleccionado={setMedidaId}/>
                     </div>
                     <div className="flex w-full gap-3">
                         

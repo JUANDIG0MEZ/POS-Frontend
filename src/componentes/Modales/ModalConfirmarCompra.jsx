@@ -29,42 +29,28 @@ export default function ModalConfirmarCompra(props){
 
 
     function finalizarCompra(){
-        if (props.carritoDeCompras.length === 0){
-            toast.info("Agrega productos al carrito.")
-            return
-        }
-        if( Number(pagado) > Number(props.total)){
-            toast.error("El monto pagado es mayor al total.")
-            return
-        }
-
-        if (Number(pagado) < Number(props.total) && !Number(idCliente)){
-            toast.error("Un cliente no registrado no puede tener deuda.")
-            return 
-        }
-
-        if (!Number(estadoEntrega)){
-            toast.warning('Elije el estado de la entrega.')
-            return
-        }
+        if (props.carritoDeCompras.length === 0) return toast.info("Agrega productos al carrito.")
+        if( Number(pagado) > Number(props.total)) return toast.error("El monto pagado es mayor al total.")
+        if (Number(pagado) < Number(props.total) && !Number(idCliente)) return toast.error("Un cliente no registrado no puede tener deuda.")
+        if (!Number(estadoEntrega)) return toast.warning('Elije el estado de la entrega.')
+        if (!nombreCliente) return toast.warning('Debes agregar el nombre del cliente.')
 
         else {
             const info = {
                 cliente_id: idCliente,
-                estado_entrega_id: estadoEntrega,
-                metodo_pago_id: metodoPago,
-                pagado: pagado || 0,
-                nombre_cliente: nombreCliente,
+                id_estado_entrega: Number(estadoEntrega),
+                id_metodo_pago: Number(metodoPago),
+                pagado: Number(pagado),    
                 total: props.total,
-                descripcion,
+                nombre_cliente: nombreCliente
             }
+            if (descripcion) info.descripcion = descripcion
 
             const detalles = props.carritoDeCompras.map(item => {
                 return {
                     producto_id: item.id,
                     cantidad: item.cantidad,
-                    precio: item.precio,
-                    subtotal: item.subtotal
+                    precio: Number(item.precio)
                 }
             })
 
@@ -74,7 +60,7 @@ export default function ModalConfirmarCompra(props){
                 props.reset()
                 props.setShowModal(false)
             }
-            fetchManager(`http://localhost:3000/api/v1/facturas/compras`, cbCompra, "POST", compraEnviar)
+            fetchManager(`http://localhost:3000/api/v1/compra`, cbCompra, "POST", compraEnviar)
 
         }
 

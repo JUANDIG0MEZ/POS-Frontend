@@ -43,10 +43,9 @@ export default function InputLista(props) {
 
 
     function listaFiltrada(){
-        return (props.lista.filter(item => item.nombre.toLowerCase().includes((props.valor || "").toLowerCase())))
+        return props.lista.filter(item => item.nombre.toLowerCase().includes((props.valor || "").toLowerCase()))
     }
 
-    
 
 
     return (
@@ -68,9 +67,9 @@ export default function InputLista(props) {
                 onMouseDown={seleccionarItem}
                 className={`absolute w-full z-10 bg-white border overflow-y-auto rounded-b-lg shadow-lg max-h-52 ${showLista ? "block" : "hidden"}`}>
                     {
-                        listaFiltrada(props.valor).slice(0, 20).map((item, indice)=>{
+                        props.lista.length ? listaFiltrada(props.valor).slice(0, 20).map((item, indice)=>{
                             return <li key={indice} data-id={item.id} className="hover-1 hover:font-semibold p-2 rounded-lg">{item.nombre}</li>
-                        })
+                        }): null
                     }
             </ul>
         </div>

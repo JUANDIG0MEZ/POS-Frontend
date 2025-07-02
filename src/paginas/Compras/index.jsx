@@ -36,24 +36,18 @@ const estadosPagoObjeto = {
 }
 
 const columnasObjeto = [
-    {id: "id", nombre: "ID"},
-    {id: "fecha", nombre: "Fecha"},
-    {id: "hora", nombre: "Hora"},
-    {id: "estado_entrega_id", nombre: "Estado entrega"},
-    {id: "estado_pago_id", nombre: "Estado pago"},
-    {id: "por_pagar", nombre: "Por Pagar"},
-    {id: "total", nombre: "Total"}
+    {id: "compra_id", nombre: "ID"},
+    {id: "por_pagar", nombre: "Por Pagar"}
 ]
 
 const limiteObjeto = [
     {id: "10", nombre: 10},
     {id: "20", nombre: 20},
     {id: "30", nombre: 30},
-    {id: "50", nombre: 50},
-    {id: "100", nombre: 100}]
+    {id: "50", nombre: 50}]
 
 
-const defaultColumn = "id"
+const defaultColumn = "compra_id"
 const defaultOrden = "DESC"
 const defaultlimite = "20"
 const defaultOffset = "0"
@@ -112,10 +106,10 @@ export default function Compras(){
         const paginacion = `limit=${limite}&offset=${offset}`
 
         const filtro = {
+            ...(id && {compra_id: id}),
             ...(idCliente && {cliente_id: idCliente}),
-            ...(idEstadoEntrega && {estado_entrega_id: idEstadoEntrega}),
-            ...(idEstadoPago && {estado_pago_id: idEstadoPago}),
-            ...(id && {id: id}),
+            ...(idEstadoEntrega && {id_estado_entrega: idEstadoEntrega}),
+            ...(idEstadoPago && {id_estado_pago: idEstadoPago}),
             ...(fechaInicio && {fecha_desde: fechaInicio}),
             ...(fechaFinal && {fecha_hasta: fechaFinal}),
             ...(columna && {columna: columna}),
@@ -131,9 +125,8 @@ export default function Compras(){
             setTotalPaginas(Math.ceil(respuesta.count / limite))
             setFacturas(respuesta.rows)
         }
-        fetchManager(`http://localhost:3000/api/v1/facturas/compras?${params}`, cbCompras, "GET")
+        fetchManager(`http://localhost:3000/api/v1/compra?${params}`, cbCompras, "GET")
     }
-
 
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-2 overflow-auto">
