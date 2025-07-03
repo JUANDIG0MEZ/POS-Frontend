@@ -38,36 +38,22 @@ export default function ModalConfirmarVenta(props){
 
 
     function finalizarVenta(){
-        if (props.carritoDeVentas.length === 0){
-            toast.info("Agrega productos al carrito.")
-            return
-        }
-        if( Number(pagado) > Number(props.total)){
-            toast.error("El monto pagado es mayor al total.")
-            return
-        }
-
-        if (Number(pagado) < Number(props.total) && !Number(idCliente)){
-            toast.error("Un cliente no registrado no puede tener deuda.")
-            return 
-        }
-
-        if (!Number(estadoEntrega)){
-            toast.warning('Elije el estado de la entrega.')
-            return
-        }
+        if (props.carritoDeVentas.length === 0) return toast.info("Agrega productos al carrito.")
+        if( Number(pagado) > Number(props.total)) return toast.error("El monto pagado es mayor al total.")
+        if (Number(pagado) < Number(props.total) && !Number(idCliente)) return toast.error("Un cliente no registrado no puede tener deuda.")
+        if (!Number(estadoEntrega))return toast.warning('Elije el estado de la entrega.')
 
         else {
             const info = {
                 cliente_id: idCliente,
-                estado_entrega_id: estadoEntrega,
-                metodo_pago_id: metodoPago,
+                id_stado_entrega: estadoEntrega,
+                id_metodo_pago: metodoPago,
                 pagado: pagado || 0,
                 nombre_cliente: nombreCliente,
                 total: props.total,
-                descripcion,
                 direccion
             }
+            if (descripcion) info.descripcion = descripcion
 
             const detalles = props.carritoDeVentas.map(item => {
                 return {
@@ -86,7 +72,7 @@ export default function ModalConfirmarVenta(props){
                 props.setShowModal(false)
                 props.reset()
             }
-            fetchManager(`http://localhost:3000/api/v1/facturas/ventas`, cbCompra, "POST", compraEnviar)
+            fetchManager(`http://localhost:3000/api/v1/venta`, cbCompra, "POST", compraEnviar)
 
         }
 

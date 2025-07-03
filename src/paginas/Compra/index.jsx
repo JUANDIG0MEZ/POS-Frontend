@@ -51,23 +51,14 @@ export default function Compra(){
     const [totalOriginal, setTotalOriginal] = useState(null)
     const [totalModificado, setTotalModificado] = useState(null)
 
-
     useEffect(()=>{
         setFacturaModificada(facturaOriginal)
     }, [facturaOriginal])
-
     useEffect(()=> { 
-        if (facturaModificada.length){
-            setTotalModificado(facturaModificada.reduce((acc, item)=> acc + Number(item.subtotal), 0) )
-        }
+        if (facturaModificada.length) setTotalModificado(facturaModificada.reduce((acc, item)=> acc + Number(item.subtotal), 0) )
     }, [facturaModificada])
-
     useEffect(()=>{
-
-        if (idItemSeleccionado){
-            setShowModalModificar(true)      
-        }
-
+        if (idItemSeleccionado) setShowModalModificar(true)    
     }, [idItemSeleccionado])
 
     function cancelarCambios(){
@@ -86,27 +77,32 @@ export default function Compra(){
             setTotal(resData.info.total)
             setTotalOriginal(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
         }
-        fetchManager(`http://localhost:3000/api/v1/facturas/compras/${id}`, cbFactura, "GET")
+        fetchManager(`http://localhost:3000/api/v1/compra/${id}`, cbFactura, "GET")
     }, [])
 
     function guardarCambios(){
         const detalles = facturaModificada.map(item => {
             return {
                 producto_id: item.id,
-                cantidad: item.cantidad,
+                cantidad: Number(item.cantidad),
                 precio: item.precio ,
                 subtotal: item.subtotal
-            }
-        })  
+            }})  
 
+    
         function cb(res){
             setFacturaOriginal(facturaModificada)
             setTotalOriginal(res.info.total)
             setTotal(res.info.total)
             setPagado(res.info.pagado)
         }
-        
-        fetchManager(`http://localhost:3000/api/v1/facturas/compras/${id}`, cb, "PATCH", detalles)
+        fetchManager(`http://localhost:3000/api/v1/compra/${id}`, cb, "PATCH", {detalles})
+    }
+
+    function devolverTodo() {
+        const devolucion = facturaOriginal.map(producto => ({...producto, cantidad: 0}));
+
+        setFacturaModificada(devolucion)
     }
 
     // function cambiarEstado(nuevoValor){
@@ -166,7 +162,7 @@ export default function Compra(){
             }
             
             <div className="flex gap-3">
-                    <Boton texto={"Devolver productos"} onClick={()=>setShowModalModificar(true)} isNormal={true}/>
+                    <Boton texto={"Devolver productos"} onClick={devolverTodo} isNormal={true}/>
                     <Boton texto={"Cancelar cambios"} onClick={cancelarCambios} isNormal={true}/>
                     <Boton texto={"GuardarCambios"} onClick={()=>guardarCambios()} isNormal={true}/>
                 </div>
