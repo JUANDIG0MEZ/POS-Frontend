@@ -16,7 +16,6 @@ import BotonIcono from "../../componentes/BotonIcono"
 const renombrar = {
     id: "ID",
     nombre: "Nombre",
-    marca: "Marca",
     medida: "Medida",
     cantidad: "Cantidad",
     precio: "Precio",
@@ -130,6 +129,9 @@ export default function Comprar() {
         limpiarCampos()
         setCarritoDeCompras([...carritoDeCompras, productoFormateado])
     }
+
+
+    
 
 
 

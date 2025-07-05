@@ -74,12 +74,12 @@ export default function Venta(){
             setTelefono(resData.info.telefono)
             setEmail(resData.info.email)
             setDireccion(resData.info.direccion)
-            setEstadoEntrega(resData.info.estado_entrega_id)
+            setEstadoEntrega(resData.info.id_estado_entrega)
             setPagado(resData.info.pagado)
             setTotal(resData.info.total)
             setTotalTabla(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
         }
-        fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${id}`, cb, "GET")
+        fetchManager(`http://localhost:3000/api/v1/venta/${id}`, cb, "GET")
     }, [id])
 
 
@@ -87,7 +87,7 @@ export default function Venta(){
         const detalles = facturaModificada.map(item => {
             return {
                 producto_id: item.id,
-                cantidad: parseInt(item.cantidad) || 0,
+                cantidad: Number(item.cantidad),
                 precio: item.precio ,
                 subtotal: item.subtotal
             }
@@ -98,12 +98,8 @@ export default function Venta(){
             setTotal(res.info.total)
             setPagado(res.info.pagado)
         }
-        fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${id}`,cb, "PATCH", detalles)    
+        fetchManager(`http://localhost:3000/api/v1/venta/${id}/detalle`,cb, "PATCH", {detalles})    
     }
-
-
-    
-
 
     return (
         <div className="w-[1400px] flex flex-col mx-auto gap-3">
@@ -130,9 +126,7 @@ export default function Venta(){
                         <Boton texto="Abonar" isNormal={true} onClick={() => setShowModalAbonar(true)}/>
                     </div>
                         
-                    <div className="flex gap-3">
-                        
-                        
+                    <div className="flex gap-3">  
                         <Opciones opciones= {estadosVentasEntrega} seleccionado={estadoEntrega} setSeleccionado ={setEstadoEntrega}  />
                     </div>
                 </div>

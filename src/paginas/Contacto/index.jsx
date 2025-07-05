@@ -101,7 +101,7 @@ export default function Contacto() {
             setPorPagarle(resData.por_pagarle)
             setDebe(resData.debe)
         }
-        fetchManager(`http://localhost:3000/api/v1/clientes/${id}`, cbCliente, "GET")
+        fetchManager(`http://localhost:3000/api/v1/cliente/${id}`, cbCliente, "GET")
     }, [])
 
 
@@ -117,7 +117,7 @@ export default function Contacto() {
         }
 
         if (nombreTabla){
-            fetchManager(`http://localhost:3000/api/v1/clientes/${id}/${nombreTabla}?limit=${limite}&offset=${offset}`, cbTablas, "GET")
+            fetchManager(`http://localhost:3000/api/v1/cliente/${id}/${nombreTabla}?limit=${limite}&offset=${offset}`, cbTablas, "GET")
         }
         
     }, [offset, limite, nombreTabla, id])

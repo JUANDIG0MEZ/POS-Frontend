@@ -4,7 +4,6 @@ import { FaChevronDown } from "react-icons/fa"
 export default function InputListaMultiple(props) {
     const [showLista, setShowLista] = useState(false)
 
-    console.log(props.lista)
 
     function labelSeleccionado () {
         if (props.labelSeleccionado){

@@ -15,7 +15,6 @@ import { FaPlus, FaTrash, FaBalanceScale } from "react-icons/fa"
 const renombrar = {
     id: "ID",
     nombre: "Nombre",
-    marca: "Marca",
     medida: "Medida",
     cantidad: "Cantidad",
     precio: "Precio",
@@ -23,7 +22,7 @@ const renombrar = {
 }
 
 
-export default function Comprar() {
+export default function Vender() {
 
     const [showModalConfirmacion, setShowModalConfirmacion] = useState(false)
 
@@ -45,9 +44,6 @@ export default function Comprar() {
     const [idProductoSeleccionadoTabla, setIdProductoSeleccionadoTabla] = useState(null)
 
 
-    const [totalParcial, setTotalParcial] = useState("")
-    const [precioParcial, setPrecioParcial] = useState("")
-
 
     function limpiarCampos(){
         setNombreProducto("")
@@ -60,24 +56,19 @@ export default function Comprar() {
     }
 
     useEffect(()=>{
-
         const producto = productos.find(producto => producto.id == idProducto)
         if (producto){
             setMedida(producto.medida)
             fetchFilesManager(`http://localhost:3000/api/v1/productos/${idProducto}/imagenes`, setImagenes)
         }
-    
-    }, [idProducto])
+    }, [productos, idProducto])
 
     useEffect(()=> {
         setTotal(carritoDeVentas.reduce((acc, item) => acc + item.subtotal, 0))
     }, [carritoDeVentas])
 
     useEffect(()=> {
-        if (precioProducto){
-            setTotalProducto("")
-        }
-        setTotalParcial(cantidadProducto * precioProducto)
+        setTotalProducto(cantidadProducto * precioProducto)
     }, [precioProducto, cantidadProducto])
 
 
@@ -100,53 +91,27 @@ export default function Comprar() {
 
         }
         
-    }, [idProductoSeleccionadoTabla, carritoDeVentas])
+    }, [idProductoSeleccionadoTabla])
 
 
     function agregarProducto(){
-        
-        if (!idProducto ){
-            toast.error("El producto no fue encontrado")
-            return 
-        }
-        else if (cantidadProducto === ""){
-            toast.error("Agrega cantidad")
-            return 
-        } 
-        else if (precioProducto === "" && totalProducto === ""){
-            toast.error("Agrega el precio o el total")
-            return
-        }
-
-        else if (carritoDeVentas.some(producto => producto.id === idProducto)){
-            toast.warning("El producto ya fue agregado")
-            return
-        }
-
-        let total
-        let precio
-
-        if (cantidadProducto !== "" && precioProducto !== ""){
-            precio = precioProducto
-            total = cantidadProducto * precioProducto
-        }
-        else if (cantidadProducto !== "" && totalProducto !== ""){
-            total = totalProducto
-            precio = totalProducto / cantidadProducto
-        }
+        if (!idProducto ) return toast.error("El producto no fue encontrado")
+        if (cantidadProducto === "") return toast.error("Agrega cantidad")
+        if (precioProducto === "" && totalProducto === "") return toast.error("Agrega el precio o el total")
+        if (carritoDeVentas.some(producto => producto.id === idProducto))return toast.warning("El producto ya fue agregado")
 
         const producto = productos.find(producto => producto.id == idProducto)
         const productoFormateado = {
             id: idProducto,
             nombre: producto.nombre,
-            marca: producto.marca,
             medida: producto.medida,
             cantidad: cantidadProducto,
-            precio: precio,
-            subtotal: total,
+            precio: precioProducto,
+            subtotal: totalProducto,
             
         }
         setIdProductoSeleccionadoTabla(null)
+        setIdProducto(null)
         limpiarCampos()
         setCarritoDeVentas([...carritoDeVentas, productoFormateado])
     }
@@ -196,7 +161,6 @@ export default function Comprar() {
                                 estilo = {"w-40"}
                                 valor={precioProducto}
                                 setValor={setPrecioProducto}
-                                labelSeleccionado = {precioParcial}
                                 label="Precio"
                                 isNumber={true}
                                 isPrice={true}
@@ -207,8 +171,6 @@ export default function Comprar() {
                                 estilo = {"w-40"}
                                 label="Total"
                                 valor={totalProducto}
-                                setValor={setTotalProducto}
-                                labelSeleccionado = {totalParcial}
                                 format={true}
                                 isPrice= {true}
                                 />

@@ -7,7 +7,6 @@ import { useState, useEffect} from "react"
 
 export default function ModalModificarProductoFactura(props){
 
-    console.log(props)
 
     const id = props.idProductoSeleccionado
     const indiceFila = encontrarIndiceFila(id)

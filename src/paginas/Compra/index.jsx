@@ -72,7 +72,7 @@ export default function Compra(){
             setNombre(resData.info.nombre_cliente)
             setTelefono(resData.info.telefono)
             setEmail(resData.info.email)
-            setEstadoEntrega(resData.info.estado_entrega_id)
+            setEstadoEntrega(resData.info.id_estado_entrega)
             setPagado(resData.info.pagado)
             setTotal(resData.info.total)
             setTotalOriginal(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
@@ -96,22 +96,13 @@ export default function Compra(){
             setTotal(res.info.total)
             setPagado(res.info.pagado)
         }
-        fetchManager(`http://localhost:3000/api/v1/compra/${id}`, cb, "PATCH", {detalles})
+        fetchManager(`http://localhost:3000/api/v1/compra/${id}/detalle`, cb, "PATCH", {detalles})
     }
 
     function devolverTodo() {
         const devolucion = facturaOriginal.map(producto => ({...producto, cantidad: 0}));
-
         setFacturaModificada(devolucion)
     }
-
-    // function cambiarEstado(nuevoValor){
-    //     if (nuevoValor === "Entregado"){
-    //         setEstado(nuevoValor)
-    //     }
-        
-    // }
-    
 
 
     return (

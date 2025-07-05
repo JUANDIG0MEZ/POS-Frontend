@@ -42,13 +42,15 @@ export default function ModalConfirmarVenta(props){
         if( Number(pagado) > Number(props.total)) return toast.error("El monto pagado es mayor al total.")
         if (Number(pagado) < Number(props.total) && !Number(idCliente)) return toast.error("Un cliente no registrado no puede tener deuda.")
         if (!Number(estadoEntrega))return toast.warning('Elije el estado de la entrega.')
+        if (!nombreCliente) return toast.warning('Debes agregar el nombre del cliente')
+        if (!Number(metodoPago)) return toast.warning('Debes agregar el metodo de pago')
 
         else {
             const info = {
                 cliente_id: idCliente,
-                id_stado_entrega: estadoEntrega,
-                id_metodo_pago: metodoPago,
-                pagado: pagado || 0,
+                id_estado_entrega: Number(estadoEntrega),
+                id_metodo_pago: Number(metodoPago),
+                pagado: Number(pagado),
                 nombre_cliente: nombreCliente,
                 total: props.total,
                 direccion
@@ -58,13 +60,12 @@ export default function ModalConfirmarVenta(props){
             const detalles = props.carritoDeVentas.map(item => {
                 return {
                     producto_id: item.id,
-                    cantidad: item.cantidad,
-                    precio: item.precio,
-                    subtotal: item.subtotal
+                    cantidad: Number(item.cantidad),
+                    precio: Number(item.precio)
                 }
             })
 
-            const compraEnviar = {info: info, datos: detalles}
+            const compraEnviar = {info: info,  detalles}
 
             function cbCompra(res) {
                 
