@@ -26,45 +26,32 @@ export default function ModalPagarCompra(props){
     }
 
 
-    function realizarAbono(){
-        if (valorAbono > porPagar){
-            toast.warning("El abono no puede ser mayor al total a pagar")
+    function realizarPago(){
+        if (valorAbono > porPagar) return toast.warning("El abono no puede ser mayor al total a pagar")
+        
+        const valorFetch = Number(valorAbono)
+        const metodoPagoFetch = Number(metodoPago)
+
+        if (!metodoPagoFetch) return toast.warning('Selecciona el metodo de pago')
+        if (!valorAbono) return toast.warning('Agrega un valor')
+        if (metodoPagoFetch > 1 && !descripcion)return toast.warning('Agrega el numero de referencia')
+
+
+        const body = {
+            compra_id: Number(numeroFactura),
+            valor: valorFetch,
+            id_metodo_pago: metodoPagoFetch,
         }
-        else {
-            const valorFetch = Number(valorAbono)
-            const metodoPagoFetch = Number(metodoPago)
+        if (descripcion) body.descripcion = descripcion
 
-            if (!metodoPagoFetch){
-                toast.warning('Selecciona el metodo de pago')
-                return 
-            }
-
-            if (!valorAbono){
-                toast.warning('Agrega un valor')
-                return 
-            }
-
-            if (metodoPagoFetch > 1 && !descripcion){
-                toast.warning('Agrega el numero de referencia')
-                return
-            }
-
-
-            const body = {
-                valor: valorFetch,
-                metodoPagoId: metodoPagoFetch,
-                descripcion
-            }
-
-            function cbAbono(resData){
-                props.setPagado(resData.pagado)
-                cerrarModal()
-            }
-            fetchManager(`http://localhost:3000/api/v1/facturas/compras/${numeroFactura}/pagar`, cbAbono, "PATCH", body)
-            
-            // cerrarModal()
-            
+        function cbAbono(resData){
+            props.setPagado(resData.pagado)
+            cerrarModal()
         }
+        fetchManager(`http://localhost:3000/api/v1/pago/compra`, cbAbono, "POST", body)
+        
+        cerrarModal()
+      
     }
 
 
@@ -93,7 +80,7 @@ export default function ModalPagarCompra(props){
                     </div>
                     <div className='justify-end flex gap-3'>
                         <Boton onClick={cerrarModal} texto = "Cancelar" isNormal={true}/>
-                        <Boton onClick={realizarAbono} texto = "Pagar" />
+                        <Boton onClick={realizarPago} texto = "Pagar" />
                     </div>
 
                 </div>

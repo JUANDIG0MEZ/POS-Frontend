@@ -149,7 +149,7 @@ export default function Compra(){
             }
 
             {
-                (totalModificado < pagado) && <p className="animate-bounce w-full justify-center text-lg"><strong className="text-xl">Nota</strong>: En caso de realizar la modficacion debes pagarle al cliente <span className=" text-red-500 text-xl"> <strong> ${pagado - totalModificado}</strong> </span></p>
+                (totalModificado < pagado) && <p className="animate-bounce w-full justify-center text-lg"><strong className="text-xl">Nota</strong>: En caso de realizar el proveedor debe pagarte <span className=" text-red-500 text-xl"> <strong> ${pagado - totalModificado}</strong> </span></p>
             }
             
             <div className="flex gap-3">

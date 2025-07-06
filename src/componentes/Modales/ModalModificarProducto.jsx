@@ -88,13 +88,13 @@ export default function ModalModificarProducto(props){
                 
                 <div className="flex flex-col flex-1 gap-7">
                     <h2 className="titulo">Modificar producto <span className="px-2 py-1 border rounded-md texto-label">{productoSeleccionado.id} </span></h2>
-                    <div className="flex flex-col gap-6">
+                    <div className="flex gap-3">
                         <InputText label="Nombre" valor={productoSeleccionado.nombre}/>
+
+                        <InputLista label="Categoria" valor={categoria} setValor={setCategoria} lista = {categorias} setIdSeleccionado={setIdCategoria} />
                         
                     </div>
                     <div className="flex w-full gap-3">
-                        <InputText label = "Marca" valor={productoSeleccionado.marca}/>
-                        <InputLista label="Categoria" valor={categoria} setValor={setCategoria} lista = {categorias} setIdSeleccionado={setIdCategoria} />
                     </div>
                     <div className="flex gap-3">
                         <InputNumber label="Cantidad" valor={productoSeleccionado.cantidad} format={true}/>

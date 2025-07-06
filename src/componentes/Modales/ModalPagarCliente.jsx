@@ -23,38 +23,27 @@ export default function ModalPagarCliente(props){
     }
 
 
-    function realizarAbono(){
+    function realizarPago(){
         const valorPagoFetch = Number(valorPago)
         const metodoPagoFetch = Number(metodoPago)
-        if (restante < 0){
-            toast.warning("El abono no puede ser mayor al total a pagar")
-            return
-        }
-        if (valorPagoFetch < 1){
-            toast.warning("Ingresa el valor del pago")
-            return
-        }
-        if (metodoPagoFetch === 0){
-            toast.warning("Agrega el metodo de pago")
-            return
-        }
-        if (!(metodoPagoFetch < 2) && !descripcion){
-            toast.warning("Agrega la referencia o nro de comprobante")
-            return
-        }
+        if (restante < 0) return toast.warning("El abono no puede ser mayor al total a pagar")
+        if (valorPagoFetch < 1) return toast.warning("Ingresa el valor del pago")
+        if (metodoPagoFetch === 0) toast.warning("Agrega el metodo de pago")
+        if (!(metodoPagoFetch < 2) && !descripcion) return toast.warning("Agrega la referencia o nro de comprobante")
+        if (!metodoPago) return toast.warning('Seleccion el metodo de pago')
 
         const body = {
+            cliente_id: Number(props.clienteId),
             valor: valorPagoFetch,
-            metodoPagoId: metodoPagoFetch,
-            descripcion
+            id_metodo_pago: metodoPagoFetch
         }
+        if (descripcion) body.descripcion = descripcion
 
         function cbAbono(resData){
             props.setPorPagarle(resData.por_pagarle)
         }
-        fetchManager(`http://localhost:3000/api/v1/clientes/${props.clienteId}/pagar`, cbAbono, "POST", body)
+        fetchManager(`http://localhost:3000/api/v1/pago/cliente`, cbAbono, "POST", body)
         
-
         cerrarModal()
 
     }
@@ -88,7 +77,7 @@ export default function ModalPagarCliente(props){
 
                         <div className='flex gap-3'>
                             <Boton onClick={cerrarModal} texto = "Cancelar" isNormal={true}/>
-                            <Boton onClick={realizarAbono} texto = "Pagar" />
+                            <Boton onClick={realizarPago} texto = "Pagar" />
                         </div>
                         
                     </div>

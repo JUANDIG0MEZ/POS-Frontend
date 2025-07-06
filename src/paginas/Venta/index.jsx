@@ -101,6 +101,8 @@ export default function Venta(){
         fetchManager(`http://localhost:3000/api/v1/venta/${id}/detalle`,cb, "PATCH", {detalles})    
     }
 
+    console.log('totalModificado', totalModificado, 'pagado', pagado)
+
     return (
         <div className="w-[1400px] flex flex-col mx-auto gap-3">
             
@@ -139,6 +141,12 @@ export default function Venta(){
                     total={totalTabla} 
                     total2= {totalModificado} 
                     setIdItemSeleccionado={setIdItemSeleccionado}/>
+            </div>
+
+            <div>
+            {
+                (totalModificado < pagado) && <p className="animate-bounce w-full justify-center text-lg"><strong className="text-xl">Nota</strong>: En caso de realizar las modificaciones, se debe pagar al cliente: <span className=" text-red-500 text-xl"> <strong> ${pagado - totalModificado}</strong> </span></p>
+            }
             </div>
             
             <div className="flex justify-between">

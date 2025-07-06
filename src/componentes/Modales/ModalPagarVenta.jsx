@@ -34,33 +34,22 @@ export default function ModalPagarVenta(props){
             const valorFetch = Number(valorAbono)
             const metodoPagoFetch = Number(metodoPago)
 
-            if (!metodoPagoFetch){
-                toast.warning('Selecciona el metodo de pago')
-                return 
-            }
-
-            if (!valorAbono){
-                toast.warning('Agrega un valor')
-                return 
-            }
-
-            if (metodoPagoFetch > 1 && !descripcion){
-                toast.warning('Agrega el numero de referencia')
-                return
-            }
-
+            if (!metodoPagoFetch) return toast.warning('Selecciona el metodo de pago')
+            if (!valorAbono) return toast.warning('Agrega un valor')
+            if (metodoPagoFetch > 1 && !descripcion) return toast.warning('Agrega el numero de referencia')
 
             const body = {
+                venta_id: Number(numeroFactura),
                 valor: valorFetch,
-                metodoPagoId: metodoPagoFetch,
-                descripcion
+                id_metodo_pago: metodoPagoFetch
             }
+            if (descripcion) body.descripcion = descripcion
 
             function cbAbono(resData){
                 props.setPagado(resData.pagado)
                 cerrarModal()
             }
-            fetchManager(`http://localhost:3000/api/v1/facturas/ventas/${numeroFactura}/abonar`, cbAbono, "PATCH", body)
+            fetchManager(`http://localhost:3000/api/v1/abono/venta`, cbAbono, "POST", body)
             
             // cerrarModal()
             

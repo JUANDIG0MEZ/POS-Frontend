@@ -55,9 +55,9 @@ export default function InputListaMultiple(props) {
     function mostrarObjeto(item) {
         return (
         <div className="flex gap-3 text-nowrap">
-            <p className="">{item.id}</p>
+            <p className="text-gray-500">{item.id}  </p>
             <p className="w-[220px] overflow-hidden font-bold text-color-" >{item.nombre}</p>
-            <p className="w-[100px] overflow-hidden text-teal-500">{item.medida}</p>
+            <p className="w-[100px] overflow-hidden text-red-500">{item.medida}</p>
             <p className="w-[160px] overflow-hidden text-gray-500">{item.categoria}</p>
         </div>
         )
