@@ -2,6 +2,9 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Login from './paginas/Autenticacion/login'
 import Home from './paginas/Home'
 import Inventario from './paginas/Inventario'
+import AjustesInventario from './paginas/AjustesInventario'
+import AjustarInventario from './paginas/AjustarInventario'
+import AjusteInventario from './paginas/AjusteIventario'
 import Categorias from './paginas/Categorias'
 import Contactos from './paginas/Contactos'
 import Contacto from './paginas/Contacto'
@@ -34,6 +37,9 @@ function App() {
 
             <Route path= '/inventario' element={<Inventario />} />
             <Route path= '/categorias' element ={<Categorias/>} />
+            <Route path= '/ajuste-inventario/historial' element={<AjustesInventario/>} />
+            <Route path= '/ajuste-inventario/:id' element={<AjusteInventario/>} />
+            <Route path= '/ajustar-inventario' element={<AjustarInventario/>} />
 
             <Route path= '/compras/historial' element={<Compras />} />
             <Route path= '/comprar' element={<Comprar />} />

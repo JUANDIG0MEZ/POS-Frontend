@@ -1,5 +1,5 @@
 
-export default function InputText(props){
+export default function InputNumber(props){
 
     function labelSeleccionado (labelSolo) {
 

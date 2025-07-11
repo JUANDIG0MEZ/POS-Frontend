@@ -40,11 +40,6 @@ const columnasObjeto = [
     {id: "por_pagar", nombre: "Por Pagar"}
 ]
 
-const limiteObjeto = [
-    {id: "10", nombre: 10},
-    {id: "20", nombre: 20},
-    {id: "30", nombre: 30},
-    {id: "50", nombre: 50}]
 
 
 const defaultColumn = "compra_id"
@@ -60,7 +55,8 @@ export default function Compras(){
         estadosComprasEntrega,
         estadosComprasPago,
         clientesNombres,
-        ordenOpciones
+        ordenOpciones,
+        limiteOpciones
     } = useContext(ContextInventario)
     const navigate = useNavigate()
 
@@ -188,7 +184,7 @@ export default function Compras(){
 
                     <Select 
                         label={"No. Filas"}
-                        opciones={limiteObjeto}
+                        opciones={limiteOpciones}
                         setValor={setLimite}
                         valor={limite}
                         valorDefault={defaultlimite}

@@ -37,7 +37,9 @@ export default memo(function DiffTabla(props) {
 
 
     return (
-        <table onClick={seleccionFila} className="w-full">
+        <>
+            {
+                props.tabla1.length > 0 ? <table onClick={seleccionFila} className="w-full">
             <thead>
 
                 <tr className="titulo-tabla">
@@ -73,7 +75,7 @@ export default memo(function DiffTabla(props) {
 
                 
                 {   
-                    props.tabla1.length ? 
+                    (props.tabla1.length && props.total) ? 
                     <tr>
                         {
                         Object.keys(props.tabla1[0]).map((item, idx)=>{
@@ -96,7 +98,11 @@ export default memo(function DiffTabla(props) {
             </tbody>
             
             
-        </table>
+        </table> : null
+            }
+            
+        </>
+        
         
     )
 })

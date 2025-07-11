@@ -11,7 +11,8 @@ const navItems = {
         to: '/inventario',
         children: [
             { label: 'Inventario', to: '/inventario' },
-            { label: 'Categorías', to: '/categorias' }
+            { label: 'Categorías', to: '/categorias' },
+            { label: 'Ajuste de inventario', to: '/ajuste-inventario/historial'}
         ]
     },
     'Compras': {

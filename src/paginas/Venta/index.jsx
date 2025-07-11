@@ -35,7 +35,7 @@ export default function Venta(){
     const [direccion, setDireccion] = useState("")
     const [telefono, setTelefono] = useState("")
     const [email, setEmail] = useState("")
-    const [estadoEntrega, setEstadoEntrega] = useState("")
+    const [idEstadoEntrega, setIdEstadoEntrega] = useState("")
 
     const [total, setTotal] = useState("")
     const [totalModificado, setTotalModificado] = useState(null)
@@ -74,7 +74,7 @@ export default function Venta(){
             setTelefono(resData.info.telefono)
             setEmail(resData.info.email)
             setDireccion(resData.info.direccion)
-            setEstadoEntrega(resData.info.id_estado_entrega)
+            setIdEstadoEntrega(resData.info.id_estado_entrega)
             setPagado(resData.info.pagado)
             setTotal(resData.info.total)
             setTotalTabla(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
@@ -101,7 +101,16 @@ export default function Venta(){
         fetchManager(`http://localhost:3000/api/v1/venta/${id}/detalle`,cb, "PATCH", {detalles})    
     }
 
-    console.log('totalModificado', totalModificado, 'pagado', pagado)
+
+    async function actualizarEstadoEntrega(nuevoEstado) {
+        const cb = (res) => {
+        }
+
+        fetchManager(`http://localhost:3000/api/v1/venta/${id}/estado-entrega`, cb, "PATCH", { id_estado_entrega: nuevoEstado })
+        setIdEstadoEntrega(nuevoEstado)
+
+    }
+
 
     return (
         <div className="w-[1400px] flex flex-col mx-auto gap-3">
@@ -129,7 +138,7 @@ export default function Venta(){
                     </div>
                         
                     <div className="flex gap-3">  
-                        <Opciones opciones= {estadosVentasEntrega} seleccionado={estadoEntrega} setSeleccionado ={setEstadoEntrega}  />
+                        <Opciones opciones= {estadosVentasEntrega} seleccionado={idEstadoEntrega} setSeleccionado ={actualizarEstadoEntrega}  />
                     </div>
                 </div>
             </div>

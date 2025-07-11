@@ -21,9 +21,9 @@ export default function CrearCategoria(props) {
             return
         }
         const categoria = {
-            nombre, 
-            descripcion
+            nombre
         }
+        if (descripcion) categoria.descripcion = descripcion
 
         function cbCrear(res){
 

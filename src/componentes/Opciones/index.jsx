@@ -10,7 +10,6 @@ export default function Opciones(props){
                             type="radio"
                             checked={opcion.id == props.seleccionado}
                             onChange={() => props.setSeleccionado(opcion.id)}
-                            
                             />
                             <span className="px-2 py-2 boton-normal">{opcion.nombre}</span> 
                     </label>

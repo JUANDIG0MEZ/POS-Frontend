@@ -20,6 +20,12 @@ const InventarioProvider = ({children}) => {
         {id: "DESC", nombre: "DESC"}
     ]
 
+    const limiteOpciones = [
+        {id: "10", nombre: 10},
+        {id: "20", nombre: 20},
+        {id: "30", nombre: 30},
+        {id: "50", nombre: 50}
+    ]
 
     useEffect(() => {
         // function cbInit(res){
@@ -73,7 +79,8 @@ const InventarioProvider = ({children}) => {
 
             //
 
-            ordenOpciones
+            ordenOpciones,
+            limiteOpciones
             
             }
         }>

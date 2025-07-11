@@ -1,8 +1,5 @@
 
 export default function RadioBoton(props){
-
-
-
     return (
         <label className="flex items-center gap-2 cursor-pointer "> 
             <input

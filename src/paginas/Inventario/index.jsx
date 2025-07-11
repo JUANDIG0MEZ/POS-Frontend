@@ -46,12 +46,7 @@ const columnasObjeto2 = [
     {id: "total", nombre: "Total"}
 ]
 
-const limiteObjeto = [
-    {id: "10", nombre: 10},
-    {id: "20", nombre: 20},
-    {id: "30", nombre: 30},
-    {id: "50", nombre: 50},
-    {id: "100", nombre: 100}]
+
 
 
 const defaultLimite = "20"
@@ -60,13 +55,12 @@ const defaultOffset = "0"
 export default function Inventario() {
     const {
         productos,
-        ordenOpciones
+        ordenOpciones,
+        medidas,
+        categorias,
+        limiteOpciones
     } = useContext(ContextInventario)
 
-
-
-
-    // const [isColumnasVisible, setIsColumnasVisible] = useState(columnas)
     const [busquedaNombre, setBusquedaNombre] = useState(null)
     const [busquedaCategoria, setBusquedaCategoria] = useState(null)
     const [busquedaId, setBusquedaId] = useState(null)
@@ -77,7 +71,7 @@ export default function Inventario() {
     const [productosOrdenados, setProductosOrdenados] = useState(productosFiltrados)
 
     const [productoSeleccionado, setProductoSeleccionado] = useState({})
-    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState("")
+    const [idProductoSeleccionado, setIdProductoSeleccionado] = useState(null)
     const [imagenes, setImagenes] = useState([])
 
     const [pagina, setPagina] = useState(0)
@@ -177,30 +171,34 @@ export default function Inventario() {
                             setIdSeleccionado={setIdProductoSeleccionado}
                             label={"Nombre producto"}
                         />
-                        <InputText 
+                        <InputLista 
                             estilo="w-72"
                             label="Categoria" 
                             valor={busquedaCategoria} 
                             setValor={setBusquedaCategoria} 
-                            labelSeleccionado={productoSeleccionado.categoria}/>
+                            labelSeleccionado={productoSeleccionado.categoria}
+                            lista={categorias}
+                            />
 
                     </div>
                     <div className="flex w-full items-center justify-between gap-3">
                         <div className="flex gap-3">
                             
-                            <InputText
+                            <InputLista
                             label="Medida"
                             estilo="w-72"
                             valor={busquedaMedida}
                             setValor={setBusquedaMedida}
-                            labelSeleccionado={productoSeleccionado.medida}/>
+                            labelSeleccionado={productoSeleccionado.medida}
+                            lista = {medidas}
+                            />
                             
                             <BotonIcono texto={<FaSearch className=""/>} onClick={filtrarDatos} isNormal={true}/>
                             <BotonIcono texto={<FaTrash/>} onClick={limipiarBusquedas} isNormal={true}/>
                         </div>
                         
                         <div className="flex items-center gap-3">
-                            <Boton onClick={()=>setShowModalModificar(true)} texto="Modificar" isNormal={true}/>
+                            <Boton onClick={()=>( idProductoSeleccionado? setShowModalModificar(true): null)} texto="Modificar" isNormal={true}/>
                             <Boton onClick={()=>setShowModalCrear(true)} texto={"Agregar"} isNormal={true}/>   
                         </div>
                                          
@@ -221,7 +219,7 @@ export default function Inventario() {
                                 setValor={setPropiedadOrden}
                                 valorDefault={"id"}/>
                             <Select
-                                opciones={limiteObjeto}
+                                opciones={limiteOpciones}
                                 label={"No. Filas"}
                                 setValor={setLimite}
                                 valorDefault={defaultLimite}/>

@@ -27,6 +27,7 @@ export default function Compra(){
         estadosComprasEntrega
     } = useContext(ContextInventario)
 
+
     const [pagado, setPagado] = useState(null)
     const [total, setTotal] = useState(null)
     const {id} = useParams()
@@ -44,7 +45,7 @@ export default function Compra(){
     const [nombre, setNombre] = useState("")
     const [telefono, setTelefono] = useState("")
     const [email, setEmail] = useState("")
-    const [estadoEntrega, setEstadoEntrega] = useState("")
+    const [idEstadoEntrega, setIdEstadoEntrega] = useState("")
 
     
     
@@ -65,6 +66,9 @@ export default function Compra(){
         setFacturaModificada(facturaOriginal)
     }
 
+
+
+
     useEffect(()=>{
         function cbFactura(resData){
             setFacturaOriginal(resData.datos)
@@ -72,13 +76,13 @@ export default function Compra(){
             setNombre(resData.info.nombre_cliente)
             setTelefono(resData.info.telefono)
             setEmail(resData.info.email)
-            setEstadoEntrega(resData.info.id_estado_entrega)
+            setIdEstadoEntrega(resData.info.id_estado_entrega)
             setPagado(resData.info.pagado)
             setTotal(resData.info.total)
             setTotalOriginal(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
         }
         fetchManager(`http://localhost:3000/api/v1/compra/${id}`, cbFactura, "GET")
-    }, [])
+    }, [id])
 
     function guardarCambios(){
         const detalles = facturaModificada.map(item => {
@@ -99,11 +103,18 @@ export default function Compra(){
         fetchManager(`http://localhost:3000/api/v1/compra/${id}/detalle`, cb, "PATCH", {detalles})
     }
 
+    async function actualizarEstadoEntrega(nuevoEstado) {
+        const cb = (res) => {
+
+        }
+        fetchManager(`http://localhost:3000/api/v1/compra/${id}/estado-entrega`, cb, "PATCH", { id_estado_entrega: nuevoEstado })
+        setIdEstadoEntrega(nuevoEstado)
+    }
+
     function devolverTodo() {
         const devolucion = facturaOriginal.map(producto => ({...producto, cantidad: 0}));
         setFacturaModificada(devolucion)
     }
-
 
     return (
         <div className="w-[1400px] flex flex-col mx-auto gap-3">
@@ -128,7 +139,7 @@ export default function Compra(){
                         <Boton texto="Abonar" isNormal={true} onClick={() => setShowModalAbonar(true)}></Boton>
                     </div>   
                     <div className="flex gap-4 items-center">
-                        <Opciones opciones={estadosComprasEntrega} setSeleccionado = {setEstadoEntrega} seleccionado = {estadoEntrega}  /> 
+                        <Opciones name={'estado_entrega'} opciones={estadosComprasEntrega} setSeleccionado = {actualizarEstadoEntrega} seleccionado = {idEstadoEntrega}  /> 
                     </div>
                     
                     
