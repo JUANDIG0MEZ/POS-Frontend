@@ -2,7 +2,7 @@ import { useState} from "react"
 import { FaChevronDown } from "react-icons/fa"
 
 
-export default function InputListaMultiple({listItems, value, label, setValue, setIdItemSelected, style}) {
+export default function InputListaMultiple({listItems, value, label, setValue, setIdSelected, style}) {
     const [showLista, setShowLista] = useState(false)
 
 
@@ -25,8 +25,8 @@ export default function InputListaMultiple({listItems, value, label, setValue, s
             const nuevoValor = listItems.find(item => item.id == id).nombre
             setShowLista(false)
             setValue(nuevoValor)
-            if (setIdItemSelected){
-                setIdItemSelected(id)
+            if (setIdSelected){
+                setIdSelected(id)
             }
         }      
     }
@@ -59,7 +59,7 @@ export default function InputListaMultiple({listItems, value, label, setValue, s
     function onFocus(){
         setValue("")
         setShowLista(true)
-        if (setIdItemSelected) setIdItemSelected(null)
+        if (setIdSelected) setIdSelected(null)
     }
     
 

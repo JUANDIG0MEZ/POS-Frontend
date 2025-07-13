@@ -23,11 +23,11 @@ export default function CrearCategoria() {
             <div className="w-[1100px] flex flex-col mx-auto">
                 <div className='flex justify-between w-full mt-4'>
                     <h1 className="titulo"> Categorias </h1>
-                    <Boton texto="Crear categoria" onClick={() => setShowModalCrear(true)}/>
+                    <Boton text="Crear categoria" onClick={() => setShowModalCrear(true)}/>
                 </div>
                 <h2 className='subtitulo'> Lista de categorias</h2>
                 
-                <Tabla datos = {categorias} setIdItemSeleccionado={setIdCategoriaSeleccionada} rename = {renombrar} />
+                <Tabla listItems = {categorias} setIdSelected={setIdCategoriaSeleccionada} rename = {renombrar} />
             </div>
             {
                 showModalCrear ? <ModalCrearCategoria setShowModal = {setShowModalCrear} /> : null

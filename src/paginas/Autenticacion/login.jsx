@@ -34,8 +34,8 @@ export default function Login () {
         </div>
 
         <div className="flex flex-col gap-10 mt-10 mx-auto max-w-sm sm:w-full sm:max-w-sm">
-            <InputText label='Correo electronico' valor={email} setValor={setEmail}/>
-            <InputPassword label='Contrasenia' valor={password} setValor={setPassword}/>
+            <InputText label1='Correo electronico' value={email} setValue={setEmail}/>
+            <InputPassword label='Contrasenia' value={password} setValue={setPassword}/>
                         
         </div>
         

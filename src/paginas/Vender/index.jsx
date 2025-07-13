@@ -131,11 +131,11 @@ export default function Vender() {
                         <div className="flex gap-3">
                             <InputListaMultiple
 
-                            valor={nombreProducto}
-                            setValor={setNombreProducto}
+                            value={nombreProducto}
+                            setValue={setNombreProducto}
                             label="Producto*"
-                            lista={productos}
-                            setIdSeleccionado = {setIdProducto}
+                            listItems={productos}
+                            setIdSelected = {setIdProducto}
                             />
 
                             <div className="flex py-2 px-3 borde-1 rounded-lg w-44 text-center items-center justify-end gap-4">
@@ -143,46 +143,37 @@ export default function Vender() {
                                 <p className="font-bold" >{medida || " Medida"}</p> 
                                 <FaBalanceScale className="text-gray-700 text-xl"/>
                             </div>
-
-
                         </div>
                         
                         <div className="flex w-full items-center justify-between">
                             <div className="flex gap-3">
                                 <InputNumber
-                                estilo = {"w-28"}
-                                valor={cantidadProducto}
-                                setValor={setCantidadProducto}
-                                label="Cantidad*"
-                                isNumber={true}
-                                format={true}
+                                style = {"w-28"}
+                                value={cantidadProducto}
+                                setValue={setCantidadProducto}
+                                label1="Cantidad*"
                                 />
                             <InputNumber
-                                estilo = {"w-40"}
-                                valor={precioProducto}
-                                setValor={setPrecioProducto}
-                                label="Precio"
-                                isNumber={true}
-                                isPrice={true}
-                                format={true}
+                                style = {"w-40"}
+                                value={precioProducto}
+                                setValue={setPrecioProducto}
+                                label1="Precio"
                                 />
                                 
                             <InputNumber
-                                estilo = {"w-40"}
-                                label="Total"
-                                valor={totalProducto}
-                                format={true}
-                                isPrice= {true}
+                                style = {"w-40"}
+                                label1="Total"
+                                value={totalProducto}
                                 />
                         
                             <BotonIcono
                                 onClick={limpiarCampos}
-                                texto={<FaTrash/>}/>
+                                icon={<FaTrash/>}/>
                             </div>
                             
                             <BotonIcono
                                 onClick={agregarProducto}
-                                texto={<FaPlus/>}/>
+                                icon={<FaPlus/>}/>
                         </div>
                     </div>
                 </div>
@@ -192,14 +183,14 @@ export default function Vender() {
             
             <div>
                 <Tabla 
-                datos = {carritoDeVentas}
+                listItems = {carritoDeVentas}
                 rename= {renombrar}
-                setIdItemSeleccionado = {setIdProductoSeleccionadoTabla}
+                setIdSelected = {setIdProductoSeleccionadoTabla}
                 total = {total}
                 />
             </div>
             <div className="flex w-full justify-end">
-                <Boton texto="Finalizar venta" onClick={()=>setShowModalConfirmacion(true)}/>       
+                <Boton text="Finalizar venta" onClick={()=>setShowModalConfirmacion(true)}/>       
             </div>
             {
                 showModalConfirmacion && 
@@ -214,8 +205,6 @@ export default function Vender() {
                 />
             }
         </div>
-        
-        
     )
 }
 

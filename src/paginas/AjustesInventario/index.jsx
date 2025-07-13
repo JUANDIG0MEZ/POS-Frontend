@@ -50,7 +50,7 @@ export default function AjustesInventario(props){
             <div className="w-[1000px] mx-auto gap-6 flex-col flex mt-4">
                 <div className="flex justify-between mt-4">
                     <h1 className="titulo">Ajuste de inventario</h1>
-                    <Boton texto={'Crear ajuste'} onClick={()=> navigate('/ajustar-inventario')}/>
+                    <Boton text={'Crear ajuste'} onClick={()=> navigate('/ajustar-inventario')}/>
                 </div>
                 <div>
                     <div className="flex justify-between mb-3">
@@ -62,12 +62,12 @@ export default function AjustesInventario(props){
                             limite={limit}
                             setLimite={setLimit}
                             setOffset={setOffset}/>
-                            <Select label={"No. Filas"} opciones = {limiteOpciones} setValor={setLimit} defaultValue={10}/>
+                            <Select label={"No. Filas"} listItems = {limiteOpciones} setValue={setLimit} defaultValue={10}/>
                         </div>
-                        <BotonIcono texto={<FaSearch className=""/>} onClick={buscarAjustes} isNormal={true}/>
+                        <BotonIcono icon={<FaSearch className=""/>} onClick={buscarAjustes} isNormal={true}/>
                     </div>
                 {
-                    ajustes.length ? <Tabla datos = {ajustes} setIdItemSeleccionado = {setAjusteSeleccionId}/> : null
+                    ajustes.length ? <Tabla listItems = {ajustes} setIdselected = {setAjusteSeleccionId}/> : null
                 }
                 </div>
                 

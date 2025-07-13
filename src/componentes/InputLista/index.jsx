@@ -1,7 +1,7 @@
 import { useState} from "react"
 import { FaChevronDown } from "react-icons/fa"
 
-export default function InputLista({listItems, value, setValue, setIdSelected, estyle, label}) {
+export default function InputLista({listItems, value, setValue, setIdSelected, style, label}) {
     const [showLista, setShowLista] = useState(false)
 
 
@@ -23,7 +23,7 @@ export default function InputLista({listItems, value, setValue, setIdSelected, e
         const regex = /[^a-zA-Z0-9\s\p{P}]/gu;
 
         const nuevoValor = e.target.value.replace(regex, "")
-        .setValor(nuevoValor)
+        setValue(nuevoValor)
 
         if (setIdSelected){
             setIdSelected(null)
@@ -49,7 +49,7 @@ export default function InputLista({listItems, value, setValue, setIdSelected, e
 
 
     return (
-        <div className={`relative ${estyle ? estyle : "flex-1"}`}>
+        <div className={`relative ${style ? style : "flex-1"}`}>
             <label className="text-sm/6 font-medium absolute -top-6 text-md">{label}</label>
             <div className="items-center flex aling-center">
                 <input

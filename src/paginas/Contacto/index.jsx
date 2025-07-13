@@ -129,35 +129,30 @@ export default function Contacto() {
             <h1 className="text-3xl font-bold mb-3">Contacto ID <span className='text-color-2 p-1 border rounded-md'>{id}</span></h1>
             <div className='flex flex-col gap-4'>
                 <div className='flex gap-3 mb-2'>
-                    <InputText label="Nombre"  valor={nombre}/>
-                    <InputText label="Direccion"  valor={direccion}/>
-                    <Boton texto="Modificar datos" isNormal="true"/>
+                    <InputText label1="Nombre"  value={nombre}/>
+                    <InputText label1="Direccion"  value={direccion}/>
+                    <Boton text="Modificar datos" isNormal="true"/>
 
                 </div>
                 <div className='flex gap-3 items-center'>
-                    <InputText estilo="w-48" label="Telefono"  valor={telefono} isNumber={true}/>
-                    <InputText estilo="w-96" label="Email"  valor={email} />
-                    <InputText estilo="w-40" label="Tipo"  valor={tipo} />
-                    
-                    <InputNumber estilo = {"w-62"} label="Saldo a favor" valor={porPagarle} format={true} isPrice= {true}/>
-                    <Boton texto="Pagar"
+                    <InputText style="w-48" label1="Telefono"  value={telefono}/>
+                    <InputText style="w-96" label1="Email"  value={email} />
+                    <InputText style="w-40" label1="Tipo"  value={tipo} />          
+                    <InputNumber style = {"w-62"} label1="Saldo a favor" value={porPagarle}/>
+                    <Boton text="Pagar"
                     onClick={() => setShowModalPago(true)}/>
                     <InputNumber
-                        estilo = {"w-62"}
-                        label="Debe"
-                        valor={debe}
-                        format={true}
-                        isPrice= {true}
+                        style = {"w-62"}
+                        label1="Debe"
+                        value={debe}
                         />
-                    <Boton texto="Abonar"
-                    onClick={() => setShowModalAbono(true)}/>
-                
-                    
+                    <Boton text="Abonar"
+                    onClick={() => setShowModalAbono(true)}/>         
                 </div>
                 <div className='flex justify-between'>
                     <div className='flex gap-3'>
                         <Boton
-                        texto="Ventas"
+                        text="Ventas"
                         onClick={()=> {
                             setOffset(0)
                             setPagina(0)
@@ -166,25 +161,22 @@ export default function Contacto() {
                         isNormal={true}/>
 
                         <Boton 
-                        texto="Compras"
+                        text="Compras"
                         onClick={()=> {
                             setOffset(0)
                             setPagina(0)
                             setNombreTabla("compras")
                         }}
                         isNormal={true}/>
-
-                        
-
                         <Boton
-                            texto="Pagos" 
+                            text="Pagos" 
                             onClick={() => {
                                 setOffset(0)
                                 setPagina(0)
                                 setNombreTabla("pagos")}}
                             isNormal={true}/>
                         <Boton
-                            texto="Abonos"
+                            text="Abonos"
                             onClick={() => {
                                 setOffset(0)
                                 setPagina(0)
@@ -195,19 +187,17 @@ export default function Contacto() {
                     <div className='flex gap-3'>
                             <Select 
                                 label={"No. Filas"}
-                                opciones={limiteObjeto}
-                                setValor={setLimite}
-                                valor={limite}
-                                valorDefault={defaultLimite}
+                                listItems={limiteObjeto}
+                                setValue={setLimite}
+                                value={limite}
+                                defaultValue={defaultLimite}
                             />
-
                             <CambiarPagina 
-                                pagina={pagina}
-                                setPagina={setPagina}
+                                page={pagina}
+                                setPage={setPagina}
                                 setOffset={setOffset}
-                                limite={limite} 
-                                totalPaginas={totalPaginas}
-                                setTotalPaginas={setTotalPaginas}
+                                limit={limite} 
+                                totalPage={totalPaginas}
                                 />
                     </div>
                     
@@ -217,7 +207,7 @@ export default function Contacto() {
             </div>
             <div className='w-full overflow-auto p-1 text-md mb-10'>
 
-                <Tabla datos={datos} rename={renombrarTabla}/>
+                <Tabla listItems={datos} rename={renombrarTabla}/>
 
             </div>
             {showModalPago && <ModalPagarCliente clienteId={id} porPagar = {porPagarle} setShowModal = {setShowModalPago} setPorPagarle={setPorPagarle}/>}

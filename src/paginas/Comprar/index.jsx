@@ -148,11 +148,11 @@ export default function Comprar() {
                         
                         <div className="flex gap-3">
                             <InputListaMultiple
-                                valor={nombreProducto}
-                                setValor={setNombreProducto}
+                                value={nombreProducto}
+                                setValue={setNombreProducto}
                                 label="Producto"
-                                lista={productos}
-                                setIdSeleccionado = {setIdProducto}/>
+                                listItems={productos}
+                                setIdSelected = {setIdProducto}/>
 
                             <div className="flex py-2 px-3 borde-1 rounded-lg w-44 text-center items-center justify-end gap-4">
                                 
@@ -164,13 +164,13 @@ export default function Comprar() {
                         <div className="flex w-full items-center justify-between gap-3">
                             <div className="flex gap-3">
                                 <InputNumber
-                                estyle = {"w-28"}
+                                style = {"w-28"}
                                 value={cantidadProducto}
                                 setValue={setCantidadProducto}
                                 label1="Cantidad"
                                 />
                             <InputNumber
-                                estyle = {"w-40"}
+                                style = {"w-40"}
                                 value={precioProducto}
                                 setValue={setPrecioProducto}
                                 label1="Precio"
@@ -178,14 +178,14 @@ export default function Comprar() {
                             
                             
                             <InputNumber
-                                estyle = {"w-40"}
+                                style = {"w-40"}
                                 label1="Total"
                                 value={totalProducto}
                                 />
                             
                             <BotonIcono
                                 onClick={limpiarCampos}
-                                texto={<FaTrash />}
+                                icon={<FaTrash />}
                                 isNormal={true}/>
                             </div>
                             
@@ -193,7 +193,7 @@ export default function Comprar() {
                             
                             <BotonIcono
                                 onClick={agregarProducto}
-                                texto={<FaPlus/>}/>
+                                icon={<FaPlus/>}/>
                         </div>
 
                     </div>
@@ -205,14 +205,14 @@ export default function Comprar() {
             
             <div>
                 <Tabla 
-                datos = {carritoDeCompras}
+                listItems = {carritoDeCompras}
                 rename= {renombrar}
-                setIdItemSeleccionado = {setIdProductoSeleccionadoTabla}
+                setIdSelected = {setIdProductoSeleccionadoTabla}
                 total = {total}
                 />
             </div>
             <div className="flex w-full justify-end">
-                <Boton texto="Finalizar Compra" onClick={()=>setShowModalConfirmacion(true)}/>       
+                <Boton text="Finalizar Compra" onClick={()=>setShowModalConfirmacion(true)}/>       
             </div>
             {
                 showModalConfirmacion &&

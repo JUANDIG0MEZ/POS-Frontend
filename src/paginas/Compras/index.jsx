@@ -44,10 +44,10 @@ const columnasObjeto = [
 
 const defaultColumn = "compra_id"
 const defaultOrden = "DESC"
-const defaultlimite = "20"
-const defaultOffset = "0"
-const defaultEstadoEntrega = "0"
-const defaultEstadoPago = "0"
+const defaultlimite = 20
+const defaultOffset = 0
+const defaultEstadoEntrega = 0
+const defaultEstadoPago = 0
 
 export default function Compras(){
 
@@ -130,34 +130,31 @@ export default function Compras(){
 
             <div className="flex items-center gap-3">
                 <div className="w-24">
-                    <InputNumber label={"Id"} valor={id} setValor = {setId}/>
+                    <InputNumber label1={"Id"} value={id} setValue = {setId}/>
                 </div>
                 <div className="flex gap-3">
-                    <FechaInput label={"Desde"} valor = {fechaInicio} setValor= {setFechaInicio}/>
-                    <FechaInput label={"Hasta"} valor= {fechaFinal} setValor= {setFechaFinal}/>
+                    <FechaInput label={"Desde"} value = {fechaInicio} setValue= {setFechaInicio}/>
+                    <FechaInput label={"Hasta"} value= {fechaFinal} setValue= {setFechaFinal}/>
                 </div>
                 <InputLista 
-                    lista={clientesNombres}
+                    listItems={clientesNombres}
                     label={"Nombre proveedor"}
-                    setValor={setNombreCliente}
-                    valor={nombreCliente}
-                    setIdSeleccionado={setIdCliente}/>
+                    setvalue={setNombreCliente}
+                    setIdSelected={setIdCliente}/>
                 
                 <Select 
                     label={"Estado entrega"}
-                    opciones={estadosComprasEntrega}
-                    setValor={setIdEstadoEntrega}
-                    valor={idEstadoEntrega}
-                    valorDefault={defaultEstadoEntrega}/>
+                    listItems={estadosComprasEntrega}
+                    setvalue={setIdEstadoEntrega}
+                    defaultValue={defaultEstadoEntrega}/>
 
                 <Select 
                     label={"Estado pago"}
-                    opciones={estadosComprasPago}
-                    setValor={setIdEstadoPago}
-                    valor={idEstadoPago}
+                    listItems={estadosComprasPago}
+                    setValue={setIdEstadoPago}
                     valorDefault={defaultEstadoPago}/>
 
-                <BotonIcono texto={<FaSearch/>}
+                <BotonIcono icon={<FaSearch/>}
                     onClick={()=> {
                         if (offset == 0){
                             realizarPeticion()
@@ -176,36 +173,34 @@ export default function Compras(){
 
                     <Select
                         label={"Columna"}
-                        opciones={columnasObjeto}
-                        setValor={setColumna}
-                        valor={columna}
-                        valorDefault={defaultColumn}
+                        listItems={columnasObjeto}
+                        setValue={setColumna}
+                        defaultValue={defaultColumn}
                     />
 
                     <Select 
                         label={"No. Filas"}
-                        opciones={limiteOpciones}
-                        setValor={setLimite}
-                        valor={limite}
-                        valorDefault={defaultlimite}
+                        listItems={limiteOpciones}
+                        setValue={setLimite}
+                        // valor={limite}
+                        defaultValue={defaultlimite}
                     />
                     <Select 
                         label={"Orden"}
-                        opciones={ordenOpciones}
-                        setValor={setOrden}
-                        valor={orden}
-                        valorDefault={defaultOrden}
+                        listItems={ordenOpciones}
+                        setValue={setOrden}
+                        // value={orden}
+                        defaultValue={defaultOrden}
                     />
 
                 </div>
                 <div>
                     <CambiarPagina 
-                    pagina={pagina}
-                    setPagina={setPagina}
+                    page={pagina}
+                    setPage={setPagina}
                     setOffset={setOffset}
-                    limite={limite} 
-                    totalPaginas={totalPaginas}
-                    setTotalPaginas={setTotalPaginas}
+                    limit={limite} 
+                    totalPage={totalPaginas}
                     />
                 </div>
                 
@@ -214,8 +209,8 @@ export default function Compras(){
             
             <div className="overflow-auto h-full">
             <Tabla
-                datos={facturas}
-                setIdItemSeleccionado = {setIdSeleccionado}
+                listItems={facturas}
+                setIdSelected = {setIdSeleccionado}
                 rename = {renombrar}
                 />
             </div>

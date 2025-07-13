@@ -134,24 +134,23 @@ export default  function Clientes() {
                 <h2 className="titulo mb-5">Contactos</h2>
                 <div className="flex gap-3 items-center">
                     <InputNumber
-                        estilo={"w-20"}
-                        label="Id"
-                        valor={idCliente}
-                        setValor={setIdCliente}
-                        isNumber= {true}
+                        style={"w-20"}
+                        label1="Id"
+                        value={idCliente}
+                        setValue={setIdCliente}
                         />
 
 
                     <InputLista 
-                        lista={clientesNombres}    
-                        valor={nombreCliente}
-                        setValor={setNombreCliente}
+                        listItems={clientesNombres}    
+                        value={nombreCliente}
+                        setvalue={setNombreCliente}
                         label={"Nombre"} 
-                        setIdSeleccionado={setIdCliente}/>
+                        setIdSelected={setIdCliente}/>
 
 
                     
-                    <Select opciones={tiposClientes} label={"Tipo cliente"} setValor={setTipoId} valorDefault={defaultTipo}/>
+                    <Select listItems={tiposClientes} label={"Tipo cliente"} setValue={setTipoId} defaultValue={defaultTipo}/>
 
                     <BotonIcono texto ={<FaSearch/>} onClick={()=>{
                         if (offset == 0) {
@@ -160,48 +159,47 @@ export default  function Clientes() {
                         setOffset(0)
                         setPagina(0)
                     }}/>
-                    <BotonIcono onClick={()=>setShowModalCrear(true)} texto={<FaUser/>}/>      
+                    <BotonIcono onClick={()=>setShowModalCrear(true)} icon={<FaUser/>}/>      
                 </div>
                 <div className="flex justify-between">
 
                     <div className="flex gap-3">
                         <Select
                             label={"Columna"}
-                            opciones={columnasObjeto}
-                            setValor={setColumna}
-                            valor={columna}
-                            valorDefault={defaultColumna}
+                            listItems={columnasObjeto}
+                            setValue={setColumna}
+                            value={columna}
+                            defaultValue={defaultColumna}
                         />
     
                         <Select 
                             label={"No. Filas"}
-                            opciones={limiteObjeto}
-                            setValor={setLimite}
-                            valor={limite}
-                            valorDefault={defaultLimite}
+                            listItems={limiteObjeto}
+                            setValue={setLimite}
+                            value={limite}
+                            defaultValue={defaultLimite}
                         />
                         <Select 
                             label={"Orden"}
-                            opciones={ordenOpciones}
-                            setValor={setOrden}
-                            valor={orden}
-                            valorDefault={defaultOrden}
+                            listItems={ordenOpciones}
+                            setValue={setOrden}
+                            value={orden}
+                            defaultValue={defaultOrden}
                         />
                     </div>
 
                     <CambiarPagina 
-                        pagina={pagina}
-                        setPagina={setPagina}
+                        page={pagina}
+                        setPage={setPagina}
                         setOffset={setOffset}
-                        limite={limite} 
-                        totalPaginas={totalPaginas}
-                        setTotalPaginas={setTotalPaginas}
+                        limit={limite} 
+                        totalPage={totalPaginas}
                         />
                 </div>
             </div>
             
             <div className="overflow-auto h-full">
-                <Tabla datos = {clientes} setIdItemSeleccionado={setIdSeleccionado} rename = {renombrar}/>
+                <Tabla listItems = {clientes} setIdSelected={setIdSeleccionado} rename = {renombrar}/>
             </div>   
             {
                 showModalCrear ? <ModalCrearCliente setShowModal={setShowModalCrear} clientes={clientes} setClientes={setClientes}/> : null

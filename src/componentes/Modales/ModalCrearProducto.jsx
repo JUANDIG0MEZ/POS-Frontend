@@ -3,12 +3,12 @@ import InputNumber from "../InputNumber"
 import InputLista from "../InputLista"
 import Select from "../Select"
 import Boton from "../Boton"
-import { useEffect, useState} from "react"
+import { useState} from "react"
 import CargarArchivos from "../CargarArchivos"
 import  {toast} from 'sonner'
 import { useContext } from "react"
 import { ContextInventario } from "../../contextInventario"
-import { fetchFilesManager, fetchManager } from "../../serviciosYFunciones/fetchFunciones"
+import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 
 export default function ModalCrearProducto(props){
 
@@ -89,14 +89,14 @@ export default function ModalCrearProducto(props){
                     <h2 className="titulo">Crear producto</h2>
                     <div>
                         <InputText
-                        label="Nombre"
-                        valor={nombre}
-                        setValor={setNombre}/>
+                        label1="Nombre"
+                        value={nombre}
+                        setValue={setNombre}/>
                     </div>
                     
                     <div className="flex gap-3">
-                        <Select opciones={categorias} label ="Categoria" valor={categoriaId} setValor={setCategoriaId}  />
-                        <InputLista estilo={"w-1/2"} label="Medida" valor= {medida} setValor={setMedida} lista = {medidas} setIdSeleccionado={setMedidaId}/>
+                        <Select listItems={categorias} label ="Categoria" setValue={setCategoriaId}  />
+                        <InputLista style={"w-1/2"} label="Medida" value={medida} setValue={setMedida} listItems = {medidas} setIdSelected={setMedidaId}/>
                     </div>
                     <div className="flex w-full gap-3">
                         
@@ -107,26 +107,23 @@ export default function ModalCrearProducto(props){
                     <div className="flex gap-3 items-center justify-between">
                         <div className="flex gap-3 items-center">
                             <InputNumber
-                            estilo="w-32"
-                            label="Cantidad"
-                            valor={cantidad}
-                            setValor={setCantidad}
-                            format={true}
+                            style="w-32"
+                            label1="Cantidad"
+                            value={cantidad}
+                            setValue={setCantidad}
                             />
                             <InputNumber
-                                estilo="flex-1"
-                                label="Valor Compra" 
-                                valor={precioCompra}
-                                setValor={setPrecioCompra}
-                                format={true}
+                                style="flex-1"
+                                label1="Valor Compra" 
+                                value={precioCompra}
+                                setValue={setPrecioCompra}
                                 />
                                 
                             <InputNumber
-                                estilo="flex-1"
-                                label="Valor Venta"
-                                valor={precioVenta}
-                                setValor={setPrecioVenta}
-                                format={true}
+                                style="flex-1"
+                                label1="Valor Venta"
+                                value={precioVenta}
+                                setValue={setPrecioVenta}
                                 />
                             
                         </div>
@@ -137,17 +134,17 @@ export default function ModalCrearProducto(props){
                     </div>
                     <div className="flex gap-3 w-full justify-between">
                         <Boton
-                            texto = "Limpiar"
+                            text = "Limpiar"
                             isNormal = {true}/>
 
                         <div className="flex gap-3">
                             <Boton
                                 onClick={cerrarModal}
-                                texto = "Cancelar"
+                                text = "Cancelar"
                                 isNormal = {true}/>
                             <Boton
                                 onClick={crearProducto}
-                                texto = "Agregar" />
+                                text = "Agregar" />
                         </div>
                     </div>
                 </div>

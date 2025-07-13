@@ -88,15 +88,15 @@ export default function ModalConfirmarVenta(props){
                     <div className="flex flex-col gap-8">
                         <p className="subtitulo">Informacion factura</p>
                         <div className="flex gap-3">
-                            <InputNumber estilo="w-40 pointer-events-none" label={"Total"} valor={props.total} format={true}/>
+                            <InputNumber estilo="w-40 pointer-events-none" label1={"Total"} valor={props.total} format={true}/>
                             <InputLista
                                 valor={nombreCliente}
                                 setValor={setNombreCliente}
                                 label="Cliente"
-                                lista={clientesNombres}
+                                listItems={clientesNombres}
                                 setIdSeleccionado = {setIdCliente}
                                 />
-                            <Select opciones={estadosVentasEntrega} valor = {estadoEntrega} setValor={setEstadoEntrega} label={"Estado entrega"} valorDefault={0}/>
+                            <Select listItems={estadosVentasEntrega} valor = {estadoEntrega} setValor={setEstadoEntrega} label={"Estado entrega"} valorDefault={0}/>
                         </div>
                     </div>
                     <div className="flex flex-col gap-8 flex-1">
@@ -104,20 +104,20 @@ export default function ModalConfirmarVenta(props){
                         <div className="flex gap-3">
 
 
-                            <InputNumber estilo="w-2/5" label={"Valor pagado"} valor={pagado} setValor={setPagado} format={true}/>
-                            <Select opciones={metodosPago} label="Metodo pago" valorDefault={0} valor={metodoPago} setValor={setMetodoPago}/>
+                            <InputNumber style="w-2/5" label1={"Valor pagado"} value={pagado} setValue={setPagado}/>
+                            <Select listItems={metodosPago} label="Metodo pago" defaultValue={0} value={metodoPago} setValue={setMetodoPago}/>
                             <div className={`${(metodoPago == 0 || metodoPago == 1) ? "pointer-events-none opacity-30" : ""} w-full`}>
-                                <InputText estilo="w-full" label="Escribre la Refencia, Nro del comprobante o una descripcion" valor={descripcion} setValor={setDescripcion}/>
+                                <InputText style="w-full" label1="Escribre la Refencia, Nro del comprobante o una descripcion" value={descripcion} setValue={setDescripcion}/>
                             </div>
                         </div>
                         <div className="flex gap-3 justify-between">
                             <div>
-                                <Boton onClick={()=> setPagado(props.total)} texto = "Pago completo" isNormal={true} />
+                                <Boton onClick={()=> setPagado(props.total)} text = "Pago completo" isNormal={true} />
                             </div>
                             <div className="flex gap-3">
                                 
-                                <Boton onClick={()=> props.setShowModal(false)} texto = "Cancelar" isNormal={true}/>
-                                <Boton onClick={finalizarVenta} texto = "Confirmar" />
+                                <Boton onClick={()=> props.setShowModal(false)} text = "Cancelar" isNormal={true}/>
+                                <Boton onClick={finalizarVenta} text = "Confirmar" />
                             </div>
                             
                         </div>

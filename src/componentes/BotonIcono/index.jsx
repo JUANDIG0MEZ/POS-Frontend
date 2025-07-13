@@ -1,4 +1,4 @@
-export default function BotonIcono({onClick, text}){
+export default function BotonIcono({onClick, icon}){
 
     function handleClick(){
         if (onClick) onClick()
@@ -7,7 +7,7 @@ export default function BotonIcono({onClick, text}){
         <button
         onClick={handleClick}
         className={'texto-hover texto-color bg-color texto-size borde hover:shadow-md px-3 py-3 boton-normal'}>
-            {text}
+            {icon}
         </button>
     )
 }

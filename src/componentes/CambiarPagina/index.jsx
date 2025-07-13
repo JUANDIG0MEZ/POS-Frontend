@@ -20,9 +20,9 @@ export default function CambiarPagina({page, limit, totalPage, setOffset, setPag
 
     return (
          <div className="flex items-center justify-center">
-            <BotonIcono texto={<FaChevronLeft />} onClick={paginaAnterior}/>
-            <p className="px-2"> <span className="font-bold">{page + 1}</span> de <span className="font-bold">{totalPage + 1}</span></p>
-            <BotonIcono texto={<FaChevronRight/>} onClick={paginaSiguiente}/> 
+            <BotonIcono icon={<FaChevronLeft />} onClick={paginaAnterior}/>
+            <p className="px-2"> <span className="font-bold">{page + 1}</span> de <span className="font-bold">{totalPage}</span></p>
+            <BotonIcono icon={<FaChevronRight/>} onClick={paginaSiguiente}/> 
         </div>
     )
 }

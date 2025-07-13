@@ -49,8 +49,8 @@ const columnasObjeto2 = [
 
 
 
-const defaultLimite = "20"
-const defaultOffset = "0"
+const defaultLimite = 20
+const defaultOffset = 0
 
 export default function Inventario() {
     const {
@@ -154,30 +154,29 @@ export default function Inventario() {
                     <h2 className="titulo">Lista de productos</h2>
                     <div className="flex w-full gap-4 items-center">
                         <div className="flex gap-1 items-center">
-                            <BotonIcono texto={<FaChevronLeft/>}/>
+                            <BotonIcono icon={<FaChevronLeft/>}/>
                             <InputText
-                            estilo="w-20" 
-                            label="Id" 
-                            valor={busquedaId} 
-                            setValor={setBusquedaId} 
-                            isNumber = {true} 
-                            labelSeleccionado={productoSeleccionado.id}/>
-                            <BotonIcono texto={<FaChevronRight/>} />
+                            style="w-20" 
+                            label1="Id" 
+                            label2={productoSeleccionado.id}
+                            value={busquedaId} 
+                            setValue={setBusquedaId}/>
+                            <BotonIcono icon={<FaChevronRight/>} />
                         </div>
                         <InputLista
-                            lista={productos}
-                            valor={busquedaNombre}
-                            setValor={setBusquedaNombre}
-                            setIdSeleccionado={setIdProductoSeleccionado}
+                            listItems={productos}
+                            value={busquedaNombre}
+                            setValue={setBusquedaNombre}
+                            setIdSelected={setIdProductoSeleccionado}
                             label={"Nombre producto"}
                         />
                         <InputLista 
-                            estilo="w-72"
+                            style="w-72"
                             label="Categoria" 
-                            valor={busquedaCategoria} 
-                            setValor={setBusquedaCategoria} 
-                            labelSeleccionado={productoSeleccionado.categoria}
-                            lista={categorias}
+                            value={busquedaCategoria} 
+                            setValue={setBusquedaCategoria} 
+                            label2={productoSeleccionado.categoria}
+                            listItems={categorias}
                             />
 
                     </div>
@@ -186,48 +185,47 @@ export default function Inventario() {
                             
                             <InputLista
                             label="Medida"
-                            estilo="w-72"
-                            valor={busquedaMedida}
-                            setValor={setBusquedaMedida}
-                            labelSeleccionado={productoSeleccionado.medida}
-                            lista = {medidas}
+                            style="w-72"
+                            value={busquedaMedida}
+                            setValue={setBusquedaMedida}
+                            label2={productoSeleccionado.medida}
+                            listItems = {medidas}
                             />
                             
-                            <BotonIcono texto={<FaSearch className=""/>} onClick={filtrarDatos} isNormal={true}/>
-                            <BotonIcono texto={<FaTrash/>} onClick={limipiarBusquedas} isNormal={true}/>
+                            <BotonIcono icon={<FaSearch className=""/>} onClick={filtrarDatos} isNormal={true}/>
+                            <BotonIcono icon={<FaTrash/>} onClick={limipiarBusquedas} isNormal={true}/>
                         </div>
                         
                         <div className="flex items-center gap-3">
-                            <Boton onClick={()=>( idProductoSeleccionado? setShowModalModificar(true): null)} texto="Modificar" isNormal={true}/>
-                            <Boton onClick={()=>setShowModalCrear(true)} texto={"Agregar"} isNormal={true}/>   
+                            <Boton onClick={()=>( idProductoSeleccionado? setShowModalModificar(true): null)} text="Modificar" isNormal={true}/>
+                            <Boton onClick={()=>setShowModalCrear(true)} text={"Agregar"} isNormal={true}/>   
                         </div>
                                          
                     </div>
                     <div className="justify-between flex mt-3">
                         <CambiarPagina
-                            pagina={pagina}
-                            setPagina={setPagina}
-                            totalPaginas={totalPaginas}
-                            limite={limite}
-                            setLimite={setLimite}
+                            page={pagina}
+                            setPage={setPagina}
+                            totalPage={totalPaginas}
+                            limit={limite}
                             setOffset={setOffset}
                             />
                         <div className="flex gap-3">
                             <Select 
-                                opciones={columnasObjeto2}
+                                listItems={columnasObjeto2}
                                 label={"Columna"}
-                                setValor={setPropiedadOrden}
-                                valorDefault={"id"}/>
+                                setValue={setPropiedadOrden}
+                                defaultValue={"id"}/>
                             <Select
-                                opciones={limiteOpciones}
+                                listItems={limiteOpciones}
                                 label={"No. Filas"}
-                                setValor={setLimite}
-                                valorDefault={defaultLimite}/>
+                                setValue={setLimite}
+                                defaultValue={defaultLimite}/>
                             <Select 
-                                opciones={ordenOpciones}
+                                listItems={ordenOpciones}
                                 label={"Ordenar"}
-                                setValor={setOrden}
-                                valorDefault={"DESC"}/>
+                                setValue={setOrden}
+                                defaultValue={"DESC"}/>
                         </div>
 
                         
@@ -239,8 +237,8 @@ export default function Inventario() {
             </div>
             <div className="w-full overflow-auto text-md ">
                 <Tabla
-                    datos = {productosOrdenados.slice(offset, offset + parseInt(limite))}
-                    setIdItemSeleccionado={setIdProductoSeleccionado}
+                    listItems = {productosOrdenados.slice(offset, offset + parseInt(limite))}
+                    setIdSelected={setIdProductoSeleccionado}
                     rename = {columnasObjeto}
                 />
                 

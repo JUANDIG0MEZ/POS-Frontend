@@ -1,12 +1,12 @@
 import {memo} from 'react'
 
-export default memo(function Tabla({listItems, setIdItemSelected, rename, total, }) {   
+export default memo(function Tabla({listItems, setIdSelected, rename, total }) {   
     
     function seleccionFila(e){
         const fila = e.target.closest('tr')
-        if (fila && setIdItemSelected){
+        if (fila && setIdSelected){
             const id = fila.dataset.id
-            setIdItemSelected(id)
+            setIdSelected(id)
         }
     }
 
@@ -56,7 +56,7 @@ export default memo(function Tabla({listItems, setIdItemSelected, rename, total,
                                 return <td key={idx} className="p-2 border font-bold text-center">Total</td>
                             }
                             else if (idx == totalColumns -1) {
-                                return <td key={idx} className="p-2 border text-center">{props.total}</td>
+                                return <td key={idx} className="p-2 border text-center">{total}</td>
                             }
                             return <td key={idx} className="p-2"></td>
 })

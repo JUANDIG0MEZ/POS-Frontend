@@ -42,12 +42,12 @@ export default function CrearCategoria(props) {
                 <div className="flex flex-col w-[600px] bg-white gap-8 p-6 rounded">
                     <h1 className="titulo">Crear categoria</h1>
                     <div className="flex flex-col gap-6">
-                        <InputText estilo='w-48' valor={nombre} setValor={setNombre} label={"Nombre"} />
-                        <InputText valor={descripcion} setValor={setDescripcion} label={"Descripcion"}/>
+                        <InputText style='w-48' value={nombre} setValue={setNombre} label1={"Nombre"} />
+                        <InputText value={descripcion} setValue={setDescripcion} label1={"Descripcion"}/>
                     </div>
                     <div className="flex gap-3 justify-end w-full">
-                        <Boton texto ="Cancelar" onClick = {() => props.setShowModal(false)} isNormal={true} />
-                        <Boton texto ="Crear categoria" onClick ={crearCategoria}/>
+                        <Boton text ="Cancelar" onClick = {() => props.setShowModal(false)} isNormal={true} />
+                        <Boton text ="Crear categoria" onClick ={crearCategoria}/>
                     </div>
                     
                 </div>

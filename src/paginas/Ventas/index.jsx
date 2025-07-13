@@ -124,38 +124,38 @@ export default function Ventas(){
 
             <div className="flex items-center gap-3">
                 <div className="w-24">
-                    <InputNumber label={"Id"} valor = {id} setValor = {setId} />
+                    <InputNumber label={"Id"} value = {id} setValue = {setId} />
                 </div>
 
                 <div className="flex gap-3">
-                    <FechaInput label={"Desde"} valor = {fechaInicio} setValor= {setFechaInicio}/>
-                    <FechaInput label={"Hasta"} valor= {fechaFinal} setValor= {setFechaFinal}/>
+                    <FechaInput label={"Desde"} value = {fechaInicio} setValue= {setFechaInicio}/>
+                    <FechaInput label={"Hasta"} value= {fechaFinal} setValue= {setFechaFinal}/>
                 </div>
 
-                <InputLista lista={clientesNombres} label={"Nombre cliente"} setValor={setNombreCliente} valor={nombreCliente} setIdSeleccionado={setIdCliente}/>
+                <InputLista listItems={clientesNombres} label={"Nombre cliente"} setValue={setNombreCliente} value={nombreCliente} setIdSeleccionado={setIdCliente}/>
 
                 <Select 
                     label={"Estado entrega"}
-                    opciones={estadosVentasEntrega}
-                    setValor={setIdEstadoEntrega}
-                    valor={idEstadoEntrega}
-                    valorDefault={0}/>
+                    listItems={estadosVentasEntrega}
+                    setValue={setIdEstadoEntrega}
+                    // value={idEstadoEntrega}
+                    defaultValue={0}/>
 
                 <Select 
                     label={"Estado entrega"}
-                    opciones={estadosVentasPago}
-                    setValor={setIdEstadoPago}
-                    valor={idEstadoPago}
-                    valorDefault={0}/>
+                    listItems={estadosVentasPago}
+                    setValue={setIdEstadoPago}
+                    value={idEstadoPago}
+                    defaultValue={0}/>
                 
-                <BotonIcono texto={<FaSearch/>} onClick={() => {      
+                <BotonIcono icon={<FaSearch/>} onClick={() => {      
                     if (offset == 0) {
                         realizarPeticion()
                     }
                     setPagina(0)
                     setOffset(0)
                 }}/>
-                <Link className="" to={'/vender'}><BotonIcono texto={<FaShoppingCart/>}/></Link>
+                <Link className="" to={'/vender'}><BotonIcono icon={<FaShoppingCart/>}/></Link>
 
             </div>
             <div className="flex justify-between">
@@ -164,36 +164,35 @@ export default function Ventas(){
 
                     <Select
                         label={"Columna"}
-                        opciones={columnasObjeto}
-                        setValor={setColumna}
-                        valor={columna}
-                        valorDefault={defaultColumn}
+                        listItems={columnasObjeto}
+                        setValue={setColumna}
+                        value={columna}
+                        defaultValue={defaultColumn}
                     />
 
                     <Select 
                         label={"No. Filas"}
-                        opciones={limiteObjeto}
-                        setValor={setLimite}
-                        valor={limite}
-                        valorDefault={defaultLimite}
+                        listItems={limiteObjeto}
+                        setValue={setLimite}
+                        value={limite}
+                        defaultValue={defaultLimite}
                     />
                     <Select 
                         label={"Orden"}
-                        opciones={ordenOpciones}
-                        setValor={setOrden}
-                        valor={orden}
-                        valorDefault={defaultOrden}
+                        listItems={ordenOpciones}
+                        setValue={setOrden}
+                        value={orden}
+                        defaultValue={defaultOrden}
                     />
 
                 </div>
                 <div>
                     <CambiarPagina 
-                    pagina={pagina}
-                    setPagina={setPagina}
+                    page={pagina}
+                    setPage={setPagina}
                     setOffset={setOffset}
-                    limite={limite} 
-                    totalPaginas={totalPaginas}
-                    setTotalPaginas={setTotalPaginas}
+                    limit={limite} 
+                    totalPage={totalPaginas}
                     />
                 </div>
                 
@@ -202,8 +201,8 @@ export default function Ventas(){
             
             <div className="overflow-auto h-full">
                 <Tabla
-                    datos={facturas}
-                    setIdItemSeleccionado={setIdSeleccionado}
+                    listItems={facturas}
+                    setIdSelected={setIdSeleccionado}
                     rename = {renombrar}
                     />
             </div>

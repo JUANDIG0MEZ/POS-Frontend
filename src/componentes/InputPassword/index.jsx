@@ -1,7 +1,7 @@
 import BotonIcono from "../BotonIcono"
 import { useState } from "react"
 import { FaEye } from "react-icons/fa"
-export default function InputPassword({value, setValue, style}) {
+export default function InputPassword({value, setValue, style, label}) {
     const [mostrarConstrasenia, setMostrarContrasenia] = useState(false)
     const establecerValor = (e) => {
         const nuevoValor = e.target.value;
@@ -12,7 +12,7 @@ export default function InputPassword({value, setValue, style}) {
 
     return (
         <div className={`relative ${style ? style : "flex-1"}`}>
-            <label className="text-sm/6 font-medium text-gray-900 absolute -top-7 text-nowrap">{labelSeleccionado(props.label)}</label>
+            <label className="text-sm/6 font-medium text-gray-900 absolute -top-7 text-nowrap">{label}</label>
 
             <div className="flex gap-1">
                 <input

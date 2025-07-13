@@ -73,37 +73,37 @@ export default function ModalConfirmarCompra(props){
                     <div className="flex flex-col gap-8">
                         <p className="subtitulo">Informacion factura</p>
                         <div className="flex gap-3">
-                            <InputNumber estilo="w-40 pointer-events-none" label={"Total"} valor={props.total} format={true}/>
+                            <InputNumber style="w-40 pointer-events-none" label1={"Total"} value={props.total}/>
                             <InputLista
-                                valor={nombreCliente}
-                                setValor={setNombreCliente}
+                                value={nombreCliente}
+                                setValue={setNombreCliente}
                                 label="Cliente"
-                                lista={clientesNombres}
-                                setIdSeleccionado = {setIdCliente}
+                                listItems={clientesNombres}
+                                setIdSelected = {setIdCliente}
                                 />
-                            <Select opciones={estadosComprasEntrega} valor = {estadoEntrega} setValor={setEstadoEntrega} label={"Estado entrega"} valorDefault={0}/>
+                            <Select listItems={estadosComprasEntrega} setValue={setEstadoEntrega} label={"Estado entrega"} defaultValue={0}/>
                             
                         </div>
                         
 
                         <p className="subtitulo">Informacion pago</p>
                         <div className="flex gap-3">
-                            <InputNumber estilo="w-1/3" label={"Valor pagado"} valor={pagado} setValor={setPagado} format={true}/>
-                            <Select opciones={metodosPago} label="Metodo pago" valorDefault={0} valor={metodoPago} setValor={setMetodoPago}/>
+                            <InputNumber style="w-1/3" label={"Valor pagado"} valor={pagado} setValor={setPagado} format={true}/>
+                            <Select listItems={metodosPago} label="Metodo pago" defaultValue={0} setValue={setMetodoPago}/>
                             <div className={`${(metodoPago == 0 || metodoPago == 1) ? "pointer-events-none opacity-30" : ""}  w-full`}>
-                                <InputText label="Escribre la Refencia, Nro del comprobante o una descripcion" valor={descripcion} setValor={setDescripcion}/>
+                                <InputText label="Escribre la Refencia, Nro del comprobante o una descripcion" value={descripcion} setValue={setDescripcion}/>
                             </div>
                             
                         </div>
 
                         <div className="flex gap-3 justify-between">
                             <div>
-                                <Boton onClick={()=> setPagado(props.total)} texto = "Pago completo" isNormal={true} />
+                                <Boton onClick={()=> setPagado(props.total)} text = "Pago completo" isNormal={true} />
                             </div>
                             <div className="flex gap-3">
                                 
-                                <Boton onClick={() => {props.setShowModal(false)}} texto = "Cancelar" isNormal={true}/>
-                                <Boton onClick={finalizarCompra} texto = "Confirmar" />
+                                <Boton onClick={() => {props.setShowModal(false)}} text = "Cancelar" isNormal={true}/>
+                                <Boton onClick={finalizarCompra} text = "Confirmar" />
                             </div>
                             
                         </div>

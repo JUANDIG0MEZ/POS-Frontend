@@ -5,7 +5,7 @@
 
 import { formatearMiles} from '../../utils/formateadores'
 
-export default function InputNumber({label1, label2, isPrice, value, setValue, estyle }){
+export default function InputNumber({label1, label2, isPrice, value, setValue, style }){
 
     function label () {
 
@@ -40,7 +40,7 @@ export default function InputNumber({label1, label2, isPrice, value, setValue, e
     } 
 
     return (
-        <div className={`relative ${estyle ? estyle : "flex-1"}`}>
+        <div className={`relative ${style ? style : "flex-1"}`}>
             <label className="text-sm/6 font-medium absolute -top-7 text-nowrap">{label()}</label>
             <input 
             onFocus={()=> setValue ? setValue("") : null}
