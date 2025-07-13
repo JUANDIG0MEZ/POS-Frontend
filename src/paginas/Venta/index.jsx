@@ -11,6 +11,7 @@ import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 import ModalModificarProductoFactura from "../../componentes/Modales/ModalModificarProductoFactura"
 import ModalPagarVenta from "../../componentes/Modales/ModalPagarVenta"
 import { ContextInventario } from "../../contextInventario"
+import Tabla from "../../componentes/Tabla"
 
 
 
@@ -25,10 +26,7 @@ export default function Venta(){
     const [showModal, setShowModal] = useState(false)
     const [showModalAbonar, setShowModalAbonar] = useState(false)
 
-    const [idItemSeleccionado, setIdItemSeleccionado] = useState(null)
-
-    const [facturaOriginal, setFacturaOriginal] = useState([])
-    const [facturaModificada, setFacturaModificada] = useState([])
+    const [factura, setFactura] = useState([])
 
     const [fecha, setFecha] = useState("")
     const [nombre, setNombre] = useState("")
@@ -38,37 +36,13 @@ export default function Venta(){
     const [idEstadoEntrega, setIdEstadoEntrega] = useState("")
 
     const [total, setTotal] = useState("")
-    const [totalModificado, setTotalModificado] = useState(null)
-    const [totalTabla, setTotalTabla] = useState(null)
     const [pagado, setPagado] = useState(null)
 
-
-    useEffect(()=>{
-        setFacturaModificada(facturaOriginal)
-        setTotalTabla(facturaOriginal.reduce((acc, item)=> acc + Number(item.subtotal), 0))
-    }, [facturaOriginal])
-
-    useEffect(()=> {
-        setTotalModificado(facturaModificada.reduce((acc, item) => acc + Number(item.subtotal), 0))
-    }, [facturaModificada])
-
-    useEffect(()=>{
-
-        if (idItemSeleccionado){
-            setShowModal(true)      
-        }
-
-    }, [idItemSeleccionado])
-
-    function cancelarCambios(){
-        setFacturaModificada(facturaOriginal)
-    }
 
 
     useEffect(()=>{
         function cb(resData){
-            setFacturaOriginal(resData.datos)
-            setFacturaModificada(resData.datos)
+            setFactura(resData.datos)
             setFecha(resData.info.fecha)
             setNombre(resData.info.nombre_cliente)
             setTelefono(resData.info.telefono)
@@ -77,29 +51,10 @@ export default function Venta(){
             setIdEstadoEntrega(resData.info.id_estado_entrega)
             setPagado(resData.info.pagado)
             setTotal(resData.info.total)
-            setTotalTabla(resData.datos.reduce((acc, item) => acc + parseInt(item.subtotal), 0))
         }
         fetchManager(`http://localhost:3000/api/v1/venta/${id}`, cb, "GET")
     }, [id])
 
-
-    function guardarCambios(){
-        const detalles = facturaModificada.map(item => {
-            return {
-                producto_id: item.id,
-                cantidad: Number(item.cantidad),
-                precio: item.precio ,
-                subtotal: item.subtotal
-            }
-        })
-        
-        function cb(res){
-            setFacturaOriginal(facturaModificada)
-            setTotal(res.info.total)
-            setPagado(res.info.pagado)
-        }
-        fetchManager(`http://localhost:3000/api/v1/venta/${id}/detalle`,cb, "PATCH", {detalles})    
-    }
 
 
     async function actualizarEstadoEntrega(nuevoEstado) {
@@ -113,9 +68,7 @@ export default function Venta(){
 
 
     return (
-        <div className="w-[1400px] flex flex-col mx-auto gap-3">
-            
-            
+        <div className="w-[1400px] flex flex-col mx-auto gap-3"> 
             <div className="flex justify-between my-2 ">
                 <h1 className="titulo items-center flex ">Factura de venta: <p className="subtitulo etiqueta border rounded-md p-1 ml-4">{id}</p></h1>
                 <h1 className="text-xl font-bold flex items-center"> Fecha: {fecha}</h1>
@@ -144,51 +97,19 @@ export default function Venta(){
             </div>
             <div>
                 <h1 className="subtitulo">Producto comprados</h1>
-                <DiffTabla 
-                    tabla1={facturaOriginal} 
-                    tabla2={facturaModificada}
-                    total={totalTabla} 
-                    total2= {totalModificado} 
-                    setIdItemSeleccionado={setIdItemSeleccionado}/>
+                <Tabla
+                    datos = {factura} 
+                   total= {total}/>
+                <Boton texto="Anular factura" isNormal={true}/>
             </div>
 
-            <div>
-            {
-                (totalModificado < pagado) && <p className="animate-bounce w-full justify-center text-lg"><strong className="text-xl">Nota</strong>: En caso de realizar las modificaciones, se debe pagar al cliente: <span className=" text-red-500 text-xl"> <strong> ${pagado - totalModificado}</strong> </span></p>
-            }
-            </div>
-            
-            <div className="flex justify-between">
-                <Boton texto="Devolver todo" isNormal={true}/>
-                
-                <div className="flex gap-3">
-                    <Boton texto="Cancelar cambios" isNormal={true} onClick={cancelarCambios}/>
-                    <Boton texto="Guardar Cambios" onClick={() => guardarCambios()}/>
-                </div>
-                
-            </div>
-            
-            <div>
-                
-            </div>
-                {showModal ?
-                    <ModalModificarProductoFactura
-                        setShowModal={setShowModal}
-                        idProductoSeleccionado={idItemSeleccionado}
-                        setIdProductoSeleccionado={setIdItemSeleccionado}
-                        datos={facturaModificada}
-                        setDatos={setFacturaModificada} />
-                    :null
-                }
+            {showModalAbonar && <ModalPagarVenta  
+                setShowModal={setShowModalAbonar}
+                numeroFactura={id}
+                total={total}
+                pagado={pagado}
+                setPagado={setPagado}/>}
 
-                {showModalAbonar && <ModalPagarVenta  
-                    setShowModal={setShowModalAbonar}
-                    numeroFactura={id}
-                    total={total}
-                    pagado={pagado}
-                    setPagado={setPagado}/>}
-            <div>
-            </div>
         </div>
     )
 }

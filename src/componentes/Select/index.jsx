@@ -3,11 +3,11 @@
 
 
 
-export default function Select(props) {
+export default function Select({listItems, setValue, defaultValue, label}) {
 
     function handleChange(e) {
         const valor = e.target.value
-        props.setValor(valor)
+        setValue(valor)
     }
     
     return (
@@ -15,9 +15,9 @@ export default function Select(props) {
             <select
             className="py-2.5 px-4 boton-normal"
             onClick={handleChange}>
-            <option value={props.valorDefault} >{props.label}</option>
+            <option value={defaultValue} >{label}</option>
             {
-                props.opciones.map( opcion  => {
+                listItems.map( opcion  => {
                     return (
                         <option key={opcion.id} value={opcion.id}>{opcion.nombre}</option>
                     )

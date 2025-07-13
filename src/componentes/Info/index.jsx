@@ -1,9 +1,9 @@
 
 
-export default function Info(props){
+export default function Info({label, value}){
     return (
         <>
-            <p><strong>{props.label} </strong>{props.value}</p>
+            <p><strong>{label} </strong>{value}</p>
         </>
     )
 }

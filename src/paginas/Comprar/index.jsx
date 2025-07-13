@@ -164,32 +164,23 @@ export default function Comprar() {
                         <div className="flex w-full items-center justify-between gap-3">
                             <div className="flex gap-3">
                                 <InputNumber
-                                estilo = {"w-28"}
-                                valor={cantidadProducto}
-                                setValor={setCantidadProducto}
-                                label="Cantidad"
-                                isNumber={true}
-                                format={true}
+                                estyle = {"w-28"}
+                                value={cantidadProducto}
+                                setValue={setCantidadProducto}
+                                label1="Cantidad"
                                 />
                             <InputNumber
-                                estilo = {"w-40"}
-                                valor={precioProducto}
-                                setValor={setPrecioProducto}
-                                // labelSeleccionado = {precioParcial}
-                                label="Precio"
-                                isNumber={true}
-                                isPrice={true}
-                                format={true}
+                                estyle = {"w-40"}
+                                value={precioProducto}
+                                setValue={setPrecioProducto}
+                                label1="Precio"
                                 />
                             
                             
                             <InputNumber
-                                estilo = {"w-40"}
-                                label="Total"
-                                valor={totalProducto}
-                                // labelSeleccionado = {totalParcial}
-                                format={true}
-                                isPrice= {true}
+                                estyle = {"w-40"}
+                                label1="Total"
+                                value={totalProducto}
                                 />
                             
                             <BotonIcono

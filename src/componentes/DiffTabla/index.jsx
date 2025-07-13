@@ -2,20 +2,20 @@
 import { FaLongArrowAltRight } from "react-icons/fa"
 import {memo} from 'react'
 
-export default memo(function DiffTabla(props) {
+export default memo(function DiffTabla({listItems1, listItems2, setIdItemSelected, rename, compare, total1, total2}) {
 
     function seleccionFila(e){
         const fila = e.target.closest('tr')
-        if (fila && props.setIdItemSeleccionado){
+        if (fila && setIdItemSelected){
             const id = fila.dataset.id
-            props.setIdItemSeleccionado(id)
+            setIdItemSelected(id)
         }
     }
 
     function comparar(indice, clave){
-        if (['cantidad', 'precio', 'subtotal'].includes(clave)){
-            const valor1 = Number(props.tabla1[indice][clave])
-            const valor2 = Number(props.tabla2[indice][clave])
+        if (compare[clave]){
+            const valor1 = Number(listItems1[indice][clave])
+            const valor2 = Number(listItems2[indice][clave])
             if (valor1 === valor2){
                 return valor1
             }
@@ -31,7 +31,7 @@ export default memo(function DiffTabla(props) {
             }
         }
         else {
-            return props.tabla1[indice][clave]
+            return listItems2[indice][clave]
         }
     }
 
@@ -39,14 +39,14 @@ export default memo(function DiffTabla(props) {
     return (
         <>
             {
-                props.tabla1.length > 0 ? <table onClick={seleccionFila} className="w-full">
+                listItems1.length > 0 ? <table onClick={seleccionFila} className="w-full">
             <thead>
 
                 <tr className="titulo-tabla">
                 {
-                    props.tabla1.length > 0 && Object.keys(props.tabla1[0]).map((key, indice)=>{
-                        if (props.rename && props.rename[key]){
-                            return <th key={indice} className="p-2 border">{props.rename[key]}</th>
+                    listItems1.length > 0 && Object.keys(listItems1[0]).map((key, indice)=>{
+                        if (rename && rename[key]){
+                            return <th key={indice} className="p-2 border">{rename[key]}</th>
                         }
                         return <th key={indice} className="p-2 border">{key}</th>
                     })
@@ -55,7 +55,7 @@ export default memo(function DiffTabla(props) {
             </thead>
             <tbody  className=" p-1 h-full w-full overflow-auto">
                 { 
-                    props.tabla1.length > 0 && props.tabla1.map((fila1, indice)=>{
+                    listItems1.length > 0 && listItems1.map((fila1, indice)=>{
                         return (<tr
                             key={indice} 
                             data-id = {fila1.id}
@@ -75,17 +75,17 @@ export default memo(function DiffTabla(props) {
 
                 
                 {   
-                    (props.tabla1.length && props.total) ? 
+                    (listItems1.length && total1) ? 
                     <tr>
                         {
-                        Object.keys(props.tabla1[0]).map((item, idx)=>{
-                            const totalColumns = Object.keys(props.tabla1[0]).length
+                        Object.keys(listItems1[0]).map((item, idx)=>{
+                            const totalColumns = Object.keys(listItems1[0]).length
 
                             if (idx == totalColumns -2) {
                                 return <td key={idx} className="p-2 border font-bold text-center">Total</td>
                             }
                             else if (idx == totalColumns -1) {
-                                return <td key={idx} className="p-2 border text-center">{compararTotales(props.total, props.total2)}</td>
+                                return <td key={idx} className="p-2 border text-center">{compararTotales(total1, total2)}</td>
                             }
                             return <td key={idx} className="p-2"></td>
                         })

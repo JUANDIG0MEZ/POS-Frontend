@@ -1,12 +1,12 @@
 import {memo} from 'react'
 
-export default memo(function Tabla(props) {   
+export default memo(function Tabla({listItems, setIdItemSelected, rename, total, }) {   
     
     function seleccionFila(e){
         const fila = e.target.closest('tr')
-        if (fila && props.setIdItemSeleccionado){
+        if (fila && setIdItemSelected){
             const id = fila.dataset.id
-            props.setIdItemSeleccionado(id)
+            setIdItemSelected(id)
         }
     }
 
@@ -15,9 +15,9 @@ export default memo(function Tabla(props) {
             <thead>
                 <tr className="titulo-tabla">
                 {
-                props.datos.length > 0 && Object.keys(props.datos[0]).map((key, indice)=>{
-                    if (props.rename && props.rename[key]){
-                        return <th key={indice} className="p-2 border">{props.rename[key]}</th>
+                listItems.length > 0 && Object.keys(listItems[0]).map((key, indice)=>{
+                    if (rename && rename[key]){
+                        return <th key={indice} className="p-2 border">{rename[key]}</th>
                     }
                     return <th key={indice} className="p-2 border">{key}</th>
                 })
@@ -26,7 +26,7 @@ export default memo(function Tabla(props) {
             </thead>
             <tbody onClick={seleccionFila} className=" p-1 h-full w-full overflow-auto">
                 { 
-                    props.datos.length ? props.datos.map((dato)=>{
+                    listItems.length ? listItems.map((dato)=>{
 
                         return (
                         <tr
@@ -35,11 +35,6 @@ export default memo(function Tabla(props) {
                             className={`hover-1 cursor-pointer text-center`}>
                             {   
                                 Object.keys(dato).map((key, indice)=>{
-                                    if (props.isVisible){
-                                        if (props.isVisible[key] === false) {
-                                            return null
-                                        }
-                                    }
                                     return <td key={indice} className="p-2 border">{dato[key]}</td>
                                 })
                             }
@@ -50,12 +45,12 @@ export default memo(function Tabla(props) {
                 : null
             } 
                 {
-                    props.total ?   props.datos.length > 0 && 
+                    total ?   listItems.length > 0 && 
                     <tr className="">
                     {   
-                        props.datos.length > 0 &&
-                        Object.keys(props.datos[0]).map((item, idx)=>{
-                            const totalColumns = Object.keys(props.datos[0]).length
+                        listItems.length > 0 &&
+                        Object.keys(listItems[0]).map((item, idx)=>{
+                            const totalColumns = Object.keys(listItems[0]).length
 
                             if (idx == totalColumns -2) {
                                 return <td key={idx} className="p-2 border font-bold text-center">Total</td>

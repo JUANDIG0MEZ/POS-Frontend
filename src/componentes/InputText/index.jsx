@@ -1,17 +1,17 @@
 
-export default function InputText(props){
-    function labelSeleccionado (labelSolo) {
-        if (props.labelSeleccionado){
+export default function InputText({value, setValue, label1, label2, style}){
+    function showLabel () {
+        if (label2){
             return (
                 <>
-                    <span >{labelSolo}</span>
+                    <span >{label1}</span>
                     <span>{" "}</span>
-                    <span className="etiqueta">{props.labelSeleccionado}</span>
+                    <span className="etiqueta">{label2}</span>
                 </>
                 
             )
         }
-        return labelSolo
+        return label1
     }
     
 
@@ -19,20 +19,20 @@ export default function InputText(props){
         const regex = /[^a-zA-Z0-9\s\p{P}]/gu;
         
         const nuevoValor = e.target.value.replace(regex, "")
-        if (props.setValor){
-            props.setValor(nuevoValor)       
+        if (setValue){
+            setValue(nuevoValor)       
         }
     }
 
 
     return (
-        <div className={`relative ${props.estilo ? props.estilo : "flex-1"}`}>
-            <label className="text-sm/6 font-medium text-gray-900 absolute -top-7 text-nowrap">{labelSeleccionado(props.label)}</label>
+        <div className={`relative ${style ? style : "flex-1"}`}>
+            <label className="text-sm/6 font-medium text-gray-900 absolute -top-7 text-nowrap">{showLabel()}</label>
             <input 
             onChange={establecerValor}
             type="text" 
-            value={props.valor || ""}
-            className={` ${props.isNumber ? "tracking-widest" : "tracking-wide"}  px-3 py-1.5 text-base w-full rounded-lg borde-input`}
+            value={value || ""}
+            className={`tracking-wide px-3 py-1.5 text-base w-full rounded-lg borde-input`}
             />
         </div>
     )
