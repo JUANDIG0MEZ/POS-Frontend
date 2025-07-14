@@ -9,12 +9,13 @@ import { ContextInventario } from "../../contextInventario"
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 import { toast } from "sonner"
 
-export default function ModalConfirmarCompra(props){
+export default function ModalConfirmarCompra({carritoDeCompras, total, reset, setShowModal}){
 
     const {
         estadosComprasEntrega,
         metodosPago,
         clientesNombres,
+        totalNumber
     } = useContext(ContextInventario)
 
     const [nombreCliente, setNombreCliente] = useState("")
@@ -25,11 +26,13 @@ export default function ModalConfirmarCompra(props){
     const [pagado , setPagado] = useState("")
     const [descripcion, setDescripcion] = useState("")
 
+    console.log(metodoPago)
+
     
     function finalizarCompra(){
-        if ( props.carritoDeCompras.length === 0) return toast.info("Agrega productos al carrito.")
-        if ( Number(pagado) > Number(props.total)) return toast.error("El monto pagado es mayor al total.")
-        if ( Number(pagado) < Number(props.total) && !Number(idCliente)) return toast.error("Un cliente no registrado no puede tener deuda.")
+        if ( carritoDeCompras.length === 0) return toast.info("Agrega productos al carrito.")
+        if ( Number(pagado) > Number(total)) return toast.error("El monto pagado es mayor al total.")
+        if ( Number(pagado) < Number(total) && !Number(idCliente)) return toast.error("Un cliente no registrado no puede tener deuda.")
         if ( !Number(estadoEntrega)) return toast.warning('Elije el estado de la entrega.')
         if ( !nombreCliente) return toast.warning('Debes agregar el nombre del cliente.')
 
@@ -39,24 +42,24 @@ export default function ModalConfirmarCompra(props){
                 id_estado_entrega: Number(estadoEntrega),
                 id_metodo_pago: Number(metodoPago),
                 pagado: Number(pagado),    
-                total: props.total,
+                total: total,
                 nombre_cliente: nombreCliente
             }
             if (descripcion) info.descripcion = descripcion
 
-            const detalles = props.carritoDeCompras.map(item => {
+            const detalles = carritoDeCompras.map(item => {
                 return {
                     producto_id: item.id,
                     cantidad: item.cantidad,
-                    precio: Number(item.precio)
+                    precio: item.precio
                 }
             })
 
             const compraEnviar = {info: info, detalles}
 
             function cbCompra(res) {
-                props.reset()
-                props.setShowModal(false)
+                reset()
+                setShowModal(false)
             }
             fetchManager(`http://localhost:3000/api/v1/compra`, cbCompra, "POST", compraEnviar)
 
@@ -73,7 +76,7 @@ export default function ModalConfirmarCompra(props){
                     <div className="flex flex-col gap-8">
                         <p className="subtitulo">Informacion factura</p>
                         <div className="flex gap-3">
-                            <InputNumber style="w-40 pointer-events-none" label1={"Total"} value={props.total}/>
+                            <InputNumber style="w-40 pointer-events-none" label1={"Total"} value={total} instanceNumber={totalNumber}/>
                             <InputLista
                                 value={nombreCliente}
                                 setValue={setNombreCliente}
@@ -88,21 +91,26 @@ export default function ModalConfirmarCompra(props){
 
                         <p className="subtitulo">Informacion pago</p>
                         <div className="flex gap-3">
-                            <InputNumber style="w-1/3" label={"Valor pagado"} valor={pagado} setValor={setPagado} format={true}/>
+                            <InputNumber style="w-1/3" label1={"Valor pagado"} value={pagado} setValue={setPagado}  instanceNumber={totalNumber}/>
                             <Select listItems={metodosPago} label="Metodo pago" defaultValue={0} setValue={setMetodoPago}/>
                             <div className={`${(metodoPago == 0 || metodoPago == 1) ? "pointer-events-none opacity-30" : ""}  w-full`}>
-                                <InputText label="Escribre la Refencia, Nro del comprobante o una descripcion" value={descripcion} setValue={setDescripcion}/>
+                                <InputText label1="Escribre la Refencia, Nro del comprobante o una descripcion" value={descripcion} setValue={setDescripcion}/>
                             </div>
                             
                         </div>
 
                         <div className="flex gap-3 justify-between">
                             <div>
-                                <Boton onClick={()=> setPagado(props.total)} text = "Pago completo" isNormal={true} />
+                                <Boton onClick={()=> {
+                                    setPagado(total)
+                                    setMetodoPago("1")
+                                }} text = "Pago completo" isNormal={true} />
                             </div>
                             <div className="flex gap-3">
                                 
-                                <Boton onClick={() => {props.setShowModal(false)}} text = "Cancelar" isNormal={true}/>
+                                <Boton onClick={() => {
+                                    setShowModal(false)
+                                    }} text = "Cancelar" isNormal={true}/>
                                 <Boton onClick={finalizarCompra} text = "Confirmar" />
                             </div>
                             

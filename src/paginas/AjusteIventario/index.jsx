@@ -7,7 +7,7 @@ import FechaInput from "../../componentes/FechaInput"
 export default function AjusteInventario() {
 
     
-    const {id} = useParams()
+    const { id } = useParams()
     const [fecha, setFecha] = useState("")
     const [hora, setHora] = useState("")
     const [detallesAhora, setDetallesAhora] = useState([])

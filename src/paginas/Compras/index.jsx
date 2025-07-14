@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext, useRef } from "react";
 import Tabla from "../../componentes/Tabla";
 import FechaInput from "../../componentes/FechaInput";
-import InputNumber from "../../componentes/InputText";
+import InputNumber from "../../componentes/InputNumber";
 import InputLista from "../../componentes/InputLista";
 import BotonIcono from "../../componentes/BotonIcono";
 import {Link, useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ import CambiarPagina from "../../componentes/CambiarPagina";
 import Select from "../../componentes/Select";
 
 import { ContextInventario } from "../../contextInventario";
+import { IdNumber } from "../../utils/numeros";
 
 
 const renombrar = {
@@ -64,18 +65,13 @@ export default function Compras(){
     const [idSeleleccionado, setIdSeleccionado] = useState(null)
     const [id, setId] = useState(null)
 
-
-
-
     const [nombreCliente, setNombreCliente] = useState(null)
-    
     
     // Paginacion
 
     const [pagina, setPagina] = useState(0)
     const [totalPaginas, setTotalPaginas] = useState(0)
-
-    
+  
     const [limite, setLimite] = useState(defaultlimite)
     const [offset, setOffset] = useState(defaultOffset)
     const [columna, setColumna] = useState(defaultColumn)
@@ -124,13 +120,14 @@ export default function Compras(){
         fetchManager(`http://localhost:3000/api/v1/compra?${params}`, cbCompras, "GET")
     }
 
+
     return (
         <div className="h-full flex flex-col max-w-5xl min-w-[1400px] mx-auto px-5 py-3 gap-2 overflow-auto">
             <h1 className="titulo mb-5">Facturas de compra</h1>
 
             <div className="flex items-center gap-3">
                 <div className="w-24">
-                    <InputNumber label1={"Id"} value={id} setValue = {setId}/>
+                    <InputNumber label1={"Id"} value={id} setValue = {setId} instanceNumber={IdNumber}/>
                 </div>
                 <div className="flex gap-3">
                     <FechaInput label={"Desde"} value = {fechaInicio} setValue= {setFechaInicio}/>

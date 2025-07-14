@@ -4,7 +4,6 @@ import InputListaMultiple from '../../componentes/InputListaMultiple'
 import InputNumber from '../../componentes/InputNumber'
 import MostrarImagen from '../../componentes/MostrarImagen'
 import Boton from '../../componentes/Boton'
-import BotonIcono from '../../componentes/BotonIcono'
 import DiffTabla from '../../componentes/DiffTabla'
 import { fetchManager } from '../../serviciosYFunciones/fetchFunciones'
 import { toast } from 'sonner'
@@ -13,16 +12,17 @@ export default function AjustarInventario(){
     const [busquedaNombre, setBusquedaNombre] = useState('')
     const [productoSeleccionadoId, setProductoSeleccionadoId] = useState()
     const [productosModificados, setProductosModificados] = useState()
-    const [cantidadActual, setCantidadActual] = useState(null)
-    const [cantidadAjustada, setCantidadAjustada] = useState(null)
+    const [cantidadActual, setCantidadActual] = useState('')
+    const [cantidadAjustada, setCantidadAjustada] = useState('')
 
     const [productoSeleccionado, setProductoSeleccionado] = useState()
 
-    const [productosActuales, setProductoActuales] = useState([])
-    const [productosAjustados, setProductoAjustados] = useState([])
+    const [productosActuales, setProductosActuales] = useState([])
+    const [productosAjustados, setProductosAjustados] = useState([])
 
     const {
-        productos
+        productos,
+        cantidadNumber
     } = useContext(ContextInventario)
     
     useEffect(() => {
@@ -55,12 +55,16 @@ export default function AjustarInventario(){
             medida: productoSeleccionado.medida
         }
 
+        console.log(productoSeleccionado)
+
 
         const productoActual= {...productoInfo, cantidad: productoSeleccionado.cantidad}
         const productoAjustado= {...productoInfo, cantidad: cantidadAjustada}
         
-        setProductoActuales([...productosActuales, productoActual])
-        setProductoAjustados([...productosAjustados, productoAjustado])
+        setProductosActuales([...productosActuales, productoActual])
+        setProductosAjustados([...productosAjustados, productoAjustado])
+
+        console.log(productoAjustado, productoActual)
 
     }
 
@@ -70,26 +74,28 @@ export default function AjustarInventario(){
                 <h1 className='titulo'>Crear ajuste de inventario</h1>
                 <div className="flex w-full gap-3">
                     <InputListaMultiple
-                        lista={productos}
-                        valor={busquedaNombre}
-                        setValor={setBusquedaNombre}
-                        setIdSeleccionado={setProductoSeleccionadoId}
+                        listItems={productos}
+                        value={busquedaNombre}
+                        setValue={setBusquedaNombre}
+                        setIdSelected={setProductoSeleccionadoId}
                         label={"Nombre producto"}
                     />
                     <div className='w-[300px] flex gap-3'>
-                        <InputNumber label={'Cantidad actual'} valor={cantidadActual} />
-                        <InputNumber label={'Cantidad ajustada'} valor={cantidadAjustada} setValor={setCantidadAjustada}/>
+                        <InputNumber label1={'Cantidad actual'} value={cantidadActual} instanceNumber={cantidadNumber} />
+                        <InputNumber label1={'Cantidad ajustada'} value={cantidadAjustada} setValue={setCantidadAjustada} instanceNumber={cantidadNumber}/>
                     </div>
                     
-                    <Boton texto = 'Guardar' onClick={ajustarProducto} isNormal = {true}/>
+                    <Boton text = 'Guardar' onClick={ajustarProducto} isNormal = {true}/>
                 </div>
 
                 <DiffTabla
-                    tabla1 = {productosActuales}
-                    tabla2= {productosAjustados}
-                    setIdItemSeleccionado = {setIdItemSeleccionado}/>
+                    listItems1 = {productosActuales}
+                    listItems2= {productosAjustados}
+                    setIdSelected = {setIdItemSeleccionado}
+                    compare={ {cantidad: true}}
+                    />
                 <div className='ml-auto'>
-                    <Boton texto='Guardar cambios' onClick={guardarCambios} /> 
+                    <Boton text='Guardar cambios' onClick={guardarCambios} /> 
                 </div>
             </div>
             <div className="w-fit h-fit mt-3 mr-4 py-3 px-2 rounded-xl border-2">

@@ -1,5 +1,6 @@
-import { createContext, useState, useEffect } from 'react'
+import { createContext, useState, useEffect, useRef } from 'react'
 import { fetchManager } from '../serviciosYFunciones/fetchFunciones'
+import { DecimalNumber } from '../utils/numeros'
 const ContextInventario = createContext()
 
 const InventarioProvider = ({children}) => {
@@ -13,6 +14,9 @@ const InventarioProvider = ({children}) => {
     const [estadosVentasEntrega, setEstadosVentasEntrega] = useState([])
     const [tiposClientes, setTiposClientes] = useState([])
     const [metodosPago, setMetodosPago] = useState([])
+    const [cantidadNumber, setCantidadNumber] = useState(null) 
+    const [precioNumber, setPrecioNumber] = useState(null)
+    const [totalNumber, setTotalNumber] = useState(null)
 
 
     const ordenOpciones = [
@@ -41,7 +45,12 @@ const InventarioProvider = ({children}) => {
         //     setMetodosPago(res.metodoPago)
         // }
         // fetchManager('http://localhost:3000/api/v1/init', cbInit, "GET")
-        
+        const cbConfiguracion =(res) =>{
+            setCantidadNumber(new DecimalNumber(res.decimalesCantidad))
+            setPrecioNumber(new DecimalNumber(res.decimalesPrecio))
+            setTotalNumber(new DecimalNumber(res.decimalesTotal))
+        }
+        fetchManager('http://localhost:3000/api/v1/init/configuracion',cbConfiguracion, 'GET' )
         fetchManager('http://localhost:3000/api/v1/cliente/nombre', setClientesNombres, "GET")
         fetchManager('http://localhost:3000/api/v1/producto/categoria', setCategorias, "GET")
         fetchManager('http://localhost:3000/api/v1/producto', setProductos, "GET")
@@ -53,7 +62,8 @@ const InventarioProvider = ({children}) => {
         fetchManager('http://localhost:3000/api/v1/venta/estadopago', setEstadosVentasPago, "GET")
         fetchManager('http://localhost:3000/api/v1/cliente/tipo', setTiposClientes, "GET")
 
-        fetchManager('http://localhost:3000/api/v1/init/metodopago', setMetodosPago,"GET")
+        fetchManager('http://localhost:3000/api/v1/init/metodo-pago', setMetodosPago,"GET")
+        
     }, [])
 
     return (
@@ -80,7 +90,13 @@ const InventarioProvider = ({children}) => {
             //
 
             ordenOpciones,
-            limiteOpciones
+            limiteOpciones,
+
+
+
+            cantidadNumber,
+            precioNumber,
+            totalNumber,
             
             }
         }>

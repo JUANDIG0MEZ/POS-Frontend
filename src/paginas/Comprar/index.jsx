@@ -11,7 +11,8 @@ import { FaTrash, FaBalanceScale, FaPlus } from "react-icons/fa"
 import { fetchFilesManager } from "../../serviciosYFunciones/fetchFunciones"
 import BotonIcono from "../../componentes/BotonIcono"
 
-
+import Decimal from 'decimal.js'
+import { multiplicarYRedondear, redondear } from "../../utils/decimales"
 
 const renombrar = {
     id: "ID",
@@ -28,35 +29,27 @@ export default function Comprar() {
     const [showModalConfirmacion, setShowModalConfirmacion] = useState(false)
 
     const {
-        productos
+        productos,
+        cantidadNumber,
+        precioNumber,
+        totalNumber
     } = useContext(ContextInventario)
     const [carritoDeCompras, setCarritoDeCompras] = useState([])
     
 
 
-    // Informacion de la compra
-    //const [nombreCliente, setNombreCliente] = useState("")
+
     const [nombreProducto, setNombreProducto] = useState("")
     const [medida, setMedida] = useState("")
     const [imagenes, setImagenes] = useState([])
-
-
-
-
-    // Manipulacion tabla
     const [idProductoSeleccionadoTabla, setIdProductoSeleccionadoTabla] = useState(null)
-
-
-    
-
-
 
     // Casillas
     const [idProducto, setIdProducto]= useState("")
     const [cantidadProducto, setCantidadProducto] = useState("")
     const [precioProducto, setPrecioProducto] = useState("")
     const [totalProducto, setTotalProducto] = useState("")
-    const [total , setTotal] = useState(0)
+    const [total , setTotal] = useState('')
 
     function limpiarCampos(){
         setNombreProducto("")
@@ -76,10 +69,13 @@ export default function Comprar() {
         } 
     }, [productos, idProducto])
     useEffect(()=> {
-        setTotal(carritoDeCompras.reduce((acc, item) => acc + item.subtotal, 0))
+        const totalFactura = carritoDeCompras.reduce((acc, item) => acc.plus(item.subtotal), new Decimal(0))
+        setTotal(totalFactura.toString())
     }, [carritoDeCompras])
     useEffect(()=> {
-        setTotalProducto(cantidadProducto * precioProducto)
+        if (cantidadProducto !== "" && precioProducto !== "") {
+             setTotalProducto(multiplicarYRedondear(cantidadProducto, precioProducto, totalNumber.maxDecimals))
+        }  
     }, [precioProducto, cantidadProducto])
 
 
@@ -119,8 +115,8 @@ export default function Comprar() {
             id: idProducto,
             nombre: producto.nombre,
             medida: producto.medida,
-            cantidad: Number(cantidadProducto),
-            precio: Number(precioProducto),
+            cantidad: redondear(cantidadProducto),
+            precio: redondear(precioProducto),
             subtotal: totalProducto,
             
         }
@@ -168,12 +164,14 @@ export default function Comprar() {
                                 value={cantidadProducto}
                                 setValue={setCantidadProducto}
                                 label1="Cantidad"
+                                instanceNumber={cantidadNumber}
                                 />
                             <InputNumber
                                 style = {"w-40"}
                                 value={precioProducto}
                                 setValue={setPrecioProducto}
                                 label1="Precio"
+                                instanceNumber={precioNumber}
                                 />
                             
                             
@@ -181,6 +179,7 @@ export default function Comprar() {
                                 style = {"w-40"}
                                 label1="Total"
                                 value={totalProducto}
+                                instanceNumber={totalNumber}
                                 />
                             
                             <BotonIcono

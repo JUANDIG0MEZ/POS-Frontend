@@ -56,11 +56,10 @@ export default function AjustesInventario(props){
                     <div className="flex justify-between mb-3">
                         <div className="flex gap-3">
                             <CambiarPagina 
-                            pagina={pagina}
-                            setPagina={setPagina}
-                            totalPaginas={totalPaginas}
-                            limite={limit}
-                            setLimite={setLimit}
+                            page={pagina}
+                            setPage={setPagina}
+                            totalPage={totalPaginas}
+                            limit={limit}
                             setOffset={setOffset}/>
                             <Select label={"No. Filas"} listItems = {limiteOpciones} setValue={setLimit} defaultValue={10}/>
                         </div>

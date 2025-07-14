@@ -21,12 +21,19 @@ export default memo(function DiffTabla({listItems1, listItems2, setIdItemSelecte
             }
             else if (valor1 > valor2){
                 return (
-                    <span className="flex gap-2 justify-center items-center">{valor1}<FaLongArrowAltRight size={20}/>{<strong className='text-red-500'>$ {valor2}</strong>}</span>
+                    <span
+                    className="flex gap-2 justify-center items-center">
+                        {valor1}
+                        <FaLongArrowAltRight size={20}/>
+                        {<strong className='text-red-500'>
+                            {valor2}
+                        </strong>}
+                    </span>
                 )
             }
             else {
                 return (
-                    <span className="flex gap-2 justify-center">{valor1}<FaLongArrowAltRight size={20}/>{<strong className='text-green-700'>$ {valor2}</strong>}</span>
+                    <span className="flex gap-2 justify-center">{valor1}<FaLongArrowAltRight size={20}/>{<strong className='text-green-700'>{valor2}</strong>}</span>
                 )
             }
         }

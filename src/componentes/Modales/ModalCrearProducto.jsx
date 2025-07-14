@@ -17,12 +17,14 @@ export default function ModalCrearProducto(props){
         productos,
         setProductos,
         categorias,
-        medidas
+        medidas,
+        cantidadNumber,
+        precioNumber
     } = useContext(ContextInventario)
 
     const [nombre, setNombre] = useState("")
-    const [precioCompra, setPrecioCompra] = useState(null)
-    const [precioVenta, setPrecioVenta] = useState(null)
+    const [precioCompra, setPrecioCompra] = useState("")
+    const [precioVenta, setPrecioVenta] = useState("")
 
     const [medida, setMedida] = useState(null)
     const [medidaId, setMedidaId] = useState(null)
@@ -111,12 +113,14 @@ export default function ModalCrearProducto(props){
                             label1="Cantidad"
                             value={cantidad}
                             setValue={setCantidad}
+                            instanceNumber={cantidadNumber}
                             />
                             <InputNumber
                                 style="flex-1"
                                 label1="Valor Compra" 
                                 value={precioCompra}
                                 setValue={setPrecioCompra}
+                                instanceNumber={precioNumber}
                                 />
                                 
                             <InputNumber
@@ -124,6 +128,7 @@ export default function ModalCrearProducto(props){
                                 label1="Valor Venta"
                                 value={precioVenta}
                                 setValue={setPrecioVenta}
+                                instanceNumber={precioNumber}
                                 />
                             
                         </div>

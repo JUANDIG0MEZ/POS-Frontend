@@ -18,7 +18,8 @@ import CambiarPagina from "../../componentes/CambiarPagina"
 
 import Select from "../../componentes/Select"
 import InputLista from "../../componentes/InputLista"
-
+import { IdNumber } from "../../utils/numeros"
+import InputNumber from "../../componentes/InputNumber"
 
 
 
@@ -155,12 +156,14 @@ export default function Inventario() {
                     <div className="flex w-full gap-4 items-center">
                         <div className="flex gap-1 items-center">
                             <BotonIcono icon={<FaChevronLeft/>}/>
-                            <InputText
+                            <InputNumber
                             style="w-20" 
                             label1="Id" 
                             label2={productoSeleccionado.id}
                             value={busquedaId} 
-                            setValue={setBusquedaId}/>
+                            setValue={setBusquedaId}
+                            instanceNumber={IdNumber}
+                            />
                             <BotonIcono icon={<FaChevronRight/>} />
                         </div>
                         <InputLista
@@ -232,8 +235,6 @@ export default function Inventario() {
                         
                     </div>
                 </div>
-            </div>
-            <div className="w-full px-2">
             </div>
             <div className="w-full overflow-auto text-md ">
                 <Tabla

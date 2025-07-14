@@ -1,5 +1,4 @@
 import InputText from "../InputText"
-import InputNumber from "../InputNumber"
 import Boton from "../Boton"
 import { useState, useEffect, useContext} from "react"
 import { ContextInventario } from "../../contextInventario"
@@ -54,24 +53,24 @@ export default function ModalCrearCliente(props){
                 <div className="flex flex-col flex-1 gap-7">
                     <h2 className="titulo">Crear contacto</h2>
                     <div className="flex gap-3">
-                        <InputText label="Razon social o nombre completo" valor={nombre} setValor={setNombre}/>
-                        <Select opciones={tiposClientes} setValor={setTipo} label={"Tipo cliente"} valorDefault={0}/> 
+                        <InputText label1="Razon social o nombre completo" value={nombre} setValue={setNombre}/>
+                        <Select listItems={tiposClientes} setValue={setTipo} label={"Tipo cliente"} defaultValue={0}/> 
                     </div>
                              
                     <div className="flex gap-3">
-                        <InputText label = "Direccion" valor = {direccion} setValor = {setDireccion}/>               
+                        <InputText label1 = "Direccion" value = {direccion} setValue = {setDireccion}/>               
                         
                     </div>
                     <div className="flex justify-between">
                         <div className="flex gap-3">
-                            <InputText estilo="w-80" label = "Email" valor = {email} setValor={setEmail}/>
-                            <InputText estilo="w-44" label = "Telefono" valor={telefono} setValor={setTelefono} isNumber={true}/>
+                            <InputText style="w-80" label1 = "Email" value = {email} setValue={setEmail}/>
+                            <InputText style="w-44" label1 = "Telefono" value={telefono} setValue={setTelefono}/>
                         </div>
                         
                         <div className="flex gap-3">  
 
                             <Botonicono
-                            texto={<FaTrash/>}/>
+                            icon={<FaTrash/>}/>
                         </div>
                         
                     </div>
@@ -81,8 +80,8 @@ export default function ModalCrearCliente(props){
                         </div>
                         
                         <div className="flex w-full justify-end gap-3">  
-                            <Boton onClick={cerrarModal}  texto = "Cancelar"  isNormal = {true}/>
-                            <Boton onClick={crearCliente} texto = "Crear" />  
+                            <Boton onClick={cerrarModal}  text = "Cancelar"  isNormal = {true}/>
+                            <Boton onClick={crearCliente} text = "Crear" />  
                         </div>
                     </div>
                     
