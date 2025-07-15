@@ -11,14 +11,16 @@ Decimal.set({
 })
 
 export function esNumeroSeguro (valor) {
-  if (valor.lt(MIN_SAFE) || valor.gt(MAX_SAFE)) throw new Error('El valor fuera de los limites')
+  const value = new Decimal(valor)
+  if (value.lt(MIN_SAFE) || value.gt(MAX_SAFE)) throw new Error('El valor fuera de los limites')
+  return true
 }
 
 export function redondear (valor, decimales = 3) {
   const num = new Decimal(valor)
   esNumeroSeguro(num)
   const resultado = num.toDecimalPlaces(decimales)
-  return resultado.toString()
+  return resultado
 }
 
 export function multiplicarYRedondear (valor1, valor2, decimales = 3) {

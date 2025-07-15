@@ -4,7 +4,7 @@ import {toast} from 'sonner'
 import { fetchManager } from '../../serviciosYFunciones/fetchFunciones'
 import InputNumber from '../InputNumber'
 import Select from '../Select'
-
+import Decimal from 'decimal.js'
 import { ContextInventario } from '../../contextInventario'
 import InputText from '../InputText'
 
@@ -17,8 +17,11 @@ export default function ModalPagarCliente(props){
     const restante = props.debe - valorPago
 
     const {
-        metodosPago
+        metodosPago,
+        totalNumber
     } = useContext(ContextInventario)
+
+    console.log('metodosPago', metodosPago)
 
     function cerrarModal(){
         props.setShowModal(false)
@@ -27,16 +30,17 @@ export default function ModalPagarCliente(props){
 
     function realizarAbono(){
 
-        const valorPagoFetch = Number(valorPago)
+        const pagadoDecimal = new Decimal(valorPago)
         const metodoPagoFetch = Number(metodoPago)
+
         if (restante < 0) return toast.warning("El abono no puede ser mayor al total a pagar")
-        if (valorPagoFetch < 1)toast.warning("Ingresa el valor del pago")
+        if (pagadoDecimal.gt(0))toast.warning("Ingresa el valor del pago")
         if (metodoPagoFetch === 0) return toast.warning("Agrega el metodo de pago")
         if (!(metodoPagoFetch < 2) && !descripcion) return toast.warning("Agrega la referencia o nro de comprobante")
 
         const body = {
             cliente_id: Number(props.clienteId),
-            valor: valorPagoFetch,
+            valor: pagadoDecimal,
             id_metodo_pago: metodoPagoFetch,
         }
         if (descripcion) body.descripcion = descripcion
@@ -57,27 +61,28 @@ export default function ModalPagarCliente(props){
                 <div className="flex flex-col flex-1 gap-3">
                     <h2 className="titulo mb-3">Crear abono del cliente</h2>
                     <h3 className='subtitulo mb-4'>Informacion del cliente</h3>
-                    <InputNumber estilo="w-40" valor = {props.debe} label ="Por pagar" format={true}/>
+                    <InputNumber style="w-40" value = {props.debe} label1 ="Por pagar" />
 
                     <p className='subtitulo mb-4'>Informacion de pago</p>
                     <div className='flex gap-3 justify-end'>
-                        <Select label="Metodo pago" valorDefault={0} opciones={metodosPago} valor={metodoPago} setValor={setMetodoPago} />
+                        <Select label="Metodo pago" defaultValue={0} listItems={metodosPago} setValue={setMetodoPago} />
                         <div className={`${metodoPago < 2 ? "opacity-50 pointer-events-none": ""} flex flex-1 gap-3`}>
-                            <InputText valor={descripcion} setValor={setDescripcion} label="Agrega la referencia o nro de comprobante" />
+                            <InputText value={descripcion} setValue={setDescripcion} label1="Agrega la referencia o nro de comprobante" />
                         </div>
                         <InputNumber 
-                            estilo="w-40"
-                            valor = {valorPago}
-                            setValor={setValorPago} 
-                            label="Valor de pago"
-                            isPrice={true} format={true} />
+                            style="w-40"
+                            value = {valorPago}
+                            setValue={setValorPago} 
+                            label1="Valor de pago"
+                            instanceNumber={totalNumber}
+                            />
                     </div>
 
                     <div className='flex gap-3 justify-between'>
-                        <Boton onClick = {() => setValorPago(props.porPagar)} texto="Pago completo" isNormal={true}/>
+                        <Boton onClick = {() => setValorPago(props.porPagar)} text="Pago completo" isNormal={true}/>
                         <div className='flex gap-3'>
-                            <Boton onClick={cerrarModal} texto = "Cancelar" isNormal={true}/>
-                            <Boton onClick={realizarAbono} texto = "Pagar" />
+                            <Boton onClick={cerrarModal} text = "Cancelar" isNormal={true}/>
+                            <Boton onClick={realizarAbono} text = "Pagar" />
                         </div>
                         
                     </div>

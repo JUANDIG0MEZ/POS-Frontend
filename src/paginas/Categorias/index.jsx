@@ -10,6 +10,12 @@ const renombrar = {
     descripcion: "Descripcion" 
 }
 
+const columns = [
+    'id',
+    'nombre',
+    'descipcion'
+]
+
 export default function CrearCategoria() {
     //const [categorias, setCategorias] = useState([])
     const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState(null)
@@ -27,7 +33,11 @@ export default function CrearCategoria() {
                 </div>
                 <h2 className='subtitulo'> Lista de categorias</h2>
                 
-                <Tabla listItems = {categorias} setIdSelected={setIdCategoriaSeleccionada} rename = {renombrar} />
+                <Tabla
+                listItems = {categorias}
+                setIdSelected={setIdCategoriaSeleccionada}
+                rename = {renombrar}
+                columns = {columns}/>
             </div>
             {
                 showModalCrear ? <ModalCrearCategoria setShowModal = {setShowModalCrear} /> : null

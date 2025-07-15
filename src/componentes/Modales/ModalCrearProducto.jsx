@@ -9,6 +9,7 @@ import  {toast} from 'sonner'
 import { useContext } from "react"
 import { ContextInventario } from "../../contextInventario"
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
+import Decimal from "decimal.js"
 
 export default function ModalCrearProducto(props){
 
@@ -41,18 +42,19 @@ export default function ModalCrearProducto(props){
 
     function crearProducto(){
 
-        if (Number(precioVenta) < Number(precioCompra)) {
-            toast.error('El valor de venta debe ser mayor que el de compra.')
-            return
-        }
+        const precioVentaDecimal = new Decimal(precioVenta)
+        const precioCompraDecimal = new Decimal(precioCompra)
+
+        if (precioVentaDecimal.lt(precioCompraDecimal)) return toast.error('El valor de venta debe ser mayor que el de compra.')
+
         if (nombre){
             const nuevoProducto = {
             nombre: nombre,
             categoria_id: Number(categoriaId),
             id_medida: Number(medidaId),
-            precio_compra: Number(precioCompra),
-            precio_venta: Number(precioVenta),
-            cantidad: Number(cantidad) }
+            precio_compra: precioCompra.toString(),
+            precio_venta: precioVenta.toString(),
+            cantidad: cantidad.toString() }
             
             // se eliminan los valores nulos
             for (const key in nuevoProducto){

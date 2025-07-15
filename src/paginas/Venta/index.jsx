@@ -12,18 +12,36 @@ import ModalModificarProductoFactura from "../../componentes/Modales/ModalModifi
 import ModalPagarVenta from "../../componentes/Modales/ModalPagarVenta"
 import { ContextInventario } from "../../contextInventario"
 import Tabla from "../../componentes/Tabla"
+import Decimal from 'decimal.js'
 
+const columns = [
+    'id',
+    'descripcion',
+    'medida',
+    'cantidad',
+    'precio',
+    'subtotal'
+]
 
+const rename = {
+    id: 'Id',
+    descripcion: 'Descripcion',
+    medida: 'Medida',
+    cantidad: 'Cantidad',
+    precio: 'Precio',
+    subtotal: 'Subtotal'
+
+}
 
 export default function Venta(){
 
     const {
-        estadosVentasEntrega
+        estadosVentasEntrega,
+        totalNumber
     } = useContext(ContextInventario)
 
     const {id} = useParams()
 
-    const [showModal, setShowModal] = useState(false)
     const [showModalAbonar, setShowModalAbonar] = useState(false)
 
     const [factura, setFactura] = useState([])
@@ -76,31 +94,35 @@ export default function Venta(){
 
             <div className="flex flex-col gap-6 w-full">
                 <div className="w-full flex gap-3 ">
-                    <InputText estilo={"w-[500px]"} label="Nombre cliente" valor = {nombre}/>
-                    <InputText estilo={"w-[500px]"} label="Direccion entrega" valor={direccion}/>
-                    <InputText estilo={"w-[500px]"} label="Email" valor={email}/>
+                    <InputText style={"w-[500px]"} label1="Nombre cliente" value = {nombre}/>
+                    <InputText style={"w-[500px]"} label1="Direccion entrega" value={direccion}/>
+                    <InputText style={"w-[500px]"} label1="Email" value={email}/>
                 </div>
                 <div className="w-full flex justify-between">
                     <div className="flex gap-3">
-                        <InputNumber estilo={"w-48"} label="Total" valor={total} isPrice={true} format={true}/>
+                        <InputNumber style={"w-48"} label="Total" value={total} isPrice={true} instanceNumber={totalNumber} />
                         <button className='font-bold'>-</button>
-                        <InputNumber estilo={"w-48"} label="Pagado" valor={pagado} isPrice={true} format={true}/>
+                        <InputNumber style={"w-48"} label="Pagado" value={pagado} isPrice={true} instanceNumber={totalNumber} />
                         <button className='font-bold'>=</button>
-                        <InputNumber estilo={"w-48"} label="Por pagar" valor={total - pagado} isPrice={true} format={true}/>
-                        <Boton texto="Abonar" isNormal={true} onClick={() => setShowModalAbonar(true)}/>
+                        <InputNumber style={"w-48"} label="Por pagar" value={total - pagado} instanceNumber={totalNumber} />
+                        <Boton text="Abonar" onClick={() => setShowModalAbonar(true)}/>
                     </div>
                         
                     <div className="flex gap-3">  
-                        <Opciones opciones= {estadosVentasEntrega} seleccionado={idEstadoEntrega} setSeleccionado ={actualizarEstadoEntrega}  />
+                        <Opciones listItems= {estadosVentasEntrega} idSelected={idEstadoEntrega} setIdSelected ={actualizarEstadoEntrega}  />
                     </div>
                 </div>
             </div>
             <div>
                 <h1 className="subtitulo">Producto comprados</h1>
                 <Tabla
-                    datos = {factura} 
-                   total= {total}/>
-                <Boton texto="Anular factura" isNormal={true}/>
+                    listItems = {factura} 
+                   total= {total}
+                   columns={columns}
+                   rename={rename}
+                   
+                   />
+                <Boton text="Anular factura" isNormal={true}/>
             </div>
 
             {showModalAbonar && <ModalPagarVenta  

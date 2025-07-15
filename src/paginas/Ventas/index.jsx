@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import Tabla from "../../componentes/Tabla";
 import FechaInput from "../../componentes/FechaInput";
-import InputNumber from "../../componentes/InputText";
+import InputNumber from "../../componentes/InputNumber";
 import InputLista from "../../componentes/InputLista";
 import CambiarPagina from "../../componentes/CambiarPagina";
 import {FaSearch, FaShoppingCart} from "react-icons/fa"
@@ -12,6 +12,7 @@ import { fetchManager } from "../../serviciosYFunciones/fetchFunciones";
 import Select from "../../componentes/Select";
 
 import { ContextInventario } from "../../contextInventario";
+import { IdNumber } from "../../utils/numeros";
 
 const renombrar = {
         id: 'ID',
@@ -37,6 +38,15 @@ const limiteObjeto = [
     {id: "30", nombre: 30},
     {id: "50", nombre: 50}]
 
+const columns = [
+    'id',
+    'fecha',
+    'por_pagar',
+    'total',
+    'estado_entrega',
+    'estado_pago',
+    'direccion'
+]
 
 const defaultColumn = "venta_id"
 const defaultOrden = "DESC"
@@ -124,7 +134,7 @@ export default function Ventas(){
 
             <div className="flex items-center gap-3">
                 <div className="w-24">
-                    <InputNumber label={"Id"} value = {id} setValue = {setId} />
+                    <InputNumber label1={"Id"} value = {id} setValue = {setId} instanceNumber={IdNumber} />
                 </div>
 
                 <div className="flex gap-3">
@@ -204,6 +214,7 @@ export default function Ventas(){
                     listItems={facturas}
                     setIdSelected={setIdSeleccionado}
                     rename = {renombrar}
+                    columns= {columns}
                     />
             </div>
         </div>

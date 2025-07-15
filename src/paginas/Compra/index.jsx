@@ -20,10 +20,19 @@ const renombrar = {
     subtotal: "Subtotal"
 }
 
+const columns = [
+    'id',
+    'descripcion',
+    'medida',
+    'precio',
+    'subtotal'
+]
+
 export default function Compra(){
 
     const {
-        estadosComprasEntrega
+        estadosComprasEntrega,
+        totalNumber
     } = useContext(ContextInventario)
 
 
@@ -56,6 +65,8 @@ export default function Compra(){
 
 
     async function actualizarEstadoEntrega(nuevoEstado) {
+
+        console.log('nuevo Estado', nuevoEstado)
         const cb = (res) => {
 
         }
@@ -79,21 +90,21 @@ export default function Compra(){
 
             <div className="flex flex-col gap-8 w-full">
                 <div className="w-full flex gap-3">
-                    <InputText label="Nombre cliente" valor={nombre}/>
-                    <InputNumber estilo={"w-48"} label="Telefono" valor={telefono}/>
-                    <InputText estilo={"w-96"} label="Email" valor={email}/>
+                    <InputText label1="Nombre cliente" value={nombre}/>
+                    <InputNumber style={"w-48"} label1="Telefono" value={telefono}/>
+                    <InputText style={"w-96"} label1="Email" value={email}/>
                 </div>
                 <div className="w-full flex gap-6 justify-between items-center">                 
                     <div className="flex gap-3 items-center">
-                        <InputNumber estyle={"w-44"} label1="Total" value={total}/>
+                        <InputNumber style={"w-44"} label1="Total" value={total} instanceNumber={totalNumber}/>
                         <button className='font-bold'>-</button>
-                        <InputNumber estyle={"w-44"} label1="Pagado" value={pagado}/>
+                        <InputNumber style={"w-44"} label1="Pagado" value={pagado} instanceNumber={totalNumber}/>
                         <button className='font-bold'>=</button>
-                        <InputNumber estyle={"w-44"} label1="Por pagar" value={total - pagado}/>
-                        <Boton texto="Abonar" isNormal={true} onClick={() => setShowModalAbonar(true)}></Boton>
+                        <InputNumber style={"w-44"} label1="Por pagar" value={total - pagado} instanceNumber={totalNumber}/>
+                        <Boton text="Abonar" isNormal={true} onClick={() => setShowModalAbonar(true)}></Boton>
                     </div>   
                     <div className="flex gap-4 items-center">
-                        <Opciones name={'estado_entrega'} opciones={estadosComprasEntrega} setSeleccionado = {actualizarEstadoEntrega} seleccionado = {idEstadoEntrega}  /> 
+                        <Opciones  listItems={estadosComprasEntrega} setIdSelected = {actualizarEstadoEntrega} /> 
                     </div>
                     
                     
@@ -103,13 +114,13 @@ export default function Compra(){
                 
             <h1 className="subtitulo mb-3">Productos y servicios adquiridos</h1>
             {
-                factura.length ? <Tabla datos={factura} total = {total}/> : null
+                factura.length ? <Tabla listItems={factura} total = {total} rename={renombrar} columns= {columns}/> : null
 
     
             }
             
             <div className="flex gap-3">
-                    <Boton texto={"Anular factura"} onClick={anularFactura} isNormal={true}/>
+                    <Boton text={"Anular factura"} onClick={anularFactura} isNormal={true}/>
                 </div>
         
             <div>

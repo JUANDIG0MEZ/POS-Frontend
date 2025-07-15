@@ -8,6 +8,14 @@ import Select from "../../componentes/Select"
 import BotonIcono from "../../componentes/BotonIcono"
 import { FaSearch } from "react-icons/fa"
 import {  useNavigate } from "react-router-dom"
+
+
+const columns = [
+    'id',
+    'fecha',
+    'hora'
+]
+
 export default function AjustesInventario(props){
     const navigate = useNavigate()
     const [ ajustes, setAjustes] = useState([])
@@ -66,7 +74,7 @@ export default function AjustesInventario(props){
                         <BotonIcono icon={<FaSearch className=""/>} onClick={buscarAjustes} isNormal={true}/>
                     </div>
                 {
-                    ajustes.length ? <Tabla listItems = {ajustes} setIdselected = {setAjusteSeleccionId}/> : null
+                    ajustes.length ? <Tabla listItems = {ajustes} setIdselected = {setAjusteSeleccionId} columns={columns}/> : null
                 }
                 </div>
                 

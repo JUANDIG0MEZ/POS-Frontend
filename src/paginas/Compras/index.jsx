@@ -41,7 +41,15 @@ const columnasObjeto = [
     {id: "por_pagar", nombre: "Por Pagar"}
 ]
 
-
+const columns = [
+    'id',
+    'fecha',
+    'nombre_cliente',
+    'estado_entrega',
+    'estado_pago',
+    'por_pagar',
+    'total',
+]
 
 const defaultColumn = "compra_id"
 const defaultOrden = "DESC"
@@ -160,7 +168,7 @@ export default function Compras(){
                         setPagina(0)
                     }}/>
                 
-                <Link className="" to={'/comprar'}><BotonIcono texto={<FaShoppingCart/>}/></Link>
+                <Link className="" to={'/comprar'}><BotonIcono icon={<FaShoppingCart/>}/></Link>
 
             </div>
 
@@ -209,6 +217,7 @@ export default function Compras(){
                 listItems={facturas}
                 setIdSelected = {setIdSeleccionado}
                 rename = {renombrar}
+                columns= {columns}
                 />
             </div>
             

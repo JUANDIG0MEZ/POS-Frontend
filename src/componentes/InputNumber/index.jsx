@@ -23,7 +23,6 @@ export default function InputNumber({label1, label2, isPrice, value, setValue, s
         let valor = e.target.value.replace(/,/g, "")
 
         if (instanceNumber.test(valor)){
-
             if (setValue){
             setValue(valor)}
         }

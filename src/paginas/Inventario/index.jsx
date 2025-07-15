@@ -48,7 +48,16 @@ const columnasObjeto2 = [
 ]
 
 
-
+const columns = [
+    'id',
+    'nombre',
+    'categoria',
+    'medida',
+    'precio_compra',
+    'precio_venta',
+    'cantidad',
+    'total'
+]
 
 const defaultLimite = 20
 const defaultOffset = 0
@@ -241,6 +250,7 @@ export default function Inventario() {
                     listItems = {productosOrdenados.slice(offset, offset + parseInt(limite))}
                     setIdSelected={setIdProductoSeleccionado}
                     rename = {columnasObjeto}
+                    columns={columns}
                 />
                 
             </div>

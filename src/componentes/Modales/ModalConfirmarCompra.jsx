@@ -8,6 +8,7 @@ import Select from "../Select"
 import { ContextInventario } from "../../contextInventario"
 import { fetchManager } from "../../serviciosYFunciones/fetchFunciones"
 import { toast } from "sonner"
+import Decimal from 'decimal.js'
 
 export default function ModalConfirmarCompra({carritoDeCompras, total, reset, setShowModal}){
 
@@ -30,9 +31,11 @@ export default function ModalConfirmarCompra({carritoDeCompras, total, reset, se
 
     
     function finalizarCompra(){
+        const totalDecimal = new Decimal(total)
+        const pagadoDecimal = new Decimal(pagado)
         if ( carritoDeCompras.length === 0) return toast.info("Agrega productos al carrito.")
-        if ( Number(pagado) > Number(total)) return toast.error("El monto pagado es mayor al total.")
-        if ( Number(pagado) < Number(total) && !Number(idCliente)) return toast.error("Un cliente no registrado no puede tener deuda.")
+        if ( pagadoDecimal.gt(totalDecimal)) return toast.error("El monto pagado es mayor al total.")
+        if ( pagadoDecimal.lt(totalDecimal) && !Number(idCliente)) return toast.error("Un cliente no registrado no puede tener deuda.")
         if ( !Number(estadoEntrega)) return toast.warning('Elije el estado de la entrega.')
         if ( !nombreCliente) return toast.warning('Debes agregar el nombre del cliente.')
 
@@ -41,8 +44,8 @@ export default function ModalConfirmarCompra({carritoDeCompras, total, reset, se
                 cliente_id: idCliente,
                 id_estado_entrega: Number(estadoEntrega),
                 id_metodo_pago: Number(metodoPago),
-                pagado: Number(pagado),    
-                total: total,
+                pagado: pagadoDecimal.toString(),    
+                total: totalDecimal.toString(),
                 nombre_cliente: nombreCliente
             }
             if (descripcion) info.descripcion = descripcion
@@ -91,7 +94,7 @@ export default function ModalConfirmarCompra({carritoDeCompras, total, reset, se
 
                         <p className="subtitulo">Informacion pago</p>
                         <div className="flex gap-3">
-                            <InputNumber style="w-1/3" label1={"Valor pagado"} value={pagado} setValue={setPagado}  instanceNumber={totalNumber}/>
+                            <InputNumber style="w-1/3" label1={"Valor pagado"} value={pagado} setValue={setPagado} instanceNumber={totalNumber}/>
                             <Select listItems={metodosPago} label="Metodo pago" defaultValue={0} setValue={setMetodoPago}/>
                             <div className={`${(metodoPago == 0 || metodoPago == 1) ? "pointer-events-none opacity-30" : ""}  w-full`}>
                                 <InputText label1="Escribre la Refencia, Nro del comprobante o una descripcion" value={descripcion} setValue={setDescripcion}/>

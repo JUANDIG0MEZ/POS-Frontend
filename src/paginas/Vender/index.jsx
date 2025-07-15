@@ -21,6 +21,8 @@ const renombrar = {
     subtotal: "Subtotal"
 }
 
+const columns = ['id','nombre','medida', 'cantidad', 'precio', 'subtotal']
+
 
 export default function Vender() {
 
@@ -28,6 +30,9 @@ export default function Vender() {
 
     const {
         productos,
+        cantidadNumber,
+        precioNumber,
+        totalNumber
     } = useContext(ContextInventario)
     const [carritoDeVentas, setCarritoDeVentas] = useState([])
     
@@ -152,18 +157,21 @@ export default function Vender() {
                                 value={cantidadProducto}
                                 setValue={setCantidadProducto}
                                 label1="Cantidad*"
+                                instanceNumber={cantidadNumber}
                                 />
                             <InputNumber
                                 style = {"w-40"}
                                 value={precioProducto}
                                 setValue={setPrecioProducto}
                                 label1="Precio"
+                                instanceNumber={precioNumber}
                                 />
                                 
                             <InputNumber
                                 style = {"w-40"}
                                 label1="Total"
                                 value={totalProducto}
+                                instanceNumber={totalNumber}
                                 />
                         
                             <BotonIcono
@@ -187,6 +195,7 @@ export default function Vender() {
                 rename= {renombrar}
                 setIdSelected = {setIdProductoSeleccionadoTabla}
                 total = {total}
+                columns = {columns}
                 />
             </div>
             <div className="flex w-full justify-end">

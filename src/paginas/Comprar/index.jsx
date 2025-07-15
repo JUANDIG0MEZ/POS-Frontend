@@ -23,6 +23,14 @@ const renombrar = {
     subtotal: "Subtotal"
 }
 
+const columns = [
+    'id',
+    'nombre',
+    'medida',
+    'cantidad',
+    'precio',
+    'subtotal',
+]
 
 export default function Comprar() {
 
@@ -36,8 +44,6 @@ export default function Comprar() {
     } = useContext(ContextInventario)
     const [carritoDeCompras, setCarritoDeCompras] = useState([])
     
-
-
 
     const [nombreProducto, setNombreProducto] = useState("")
     const [medida, setMedida] = useState("")
@@ -74,7 +80,7 @@ export default function Comprar() {
     }, [carritoDeCompras])
     useEffect(()=> {
         if (cantidadProducto !== "" && precioProducto !== "") {
-             setTotalProducto(multiplicarYRedondear(cantidadProducto, precioProducto, totalNumber.maxDecimals))
+             setTotalProducto(multiplicarYRedondear(cantidadProducto, precioProducto, totalNumber.maxDecimals).toString())
         }  
     }, [precioProducto, cantidadProducto])
 
@@ -115,8 +121,8 @@ export default function Comprar() {
             id: idProducto,
             nombre: producto.nombre,
             medida: producto.medida,
-            cantidad: redondear(cantidadProducto),
-            precio: redondear(precioProducto),
+            cantidad: redondear(cantidadProducto).toString(),
+            precio: redondear(precioProducto).toString(),
             subtotal: totalProducto,
             
         }
@@ -208,6 +214,7 @@ export default function Comprar() {
                 rename= {renombrar}
                 setIdSelected = {setIdProductoSeleccionadoTabla}
                 total = {total}
+                columns= {columns}
                 />
             </div>
             <div className="flex w-full justify-end">

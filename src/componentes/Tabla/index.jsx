@@ -1,6 +1,6 @@
 import {memo} from 'react'
 
-export default memo(function Tabla({listItems, setIdSelected, rename, total }) {   
+export default memo(function Tabla({listItems, setIdSelected, rename, total, columns }) {   
     
     function seleccionFila(e){
         const fila = e.target.closest('tr')
@@ -15,7 +15,7 @@ export default memo(function Tabla({listItems, setIdSelected, rename, total }) {
             <thead>
                 <tr className="titulo-tabla">
                 {
-                listItems.length > 0 && Object.keys(listItems[0]).map((key, indice)=>{
+                listItems.length > 0 && columns.map((key, indice)=>{
                     if (rename && rename[key]){
                         return <th key={indice} className="p-2 border">{rename[key]}</th>
                     }
@@ -34,7 +34,7 @@ export default memo(function Tabla({listItems, setIdSelected, rename, total }) {
                             data-id = {dato.id}
                             className={`hover-1 cursor-pointer text-center`}>
                             {   
-                                Object.keys(dato).map((key, indice)=>{
+                                columns.map((key, indice)=>{
                                     return <td key={indice} className="p-2 border">{dato[key]}</td>
                                 })
                             }
@@ -49,8 +49,8 @@ export default memo(function Tabla({listItems, setIdSelected, rename, total }) {
                     <tr className="">
                     {   
                         listItems.length > 0 &&
-                        Object.keys(listItems[0]).map((item, idx)=>{
-                            const totalColumns = Object.keys(listItems[0]).length
+                        columns.map((item, idx)=>{
+                            const totalColumns = columns.length
 
                             if (idx == totalColumns -2) {
                                 return <td key={idx} className="p-2 border font-bold text-center">Total</td>
