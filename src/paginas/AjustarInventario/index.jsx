@@ -11,7 +11,6 @@ export default function AjustarInventario(){
     const [idItemSeleccionad, setIdItemSeleccionado] = useState(null)
     const [busquedaNombre, setBusquedaNombre] = useState('')
     const [productoSeleccionadoId, setProductoSeleccionadoId] = useState()
-    const [productosModificados, setProductosModificados] = useState()
     const [cantidadActual, setCantidadActual] = useState('')
     const [cantidadAjustada, setCantidadAjustada] = useState('')
 
@@ -35,7 +34,7 @@ export default function AjustarInventario(){
 
     function guardarCambios() {
 
-        const ajustes = productosAjustados.map((producto) => ({producto_id: producto.id, cantidad: Number(producto.cantidad)}))
+        const ajustes = productosAjustados.map((producto) => ({producto_id: producto.id, cantidad: producto.cantidad}))
         function cb (res){
             
         }

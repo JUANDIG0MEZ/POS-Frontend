@@ -23,7 +23,7 @@ export default function InputPassword({value, setValue, style, label}) {
 
                 <div onMouseDown={() => {setMostrarContrasenia(!mostrarConstrasenia)}}>
 
-                    <BotonIcono texto={<FaEye/>}/>
+                    <BotonIcono icon={<FaEye/>}/>
                 </div>
             </div>
             

@@ -24,7 +24,7 @@ export default function ModalConfirmarCompra({carritoDeCompras, total, reset, se
 
     const [estadoEntrega, setEstadoEntrega] = useState("0")
     const [metodoPago, setMetodoPago] = useState("0")
-    const [pagado , setPagado] = useState("")
+    const [pagado , setPagado] = useState("0")
     const [descripcion, setDescripcion] = useState("")
 
     console.log(metodoPago)

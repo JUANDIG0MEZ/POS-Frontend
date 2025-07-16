@@ -32,7 +32,7 @@ export default function ModalConfirmarVenta({total, carritoDeVentas, setShowModa
 
 
     const [estadoEntrega, setEstadoEntrega] = useState(0)
-    const [pagado , setPagado] = useState("")
+    const [pagado , setPagado] = useState("0")
     
 
 

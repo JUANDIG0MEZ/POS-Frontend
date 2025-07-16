@@ -25,6 +25,7 @@ import './styles/bordes.css'
 
 import Dashboard from './componentes/Dashboard'
 import {Toaster} from 'sonner'
+import Confirmar from './paginas/Autenticacion/confirmar'
 function App() {
   return (
     <>
@@ -34,6 +35,7 @@ function App() {
           <Route element={<Dashboard />}>
             <Route path= '/' element={<Home />} />
             <Route path= '/login' element={<Login />} />
+            <Route path= '/confirmar' element={<Confirmar />} />
 
             <Route path= '/inventario' element={<Inventario />} />
             <Route path= '/categorias' element ={<Categorias/>} />

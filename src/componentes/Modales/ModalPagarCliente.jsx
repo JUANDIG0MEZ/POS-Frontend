@@ -7,15 +7,18 @@ import Select from '../Select'
 
 import { ContextInventario } from '../../contextInventario'
 import InputText from '../InputText'
+import Decimal from 'decimal.js'
+import { redondear } from '../../utils/decimales'
 
 export default function ModalPagarCliente(props){
 
-    const [valorPago, setValorPago] = useState(0) 
+    const [valorPago, setValorPago] = useState("0") 
     const [metodoPago, setMetodoPago] = useState(0)
     const [descripcion, setDescripcion ] = useState('')
     const restante = props.porPagar - valorPago
     const {
-        metodosPago
+        metodosPago,
+        totalNumber
     } = useContext(ContextInventario)
 
     function cerrarModal(){
@@ -24,17 +27,17 @@ export default function ModalPagarCliente(props){
 
 
     function realizarPago(){
-        const valorPagoFetch = Number(valorPago)
+        const valorPagoDecimal = new Decimal(valorPago)
         const metodoPagoFetch = Number(metodoPago)
         if (restante < 0) return toast.warning("El abono no puede ser mayor al total a pagar")
-        if (valorPagoFetch < 1) return toast.warning("Ingresa el valor del pago")
+        if (!valorPagoDecimal.gt(0)) return toast.warning("Ingresa el valor del pago")
         if (metodoPagoFetch === 0) toast.warning("Agrega el metodo de pago")
         if (!(metodoPagoFetch < 2) && !descripcion) return toast.warning("Agrega la referencia o nro de comprobante")
         if (!metodoPago) return toast.warning('Seleccion el metodo de pago')
 
         const body = {
             cliente_id: Number(props.clienteId),
-            valor: valorPagoFetch,
+            valor: valorPagoDecimal.toString(),
             id_metodo_pago: metodoPagoFetch
         }
         if (descripcion) body.descripcion = descripcion
@@ -54,30 +57,31 @@ export default function ModalPagarCliente(props){
                 <div className="flex flex-col flex-1 gap-3">
                     <h2 className="titulo mb-3">Realizar pago al cliente</h2>
                     <h3 className='subtitulo mb-4'>Informacion del cliente</h3>
-                    <InputNumber estilo="w-40" valor = {props.porPagar} label ="Saldo a favor" format={true}/>
+                    <InputNumber style="w-40" value = {props.porPagar} label1 ="Saldo a favor" instanceNumber={totalNumber}/>
 
                     <p className='subtitulo mb-4'>Informacion del pago</p>
                     <div className="flex gap-3 justify-end">
-                        <Select label="Metodo pago" valorDefault={0} opciones={metodosPago} valor={metodoPago} setValor={setMetodoPago} />
+                        <Select label="Metodo pago" defaultValue={0} listItems={metodosPago} setValue={setMetodoPago} />
                         <div className={`${metodoPago < 2 ? "opacity-50 pointer-events-none": ""} flex flex-1 gap-3`}>
-                            <InputText valor={descripcion} setValor={setDescripcion} label="Agrega la referencia o nro de comprobante" />
+                            <InputText value={descripcion} setValue={setDescripcion} label1="Agrega la referencia o nro de comprobante" />
                         </div>
                         <InputNumber 
-                            estilo="w-40"
-                            valor = {valorPago}
-                            setValor={setValorPago} 
-                            label="Valor de pago"
-                            isPrice={true} format={true} />
+                            style="w-40"
+                            value = {valorPago}
+                            setValue={setValorPago} 
+                            label1="Valor de pago"
+                            instanceNumber={totalNumber}
+                            />
 
                     </div>
                     <div className='flex gap-3 justify-between'>
-                        <Boton onClick = {() => setValorPago(props.porPagar)} texto="Pago completo" isNormal={true}/>
+                        <Boton onClick = {() => setValorPago(props.porPagar)} text="Pago completo" isNormal={true}/>
                         
                         
 
                         <div className='flex gap-3'>
-                            <Boton onClick={cerrarModal} texto = "Cancelar" isNormal={true}/>
-                            <Boton onClick={realizarPago} texto = "Pagar" />
+                            <Boton onClick={cerrarModal} text = "Cancelar" isNormal={true}/>
+                            <Boton onClick={realizarPago} text = "Pagar" />
                         </div>
                         
                     </div>

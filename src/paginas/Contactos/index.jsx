@@ -16,6 +16,7 @@ import BotonIcono from "../../componentes/BotonIcono";
 import ModalCrearCliente from "../../componentes/Modales/ModalCrearCliente"
 import { useNavigate } from "react-router-dom"
 import InputLista from "../../componentes/InputLista"
+import { IdNumber } from "../../utils/numeros"
 
 
 const renombrar = {
@@ -29,6 +30,14 @@ const renombrar = {
         por_pagarle: 'Por pagarle',
         debe: 'Debe'
     }
+
+const columns = [
+    'id',
+    'nombre',
+    'tipo',
+    'por_pagarle',
+    'debe'
+]
 
 const columnasObjeto = [
     {id: "id", nombre: "ID"},
@@ -137,14 +146,14 @@ export default  function Clientes() {
                         style={"w-20"}
                         label1="Id"
                         value={idCliente}
-                        setValue={setIdCliente}
+                        instanceNumber={IdNumber}
                         />
 
 
                     <InputLista 
                         listItems={clientesNombres}    
                         value={nombreCliente}
-                        setvalue={setNombreCliente}
+                        setValue={setNombreCliente}
                         label={"Nombre"} 
                         setIdSelected={setIdCliente}/>
 
@@ -152,7 +161,7 @@ export default  function Clientes() {
                     
                     <Select listItems={tiposClientes} label={"Tipo cliente"} setValue={setTipoId} defaultValue={defaultTipo}/>
 
-                    <BotonIcono texto ={<FaSearch/>} onClick={()=>{
+                    <BotonIcono icon ={<FaSearch/>} onClick={()=>{
                         if (offset == 0) {
                             realizarPeticion()
                         }
@@ -199,7 +208,7 @@ export default  function Clientes() {
             </div>
             
             <div className="overflow-auto h-full">
-                <Tabla listItems = {clientes} setIdSelected={setIdSeleccionado} rename = {renombrar}/>
+                <Tabla listItems = {clientes} setIdSelected={setIdSeleccionado} rename = {renombrar} columns={columns}/>
             </div>   
             {
                 showModalCrear ? <ModalCrearCliente setShowModal={setShowModalCrear} clientes={clientes} setClientes={setClientes}/> : null

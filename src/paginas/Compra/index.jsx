@@ -68,7 +68,7 @@ export default function Compra(){
 
         console.log('nuevo Estado', nuevoEstado)
         const cb = (res) => {
-
+            setPagado(res.pagado)
         }
         fetchManager(`http://localhost:3000/api/v1/compra/${id}/estado-entrega`, cb, "PATCH", { id_estado_entrega: nuevoEstado })
         setIdEstadoEntrega(nuevoEstado)

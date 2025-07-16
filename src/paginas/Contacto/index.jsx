@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import InputText from '../../componentes/InputText';
 import {useParams} from 'react-router-dom';
 import Boton from '../../componentes/Boton';
@@ -9,6 +9,7 @@ import ModalPagarCliente from '../../componentes/Modales/ModalPagarCliente';
 import ModalAbonarCliente from '../../componentes/Modales/ModalAbonarCliente';
 import CambiarPagina from '../../componentes/CambiarPagina';
 import Select from '../../componentes/Select';
+import { ContextInventario } from '../../contextInventario';
 
 
 
@@ -26,7 +27,7 @@ const renombrar = {
         fecha: 'Fecha',
         hora: 'Hora',
         total: 'Total',
-        por_pagar: 'Por pagar',
+        por_pagar: 'Debe',
         estado_pago: 'Estado pago'
     },
     compras: {
@@ -34,7 +35,7 @@ const renombrar = {
         fecha: "Fecha",
         hora: "Hora",
         total: "Total",
-        por_pagar: 'Debe',
+        por_pagar: 'Por pagar',
         estado_pago: 'Estado pago'
     },
     abonos: {
@@ -56,6 +57,8 @@ const renombrar = {
     
 }
 
+let columns = []
+
 
 const defaultLimite = "15"
 
@@ -63,6 +66,11 @@ const defaultLimite = "15"
 
 
 export default function Contacto() {
+
+    const {
+        totalNumber
+    } = useContext(ContextInventario)
+
 
     const {id} = useParams();
     const [nombre, setNombre]= useState("")
@@ -138,16 +146,18 @@ export default function Contacto() {
                     <InputText style="w-48" label1="Telefono"  value={telefono}/>
                     <InputText style="w-96" label1="Email"  value={email} />
                     <InputText style="w-40" label1="Tipo"  value={tipo} />          
-                    <InputNumber style = {"w-62"} label1="Saldo a favor" value={porPagarle}/>
-                    <Boton text="Pagar"
-                    onClick={() => setShowModalPago(true)}/>
                     <InputNumber
                         style = {"w-62"}
                         label1="Debe"
                         value={debe}
+                        instanceNumber={totalNumber}
                         />
                     <Boton text="Abonar"
-                    onClick={() => setShowModalAbono(true)}/>         
+                    onClick={() => setShowModalAbono(true)}/>  
+                    <InputNumber style = {"w-62"} label1="Saldo a favor" value={porPagarle} instanceNumber={totalNumber}/>
+                    <Boton text="Pagar"
+                    onClick={() => setShowModalPago(true)}/>
+                           
                 </div>
                 <div className='flex justify-between'>
                     <div className='flex gap-3'>
@@ -157,12 +167,14 @@ export default function Contacto() {
                             setOffset(0)
                             setPagina(0)
                             setNombreTabla("ventas")
+                            columns=['id', 'fecha', 'hora', 'direccion', 'por_pagar', 'total']
                         }}
                         isNormal={true}/>
 
                         <Boton 
                         text="Compras"
                         onClick={()=> {
+                            columns=['id', 'fecha', 'hora', 'estado_entrega', 'estado_pago', 'por_pagar', 'total']
                             setOffset(0)
                             setPagina(0)
                             setNombreTabla("compras")
@@ -173,14 +185,17 @@ export default function Contacto() {
                             onClick={() => {
                                 setOffset(0)
                                 setPagina(0)
-                                setNombreTabla("pagos")}}
+                                setNombreTabla("pagos")
+                                columns=['id', 'fecha', 'hora', 'metodo_pago', 'descripcion', 'valor']}}
                             isNormal={true}/>
+                            
                         <Boton
                             text="Abonos"
                             onClick={() => {
                                 setOffset(0)
                                 setPagina(0)
                                 setNombreTabla("abonos")
+                                columns=['id', 'fecha', 'hora', 'metodo_pago', 'descripcion', 'valor']
                             }}
                             isNormal={true}/>
                     </div>
@@ -207,7 +222,7 @@ export default function Contacto() {
             </div>
             <div className='w-full overflow-auto p-1 text-md mb-10'>
 
-                <Tabla listItems={datos} rename={renombrarTabla}/>
+                <Tabla listItems={datos} rename={renombrarTabla} columns = {columns}/>
 
             </div>
             {showModalPago && <ModalPagarCliente clienteId={id} porPagar = {porPagarle} setShowModal = {setShowModalPago} setPorPagarle={setPorPagarle}/>}
